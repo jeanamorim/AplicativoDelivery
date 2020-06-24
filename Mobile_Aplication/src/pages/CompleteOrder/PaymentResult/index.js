@@ -12,8 +12,8 @@ import {
   ContinueButton,
 } from './styles';
 
-export default function PaymentResult({ navigation }) {
-  const status = navigation.getParam('status');
+export default function PaymentResult({ navigation, route }) {
+  const { status } = route.params;
 
   return (
     <Container status={status}>

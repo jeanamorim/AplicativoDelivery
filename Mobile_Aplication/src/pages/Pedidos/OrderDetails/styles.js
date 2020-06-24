@@ -5,6 +5,7 @@ export const Container = styled.View`
   display: flex;
   flex-direction: column;
   flex: 1;
+  margin-top: 10px;
 `;
 
 export const Card = styled.View`
@@ -88,16 +89,16 @@ export const Line = styled.View`
 export const StatusContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  margin-top: -15px;
+  margin-top: 30px;
   margin-left: 20px;
   margin-right: 20px;
 `;
 
 export const Dot = styled.View`
-  width: 28px;
-  height: 28px;
+  width: 60px;
+  height: 60px;
   border: 1px solid #f4a460;
-  border-radius: 20px;
+  border-radius: 30px;
   background: ${props => (props.filled ? '#E25B08' : '#FFFFFF')};
   margin-bottom: 5px;
 `;

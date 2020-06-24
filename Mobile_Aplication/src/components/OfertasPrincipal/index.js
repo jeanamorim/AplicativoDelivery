@@ -38,7 +38,9 @@ export default function OfertasPrincipal({ navigation }) {
         {offers.map(oferta => (
           <Body key={oferta.id}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('ProductsLojas')}>
+              onPress={() =>
+                navigation.navigate('ProductsLojas', { product: 5 })
+              }>
               <CardItem cardBody>
                 <Thumbnail
                   square

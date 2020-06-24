@@ -106,7 +106,7 @@ export default {
     borderColor: '#fff',
   },
   nameestabelecimento: {
-    marginTop: 90,
+    marginTop: 87,
     position: 'absolute',
 
     color: '#fff',

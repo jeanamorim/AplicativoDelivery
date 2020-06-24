@@ -40,46 +40,53 @@ export default function OfertasEstabelecimentos({ navigation, id }) {
             style={styles.ofertas}>
             {offers.map(oferta => (
               <Body key={oferta.id}>
-                <CardItem cardBody>
-                  <Thumbnail
-                    square
-                    large
-                    source={{
-                      uri: oferta.product.image.url.replace(
-                        'localhost',
-                        '10.0.0.106',
-                      ),
-                    }}
-                    style={styles.off}
-                  />
-                </CardItem>
-                <Text>
-                  <Text
-                    note
-                    style={{
-                      textDecorationLine: 'line-through',
-                      textDecorationStyle: 'solid',
-                      fontFamily: 'CerebriSans-ExtraBold',
-                    }}>
-                    {formatPrice(oferta.from)}
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('ProductDetails', {
+                      categoria: oferta,
+                    })
+                  }>
+                  <CardItem cardBody>
+                    <Thumbnail
+                      square
+                      large
+                      source={{
+                        uri: oferta.product.image.url.replace(
+                          'localhost',
+                          '10.0.0.106',
+                        ),
+                      }}
+                      style={styles.off}
+                    />
+                  </CardItem>
+                  <Text>
+                    <Text
+                      note
+                      style={{
+                        textDecorationLine: 'line-through',
+                        textDecorationStyle: 'solid',
+                        fontFamily: 'CerebriSans-ExtraBold',
+                      }}>
+                      {formatPrice(oferta.from)}
+                    </Text>
+                    <Text
+                      note
+                      style={{
+                        color: '#FF0000',
+                        fontFamily: 'CerebriSans-ExtraBold',
+                      }}>
+                      {formatPrice(oferta.to)}
+                    </Text>
                   </Text>
                   <Text
                     note
                     style={{
-                      color: '#FF0000',
+                      color: '#F4A460',
                       fontFamily: 'CerebriSans-ExtraBold',
                     }}>
-                    {formatPrice(oferta.to)}
+                    {oferta.product.name}
                   </Text>
-                </Text>
-                <Text
-                  note
-                  style={{
-                    color: '#F4A460',
-                    fontFamily: 'CerebriSans-ExtraBold',
-                  }}>
-                  {oferta.product.name}
-                </Text>
+                </TouchableOpacity>
               </Body>
             ))}
           </ScrollView>

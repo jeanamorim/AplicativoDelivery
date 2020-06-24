@@ -20,7 +20,11 @@ export default function CategoriaPrincipal({ navigation }) {
               name="store"
               size={25}
               color="#F4A460"
-              onPress={() => navigation.navigate('EstabelecimentoByCategory')}
+              onPress={() =>
+                navigation.navigate('EstabelecimentoByCategory', {
+                  Name: 'MERCADO',
+                })
+              }
             />
           </Button>
           <Text
@@ -36,7 +40,11 @@ export default function CategoriaPrincipal({ navigation }) {
 
         <Body>
           <Button
-            onPress={() => navigation.navigate('EstabelecimentoByCategory')}
+            onPress={() =>
+              navigation.navigate('EstabelecimentoByCategory', {
+                Name: 'PIZZARIAS',
+              })
+            }
             rounded
             style={styles.categoryButton}>
             <Icon name="pizza-slice" size={25} color="#F4A460" />
@@ -78,7 +86,11 @@ export default function CategoriaPrincipal({ navigation }) {
           <Button
             rounded
             style={styles.categoryButton}
-            onPress={() => navigation.navigate('EstabelecimentoByCategory')}>
+            onPress={() =>
+              navigation.navigate('EstabelecimentoByCategory', {
+                Name: 'BEBIDAS',
+              })
+            }>
             <Icon name="glass-cheers" size={25} color="#F4A460" />
           </Button>
           <Text
@@ -96,7 +108,11 @@ export default function CategoriaPrincipal({ navigation }) {
           <Button
             rounded
             style={styles.categoryButton}
-            onPress={() => navigation.navigate('EstabelecimentoByCategory')}>
+            onPress={() =>
+              navigation.navigate('EstabelecimentoByCategory', {
+                Name: 'AGUA E GÁS',
+              })
+            }>
             <Icon name="gulp" size={25} color="#F4A460" />
           </Button>
           <Text
@@ -114,7 +130,11 @@ export default function CategoriaPrincipal({ navigation }) {
           <Button
             rounded
             style={styles.categoryButton}
-            onPress={() => navigation.navigate('EstabelecimentoByCategory')}>
+            onPress={() =>
+              navigation.navigate('EstabelecimentoByCategory', {
+                Name: 'GELADOS',
+              })
+            }>
             <Icon name="ice-cream" size={25} color="#F4A460" />
           </Button>
           <Text
@@ -131,7 +151,11 @@ export default function CategoriaPrincipal({ navigation }) {
           <Button
             rounded
             style={styles.categoryButton}
-            onPress={() => navigation.navigate('EstabelecimentoByCategory')}>
+            onPress={() =>
+              navigation.navigate('EstabelecimentoByCategory', {
+                Name: 'VARIEDADES',
+              })
+            }>
             <Icon name="gifts" size={25} color="#F4A460" />
           </Button>
           <Text
@@ -148,7 +172,11 @@ export default function CategoriaPrincipal({ navigation }) {
           <Button
             rounded
             style={styles.categoryButton}
-            onPress={() => navigation.navigate('EstabelecimentoByCategory')}>
+            onPress={() =>
+              navigation.navigate('EstabelecimentoByCategory', {
+                Name: 'SOBREMESA',
+              })
+            }>
             <Icon name="birthday-cake" size={25} color="#F4A460" />
           </Button>
           <Text

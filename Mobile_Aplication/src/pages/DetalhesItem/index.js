@@ -35,20 +35,11 @@ import {
 } from 'native-base';
 import api from '../../services/api';
 import * as CartActions from '../../store/modules/cart/actions';
-export default function DetalhesItens({ navigation }) {
+export default function DetalhesItens({ navigation, route }) {
   const [variacao, setVariacao] = useState([]);
-  const productDetails = navigation.getParam('produtoDetails');
 
-  const id = productDetails.id;
-  const id_loja = navigation.getParam('id_estabelecimento');
-
-  async function gravarIdLoja() {
-    try {
-      await storage.setItem('id_estabelecimento', id_loja.toString());
-    } catch (error) {
-      alert(error);
-    }
-  }
+  const { produtoDetails, id_estabelecimento } = route.params;
+  const id = produtoDetails.id;
 
   const dispatch = useDispatch();
 
@@ -76,7 +67,7 @@ export default function DetalhesItens({ navigation }) {
   }
 
   function handleAddProduct(product) {
-    dispatch(addToCartRequest(product, id_loja));
+    dispatch(addToCartRequest(product));
   }
 
   return (
@@ -89,7 +80,7 @@ export default function DetalhesItens({ navigation }) {
                 color="#fff"
                 size={25}
                 name="arrow-back"
-                onPress={() => navigation.navigate('ProductDetails')}
+                onPress={() => navigation.navigate('produtoDetails')}
               />
             </Button>
           </Left>
@@ -118,7 +109,7 @@ export default function DetalhesItens({ navigation }) {
             <CardItem cardBody>
               <Image
                 source={{
-                  uri: productDetails.image.url.replace(
+                  uri: produtoDetails.image.url.replace(
                     'localhost',
                     '10.0.0.106',
                   ),
@@ -146,20 +137,20 @@ export default function DetalhesItens({ navigation }) {
                 active
                 size={29}
                 name="remove"
-                onPress={() => decrement(productDetails.id)}
+                onPress={() => decrement(produtoDetails.id)}
                 style={{ marginLeft: 10, marginRight: 20, color: '#f4a460' }}
               />
               <Text
                 style={{
                   fontFamily: 'CerebriSans-ExtraBold',
                 }}>
-                {amount[productDetails.id] || 0}
+                {amount[produtoDetails.id] || 0}
               </Text>
               <Icon
                 active
                 size={29}
                 name="add"
-                onPress={() => increment(productDetails.id)}
+                onPress={() => increment(produtoDetails.id)}
                 style={{ marginLeft: 20, marginRight: 20, color: '#f4a460' }}
               />
             </Item>
@@ -170,14 +161,14 @@ export default function DetalhesItens({ navigation }) {
               style={{
                 fontFamily: 'CerebriSans-ExtraBold',
               }}>
-              {productDetails.name}
+              {produtoDetails.name}
             </Text>
             <Text
               note
               style={{
                 fontFamily: 'CerebriSans-ExtraBold',
               }}>
-              {productDetails.description}
+              {produtoDetails.description}
             </Text>
           </Body>
           <Body>
@@ -188,7 +179,7 @@ export default function DetalhesItens({ navigation }) {
                 marginTop: 0,
                 marginLeft: -240,
               }}>
-              {formatPrice(productDetails.price)}
+              {formatPrice(produtoDetails.price)}
             </Text>
           </Body>
 
@@ -224,8 +215,8 @@ export default function DetalhesItens({ navigation }) {
                         name="arrow-forward"
                         onPress={() =>
                           navigation.navigate('Variacao', {
-                            variacao: variacoes,
-                            produto: productDetails,
+                            variacoes: variacoes,
+                            produto: produtoDetails,
                           })
                         }
                       />
@@ -256,9 +247,8 @@ export default function DetalhesItens({ navigation }) {
         <FooterTab style={{ backgroundColor: '#F4A460' }}>
           <Button
             onPress={() => {
-              handleAddProduct(productDetails, id_loja);
-              navigation.navigate('ProductDetails');
-              gravarIdLoja();
+              handleAddProduct(produtoDetails);
+              navigation.goBack();
             }}>
             <Text style={{ fontSize: 15, color: '#fff' }}>
               Adicionar ao carrinho

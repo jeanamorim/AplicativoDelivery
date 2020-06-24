@@ -175,7 +175,7 @@ routes.put('/estabelecimento/:id', EstabelecimentoControllers.update);
 
 routes.post('/products', validateProductStore, ProductController.store);
 routes.get('/products', ProductController.index);
-routes.get('/products_estab/:id', ProductEstabelecimento.index);
+routes.get('/productsCategorias/:id', ProductEstabelecimento.index);
 routes.get('/productsList', ProductListControllers.index);
 routes.get('/products/:id', ProductDetails.index);
 routes.delete('/products/:id', ProductController.delete);

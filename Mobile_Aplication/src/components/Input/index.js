@@ -27,7 +27,7 @@ export function Input(
     }
 
     if (isFocused) {
-      return colors.primary;
+      return colors.finalisar;
     }
 
     return colors.inactive;

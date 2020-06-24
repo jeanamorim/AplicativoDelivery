@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { useSelector } from 'react-redux';
 import Iconn from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -7,7 +7,7 @@ import Iconn from 'react-native-vector-icons/MaterialCommunityIcons';
 import { YellowBox, Image } from 'react-native';
 YellowBox.ignoreWarnings(['VirtualizedLists']);
 import Icons from 'react-native-vector-icons/FontAwesome5';
-
+import storage from '@react-native-community/async-storage';
 import Background from '../../components/Background';
 
 import { ItemCount } from './styles';
@@ -32,16 +32,37 @@ import {
   Card,
   Icon,
 } from 'native-base';
-
+import { formatPrice } from '../../util/format';
 import OfertasEstabelecimento from '../../components/OfertasEstabelecimentos';
 import CategoriaEstabelecimento from '../../components/CategoriasEstabelecimentos';
-export default function ProductsLojas({ navigation }) {
+export default function ProductsLojas({ navigation, route }) {
   StatusBar.setBackgroundColor(colors.finalisar);
-  const productDetails = navigation.getParam('product');
-
+  const { product } = route.params;
   const cartSize = useSelector(state => state.cart.length);
+  const id = product.id;
 
-  const id = productDetails.id;
+  const cart = useSelector(state =>
+    state.cart.map(product => ({
+      ...product,
+      subtotal: formatPrice(product.amount * product.price),
+    })),
+  );
+
+  useEffect(() => {
+    async function loadId() {
+      try {
+        await storage.setItem('KEY_VALUE_ID_ESTABELECIMENTO', id.toString());
+      } catch (err) {
+        if (err.response) {
+          console.tron.log('Erro no servidor');
+        } else {
+          console.tron.log('Falha ao conectar com o servidor');
+        }
+      }
+    }
+
+    loadId();
+  }, [id]);
 
   return (
     <Background>
@@ -69,7 +90,7 @@ export default function ProductsLojas({ navigation }) {
         </Header>
 
         <Header style={styles.headerNameLoja}>
-          <Text style={styles.nameLoja}>{productDetails.name_loja}</Text>
+          <Text style={styles.nameLoja}>{product.name_loja}</Text>
         </Header>
 
         <Button
@@ -86,10 +107,7 @@ export default function ProductsLojas({ navigation }) {
             }}>
             <Image
               source={{
-                uri: productDetails.image.url.replace(
-                  'localhost',
-                  '10.0.0.106',
-                ),
+                uri: product.image.url.replace('localhost', '10.0.0.106'),
               }}
               style={styles.imageGrande}
             />
@@ -97,10 +115,7 @@ export default function ProductsLojas({ navigation }) {
             <Thumbnail
               large
               source={{
-                uri: productDetails.image.url.replace(
-                  'localhost',
-                  '10.0.0.106',
-                ),
+                uri: product.image.url.replace('localhost', '10.0.0.106'),
               }}
               style={styles.avatar}
             />
@@ -113,7 +128,7 @@ export default function ProductsLojas({ navigation }) {
               <Left>
                 <Icons name="star-half-alt" size={15} color="#F4A460" />
                 <Text note style={styles.avaliacaoLoja}>
-                  {productDetails.avaliacao}
+                  {product.avaliacao}
                 </Text>
               </Left>
               <Body>
@@ -125,7 +140,7 @@ export default function ProductsLojas({ navigation }) {
                       fontFamily: 'CerebriSans-Regular',
                       color: '#000',
                     }}>
-                    {productDetails.tempo_entrega} min
+                    {product.tempo_entrega} min
                   </Text>
                 </Text>
               </Body>
@@ -137,7 +152,7 @@ export default function ProductsLojas({ navigation }) {
                       fontFamily: 'CerebriSans-Regular',
                       color: '#20B402',
                     }}>
-                    {productDetails.status}
+                    {product.status}
                   </Text>
                 </Text>
               </Right>

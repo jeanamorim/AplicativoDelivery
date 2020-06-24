@@ -77,20 +77,10 @@ export default function Orders({ navigation }) {
 
   return (
     <Background>
-      <Header span style={{ backgroundColor: '#F4A460', height: 60 }}>
-        <Text
-          style={{
-            color: '#fff',
-            fontFamily: 'CerebriSans-ExtraBold',
-            fontSize: 20,
-            alignSelf: 'center',
-          }}>
-          Detalhes do pedido
-        </Text>
-      </Header>
       <ScrollView>
         {orders.map(item => (
           <Containerr
+            key={item.id}
             style={{
               elevation: 4,
             }}>

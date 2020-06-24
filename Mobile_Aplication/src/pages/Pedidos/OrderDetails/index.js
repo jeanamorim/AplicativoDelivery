@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { format, parseISO } from 'date-fns';
@@ -41,7 +42,7 @@ import {
   Right,
 } from 'native-base';
 import colors from '../../../styles/colors';
-export default function OrderDetails({ navigation }) {
+export default function OrderDetails({ navigation, route }) {
   const [tableData, setTableData] = useState({});
   const [orderDetails, setOrderDetails] = useState({});
   const pendente = orderDetails.status === 'PENDENTE' ? 'PENDENTE' : null;
@@ -49,15 +50,13 @@ export default function OrderDetails({ navigation }) {
   const enviado = orderDetails.status === 'ENVIADO' ? 'ENVIADO' : null;
   const entregue = orderDetails.status === 'ENTREGUE' ? 'ENTREGUE' : null;
   const cancelado = orderDetails.status === 'CANCELADO' ? 'CANCELADO' : null;
-
+  const { order } = route.params;
   useEffect(() => {
     const orderDetailsFormatted = {
-      ...navigation.getParam('order'),
-      dateFormatted: format(
-        parseISO(navigation.getParam('order').date),
-        'PPPpp',
-        { locale: dateLanguage },
-      ),
+      ...order,
+      dateFormatted: format(parseISO(order.date), 'PPPpp', {
+        locale: dateLanguage,
+      }),
     };
 
     setOrderDetails(orderDetailsFormatted);
@@ -72,43 +71,11 @@ export default function OrderDetails({ navigation }) {
     ]);
 
     setTableData({ tableHeader, tableRows });
-  }, [navigation]);
+  }, [navigation, order]);
 
   return (
     <Background>
       <Container>
-        <Header span style={{ backgroundColor: '#F4A460', height: 60 }}>
-          <Left>
-            <Button transparent>
-              <Icon
-                style={{}}
-                size={25}
-                name="chevron-left"
-                color="#FFF"
-                onPress={() => navigation.goBack()}
-              />
-            </Button>
-          </Left>
-
-          <Text
-            style={{
-              marginTop: -10,
-              marginLeft: 40,
-              color: '#fff',
-              fontFamily: 'CerebriSans-ExtraBold',
-              fontSize: 20,
-              alignSelf: 'center',
-            }}>
-            Detalhes do pedido
-          </Text>
-          <Right>
-            <Button transparent>
-              <Iconn name="redo" color="#FFF" size={26} />
-            </Button>
-          </Right>
-        </Header>
-
-        <Line />
         <StatusContainer>
           <LabelContainer>
             <Dot filled={pendente} />

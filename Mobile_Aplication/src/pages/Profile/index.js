@@ -27,9 +27,9 @@ export default function Profile({ navigation }) {
     </Background>
   );
 }
-Profile.navigationOptions = {
-  tabBarLabel: 'Minha conta',
-  tabBarIcon: ({ tintColor }) => (
-    <Icon name="user" size={20} color={tintColor} />
-  ),
-};
+//Profile.navigationOptions = {
+// tabBarLabel: 'Minha conta',
+// tabBarIcon: ({ tintColor }) => (
+// <Icon name="user" size={20} color={tintColor} />
+// ),
+//};

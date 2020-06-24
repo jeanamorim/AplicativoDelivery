@@ -36,3 +36,18 @@ export const SignLinkText = styled.Text`
   font-weight: bold;
   font-size: 16px;
 `;
+export const GenderContainer = styled.View`
+  flex-direction: row;
+
+  justify-content: space-between;
+  align-self: stretch;
+`;
+
+export const GenderLabel = styled.Text`
+  font-size: 15px;
+  color: '#000';
+`;
+
+export const ButtonContainer = styled.View`
+  flex-direction: row;
+`;

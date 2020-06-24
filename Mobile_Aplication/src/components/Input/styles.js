@@ -15,7 +15,7 @@ export const Container = styled.View`
         return colors.error;
       }
       if (props.isFocused) {
-        return colors.primary;
+        return colors.finalisar;
       }
       return colors.border;
     }};

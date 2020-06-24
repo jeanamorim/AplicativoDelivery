@@ -6,7 +6,7 @@ class ProductEstabelecimentoController {
   async index(req, res) {
     const category = await Product.findAll({
       where: {
-        estabelecimento_id: req.params.id,
+        category_id: req.params.id,
       },
       attributes: ['id', 'name', 'description', 'quantity', 'unit', 'price'],
       include: [

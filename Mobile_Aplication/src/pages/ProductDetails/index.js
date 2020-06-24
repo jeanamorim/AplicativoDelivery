@@ -31,16 +31,16 @@ import {
 } from 'native-base';
 import styles from './styles';
 import api from '../../services/api';
-export default function ProductDetails({ navigation }) {
-  const productDetails = navigation.getParam('categoria');
-  const id_loja = navigation.getParam('id_loja');
+export default function ProductDetails({ navigation, route }) {
+  const { categoria, id_loja } = route.params;
+
   const [products, setProducts] = useState([]);
   const cartSize = useSelector(state => state.cart.length);
-  const id = productDetails.id;
+  const id = categoria.id;
 
   useEffect(() => {
     async function getData() {
-      const response = await api.get(`products_estab/${id}`);
+      const response = await api.get(`productsCategorias/${id}`);
       console.tron.log(response.data);
       setProducts(response.data);
     }
@@ -135,7 +135,7 @@ export default function ProductDetails({ navigation }) {
                 fontFamily: 'CerebriSans-ExtraBold',
                 fontSize: 20,
               }}>
-              {productDetails.name}
+              {categoria.name}
             </Text>
           </Body>
         </Header>

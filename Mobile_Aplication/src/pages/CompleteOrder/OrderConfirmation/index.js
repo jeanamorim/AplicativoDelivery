@@ -36,30 +36,44 @@ import {
   FooterTab,
 } from 'native-base';
 
-export default function OrderConfirmation({ navigation }) {
+export default function OrderConfirmation({ navigation, route }) {
   const [loading, setLoading] = useState(false);
   const [idloja, setIdloja] = useState([]);
-  const address = navigation.getParam('address');
-  const orderDetails = navigation.getParam('orderDetails');
-  const paymentMethod = navigation.getParam('paymentMethod');
+  const [address, setAdresses] = useState([]);
+  const { orderDetails, paymentMethod } = route.params;
 
   const userId = useSelector(state => state.user.profile.id);
+  const name = useSelector(state => state.user.profile.name);
 
   const products = useSelector(state =>
     state.cart.map(product => ({
       product_id: product.id,
-      nome: product.name,
       quantity: product.amount,
       price: product.price,
-      image_url: product.image.url,
       total: product.amount * product.price,
     })),
   );
 
   useEffect(() => {
+    async function BuscarEndereco() {
+      try {
+        const response = JSON.parse(
+          await storage.getItem('KEY_VALUE_ADRESS_ENTREGA'),
+        );
+
+        setAdresses(response[0]);
+      } catch (error) {
+        Alert.alert('Error:', error.message);
+      }
+    }
+
+    BuscarEndereco();
+  }, [setAdresses]);
+
+  useEffect(() => {
     async function loadId() {
       try {
-        const response = await storage.getItem('id_estabelecimento');
+        const response = await storage.getItem('KEY_VALUE_ID_ESTABELECIMENTO');
 
         setIdloja(response);
       } catch (err) {
@@ -75,12 +89,12 @@ export default function OrderConfirmation({ navigation }) {
   }, []);
   const deleteidEstabelecimento = async () => {
     try {
-      await storage.removeItem('id_estabelecimento');
+      await storage.removeItem('KEY_VALUE_ID_ESTABELECIMENTO');
     } catch (error) {
       console.log(error.message);
     }
   };
-
+  console.tron.log(address);
   const dispatch = useDispatch();
   async function handleSubmit() {
     try {
@@ -90,13 +104,15 @@ export default function OrderConfirmation({ navigation }) {
           user_id: userId,
           estabelecimento_id: idloja,
           status: 'PENDENTE',
-          addressee: address.addressee,
+          addressee: name,
           ship_postal_code: unformatNumber(address.postal_code),
           ship_street: address.street,
           ship_street_n: address.street_n,
           ship_neighborhood: address.neighborhood,
           ship_city: address.city,
           ship_state: address.state,
+          ship_complement: address.complement,
+          ship_reference: address.reference,
           payment_method: paymentMethod,
           payment_condition: 1,
           delivery_fee: unformatPrice(orderDetails.deliveryFee),
@@ -107,13 +123,15 @@ export default function OrderConfirmation({ navigation }) {
           user_id: userId,
           estabelecimento_id: idloja,
           status: 'PENDENTE',
-          addressee: address.addressee,
+          addressee: name,
           ship_postal_code: unformatNumber(address.postal_code),
           ship_street: address.street,
           ship_street_n: address.street_n,
           ship_neighborhood: address.neighborhood,
           ship_city: address.city,
           ship_state: address.state,
+          ship_complement: address.complement,
+          ship_reference: address.reference,
           payment_method: paymentMethod,
           payment_condition: 1,
           delivery_fee: unformatPrice(orderDetails.deliveryFee),

@@ -43,11 +43,10 @@ import {
 } from 'native-base';
 import * as CartActions from '../../store/modules/cart/actions';
 
-export default function ProductsLojas({ navigation }) {
+export default function ProductsLojas({ navigation, route }) {
   const [variacao, setVariacao] = useState([]);
-  const variacoes = navigation.getParam('variacao');
-  const produto = navigation.getParam('produto');
-  console.tron.log(produto);
+
+  const { variacoes, produto } = route.params;
   const [categorias, setCategorias] = useState([]);
   const [offers, setOffers] = useState([]);
   const id = variacoes.id;

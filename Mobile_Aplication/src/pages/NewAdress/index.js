@@ -7,11 +7,11 @@ import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Background from '../../components/Background';
 import api from '../../services/api';
-import { Button, Header, Text, Left, Body } from 'native-base';
+import { Button, Header, Text, Left, Body, Label, Select } from 'native-base';
 
 import { Container, Form, FormInput, SubmitButton } from './styles';
 
-export default function NewAdress({ navigation }) {
+export default function NewAdress({ navigation, route }) {
   const streetRef = useRef();
   const street_nRef = useRef();
   const neighborhoodRef = useRef();
@@ -30,19 +30,31 @@ export default function NewAdress({ navigation }) {
   const [reference, setReference] = useState('');
   const userId = useSelector(state => state.user.profile.id);
   const [loading, setLoading] = useState(false);
+  const [dados, setDados] = useState([]);
 
-  const dado = navigation.getParam('dados');
+  // { dados } = route.params;
+  useEffect(() => {
+    async function buscarCep() {
+      setLoading(true);
+      const response = await api.get('https://viacep.com.br/ws/49400000/json/');
+
+      setDados(response.data);
+      setLoading(false);
+    }
+
+    buscarCep();
+  }, []);
 
   async function handleSubmit() {
     setLoading(true);
     await api.post('/address_estab', {
       user_id: userId,
-      postal_code: dado.cep,
+      postal_code: 49400000,
       street,
       street_n,
       neighborhood,
-      city: dado.localidade,
-      state: dado.uf,
+      city: 'Lagarto',
+      state: 'se',
       complement,
       reference,
     });
@@ -86,6 +98,7 @@ export default function NewAdress({ navigation }) {
       <ScrollView>
         <Container>
           <Form>
+            <Label style={{ color: '#F4A460' }}>CEP</Label>
             <FormInput
               editable={false}
               style={{ marginTop: 10 }}
@@ -93,10 +106,12 @@ export default function NewAdress({ navigation }) {
               placeholder="Cep"
               returnKeyType="send"
               onSubmitEditing={() => streetRef.current.focus()}
-              value={dado.cep}
+              value={dados.cep}
               onChangeText={setPostal_code}
             />
+            <Label style={{ color: '#F4A460' }}>Rua</Label>
             <FormInput
+              required
               autoCorrect={false}
               autoCapitalize="none"
               placeholder="Rua, avenida.."
@@ -105,7 +120,9 @@ export default function NewAdress({ navigation }) {
               value={street}
               onChangeText={setStreet}
             />
+            <Label style={{ color: '#F4A460' }}>Numero</Label>
             <FormInput
+              keyboardType="numeric"
               autoCorrect={false}
               autoCapitalize="none"
               placeholder="Numero"
@@ -114,6 +131,7 @@ export default function NewAdress({ navigation }) {
               value={street_n}
               onChangeText={setStreet_n}
             />
+            <Label style={{ color: '#F4A460' }}>Bairro</Label>
             <FormInput
               autoCorrect={false}
               placeholder="Bairro"
@@ -123,6 +141,7 @@ export default function NewAdress({ navigation }) {
               value={neighborhood}
               onChangeText={setNeighborhood}
             />
+            <Label style={{ color: '#F4A460' }}>Cidade</Label>
             <FormInput
               editable={false}
               autoCorrect={false}
@@ -130,9 +149,10 @@ export default function NewAdress({ navigation }) {
               ref={cityRef}
               returnKeyType="send"
               onSubmitEditing={() => stateRef.current.focus()}
-              value={dado.localidade}
+              value={dados.localidade}
               onChangeText={setCity}
             />
+            <Label style={{ color: '#F4A460' }}>Estado</Label>
             <FormInput
               editable={false}
               autoCorrect={false}
@@ -140,9 +160,10 @@ export default function NewAdress({ navigation }) {
               ref={stateRef}
               returnKeyType="send"
               onSubmitEditing={() => complementRef.current.focus()}
-              value={dado.uf}
+              value={dados.uf}
               onChangeText={setState}
             />
+            <Label style={{ color: '#F4A460' }}>Complemento</Label>
             <FormInput
               autoCorrect={false}
               placeholder="Complemento"
@@ -152,6 +173,7 @@ export default function NewAdress({ navigation }) {
               value={complement}
               onChangeText={setComplement}
             />
+            <Label style={{ color: '#F4A460' }}>Referência</Label>
             <FormInput
               autoCorrect={false}
               placeholder="Referência"

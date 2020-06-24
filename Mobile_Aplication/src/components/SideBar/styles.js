@@ -3,7 +3,7 @@ import colors from '../../styles/colors';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
-  background: ${colors.primary};
+  background: ${colors.finalisar};
 `;
 
 export const LogoContainer = styled.View`

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icons from 'react-native-vector-icons/MaterialIcons';
-
+import Iconn from 'react-native-vector-icons/MaterialCommunityIcons';
 import api from '../../services/api';
 
 import Background from '../../components/Background';
@@ -34,23 +34,20 @@ import {
 
 import styles from './styles';
 
-export default function EstabelecimentoByCategory({ navigation }) {
+export default function EstabelecimentoByCategory({ navigation, route }) {
   const [estabelecimento, setEstabelecimento] = useState([]);
 
-  const categoryName = navigation.getParam('Name');
-
+  const { Name } = route.params;
   useEffect(() => {
     async function loadData() {
-      const response = await api.get(
-        `buscarestabelecimento?category=${categoryName}`,
-      );
+      const response = await api.get(`buscarestabelecimento?category=${Name}`);
 
       setEstabelecimento(response.data);
     }
 
     loadData();
-  }, [categoryName]);
-
+  }, [Name]);
+  console.tron.log(estabelecimento.length);
   return (
     <Background>
       <Container>
@@ -75,65 +72,84 @@ export default function EstabelecimentoByCategory({ navigation }) {
               fontFamily: 'CerebriSans-ExtraBold',
               fontSize: 20,
             }}>
-            {categoryName}
+            {Name}
           </Text>
         </Header>
-        <Content>
-          {estabelecimento.map(loja => (
-            <TouchableOpacity
-              key={loja.id}
-              onPress={() =>
-                navigation.navigate('ProductsLojas', { product: loja })
-              }>
-              <Card
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                }}>
-                <Image
-                  source={{
-                    uri:
-                      'https://www.popeyesbrasil.com.br/assets/products/hero/hero_combo_lanches.jpg',
-                  }}
+        {estabelecimento.length > 0 ? (
+          <Content>
+            {estabelecimento.map(loja => (
+              <TouchableOpacity
+                key={loja.id}
+                onPress={() =>
+                  navigation.navigate('ProductsLojas', { product: loja })
+                }>
+                <Card
                   style={{
-                    height: 110,
                     flex: 1,
-                    width: '100%',
-                  }}
-                />
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={{
+                      uri:
+                        'https://www.popeyesbrasil.com.br/assets/products/hero/hero_combo_lanches.jpg',
+                    }}
+                    style={{
+                      height: 110,
+                      flex: 1,
+                      width: '100%',
+                    }}
+                  />
 
-                <Thumbnail
-                  large
-                  source={{
-                    uri: loja.image.url.replace('localhost', '10.0.0.104'),
-                  }}
-                  style={styles.avatar}
-                />
-                <Text style={styles.nameestabelecimento}>{loja.name_loja}</Text>
+                  <Thumbnail
+                    large
+                    source={{
+                      uri: loja.image.url.replace('localhost', '10.0.0.104'),
+                    }}
+                    style={styles.avatar}
+                  />
+                  <Text style={styles.nameestabelecimento}>
+                    {loja.name_loja}
+                  </Text>
 
-                <CardItem>
-                  <Left>
-                    <Icon name="star-half-alt" size={15} color="#F4A460" />
-                    <Text note style={{ fontFamily: 'CerebriSans-Regular' }}>
-                      {loja.avaliacao}
-                    </Text>
-                  </Left>
-                  <Body>
-                    <Text>
-                      <Icon name="clock" size={15} color="#999" />
+                  <CardItem>
+                    <Left>
+                      <Icon name="star-half-alt" size={15} color="#F4A460" />
                       <Text note style={{ fontFamily: 'CerebriSans-Regular' }}>
-                        {loja.tempo_entrega} min
+                        {loja.avaliacao}
                       </Text>
-                    </Text>
-                  </Body>
-                  <Right>
-                    <Text style={styles.status}>{loja.status}</Text>
-                  </Right>
-                </CardItem>
-              </Card>
-            </TouchableOpacity>
-          ))}
-        </Content>
+                    </Left>
+                    <Body>
+                      <Text>
+                        <Icon name="clock" size={15} color="#999" />
+                        <Text
+                          note
+                          style={{ fontFamily: 'CerebriSans-Regular' }}>
+                          {loja.tempo_entrega} min
+                        </Text>
+                      </Text>
+                    </Body>
+                    <Right>
+                      <Text style={styles.status}>{loja.status}</Text>
+                    </Right>
+                  </CardItem>
+                </Card>
+              </TouchableOpacity>
+            ))}
+          </Content>
+        ) : (
+          <View
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Iconn name="emoticon-sad-outline" size={85} color="#CFCFCF" />
+            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
+              Nenhum estabelecimento por aqui ainda...
+            </Text>
+            <Text
+              onPress={() => navigation.goBack()}
+              style={{ color: '#F4A460', fontWeight: 'bold', fontSize: 16 }}>
+              Voltar
+            </Text>
+          </View>
+        )}
       </Container>
     </Background>
   );

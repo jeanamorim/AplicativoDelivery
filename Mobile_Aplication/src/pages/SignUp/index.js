@@ -15,7 +15,6 @@ import {
   SignLink,
   SignLinkText,
 } from './styles';
-import translate from '../../locales';
 
 export default function SignUp({ navigation }) {
   const dispatch = useDispatch();
@@ -53,9 +52,7 @@ export default function SignUp({ navigation }) {
           <Image source={logo} />
           <SignUpForm handleFormSubmit={handleFormSubmit} loading={loading} />
           <SignLink onPress={() => navigation.navigate('SignIn')}>
-            <SignLinkText>
-              {translate('i_already_have_an_account_button')}
-            </SignLinkText>
+            <SignLinkText>Ja tenho uma conta</SignLinkText>
           </SignLink>
         </FormContainer>
       </Container>

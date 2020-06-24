@@ -71,7 +71,7 @@ export default function SearchEstabelecimento({ navigation }) {
     return (
       <TouchableOpacity
         key={item.id}
-        onPress={() => navigation.navigate('Productsitems', { product: item })}>
+        onPress={() => navigation.navigate('ProductsLojas', { product: item })}>
         <Card
           key={item.id}
           style={{
@@ -212,9 +212,9 @@ export default function SearchEstabelecimento({ navigation }) {
     </Background>
   );
 }
-SearchEstabelecimento.navigationOptions = {
-  tabBarLabel: 'Buscar',
-  tabBarIcon: ({ tintColor }) => (
-    <Icon name="search" size={20} color={tintColor} />
-  ),
-};
+//SearchEstabelecimento.navigationOptions = {
+//tabBarLabel: 'Buscar',
+// tabBarIcon: ({ tintColor }) => (
+// <Icon name="search" size={20} color={tintColor} />
+//),
+//};

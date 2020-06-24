@@ -12,6 +12,7 @@ import Background from '../../components/Background';
 import { useSelector } from 'react-redux';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Iconn from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {
   Button,
@@ -38,7 +39,9 @@ export default function OfertasPrincipal({ navigation }) {
 
   async function gravarendereco(adress) {
     try {
-      await storage.multiSet([['enderecoprincipal', JSON.stringify(adress)]]);
+      await storage.multiSet([
+        [`KEY_VALUE_ID/${userId}`, JSON.stringify(adress)],
+      ]);
     } catch (error) {
       Alert.alert('Error:', error.message);
     }
@@ -47,7 +50,9 @@ export default function OfertasPrincipal({ navigation }) {
   useEffect(() => {
     async function BuscarEndereco() {
       try {
-        const response = JSON.parse(await storage.getItem('enderecoprincipal'));
+        const response = JSON.parse(
+          await storage.getItem(`KEY_VALUE_ID/${userId}`),
+        );
         setAdresses(response);
       } catch (error) {
         Alert.alert('Error:', error.message);
@@ -55,11 +60,13 @@ export default function OfertasPrincipal({ navigation }) {
     }
 
     BuscarEndereco();
-  }, []);
+  }, [userId]);
 
   async function AtualizaEndereco() {
     try {
-      const response = JSON.parse(await storage.getItem('enderecoprincipal'));
+      const response = JSON.parse(
+        await storage.getItem(`KEY_VALUE_ID/${userId}`),
+      );
 
       setAdresses(response);
     } catch (error) {
@@ -88,35 +95,73 @@ export default function OfertasPrincipal({ navigation }) {
 
   return (
     <Background>
-      <List style={{ backgroundColor: '#F4A460', elevation: 5, marginTop: 2 }}>
-        <ListItem avatar>
-          <Left>
-            <Text style={{ marginLeft: -10, marginTop: -30, color: '#FF0000' }}>
-              Entregar em
-            </Text>
-            <Text
-              note
-              style={{
-                marginLeft: -95,
-                marginTop: 10,
-                color: '#000000',
-              }}>
-              {`${adresses.street}, ${adresses.street_n} - ${adresses.city}`}
-            </Text>
-          </Left>
-          <Right>
-            <Icon
-              style={{ marginTop: 10, marginLeft: 20 }}
-              name="angle-down"
-              size={25}
-              color="#FF0000"
-              onPress={() => {
-                setVisible(true);
-              }}
-            />
-          </Right>
-        </ListItem>
-      </List>
+      {adresses ? (
+        <List
+          style={{ backgroundColor: '#F4A460', elevation: 5, marginTop: 2 }}>
+          <ListItem avatar>
+            <Left>
+              <Text
+                style={{ marginLeft: -10, marginTop: -30, color: '#FF0000' }}>
+                Entregar em
+              </Text>
+
+              <Text
+                note
+                style={{
+                  marginLeft: -95,
+                  marginTop: 10,
+                  color: '#000000',
+                }}>
+                {`${adresses.street}, ${adresses.street_n} - ${adresses.city}`}
+              </Text>
+            </Left>
+            <Right>
+              <Icon
+                style={{ marginTop: 10, marginLeft: 20 }}
+                name="angle-down"
+                size={25}
+                color="#FF0000"
+                onPress={() => {
+                  setVisible(true);
+                }}
+              />
+            </Right>
+          </ListItem>
+        </List>
+      ) : (
+        <List
+          style={{ backgroundColor: '#F4A460', elevation: 5, marginTop: 2 }}>
+          <ListItem avatar>
+            <Left>
+              <Text
+                style={{ marginLeft: -10, marginTop: -30, color: '#FF0000' }}>
+                Entregar em
+              </Text>
+
+              <Text
+                note
+                style={{
+                  marginLeft: -95,
+                  marginTop: 10,
+                  color: '#000000',
+                }}>
+                Você precisa cadastar um endereço.
+              </Text>
+            </Left>
+            <Right>
+              <Icon
+                style={{ marginTop: 10, marginLeft: 20 }}
+                name="angle-down"
+                size={25}
+                color="#FF0000"
+                onPress={() => {
+                  setVisible(true);
+                }}
+              />
+            </Right>
+          </ListItem>
+        </List>
+      )}
 
       <Modal isVisible={visible} style={styles.modal}>
         <View style={styles.title}>
@@ -133,7 +178,7 @@ export default function OfertasPrincipal({ navigation }) {
           <TouchableOpacity
             onPress={() => {
               setVisible(false);
-              navigation.navigate('BuscarCep');
+              navigation.navigate('NewAdress');
             }}
             style={{
               alignItems: 'center',
@@ -148,41 +193,65 @@ export default function OfertasPrincipal({ navigation }) {
           </TouchableOpacity>
         </View>
         <Content>
-          <ScrollView>
-            {endereco.map(adresse => (
-              <TouchableOpacity
+          {endereco.length > 0 ? (
+            <ScrollView>
+              {endereco.map(adresse => (
+                <TouchableOpacity
+                  key={adresse.id}
+                  onPress={() => {
+                    setVisible(false);
+                    gravarendereco(adresse);
+                    AtualizaEndereco();
+                  }}>
+                  <CardItem key={adresse.id}>
+                    <Left>
+                      <Icon name="home" size={18} color="#F4A460" />
+                      <Body>
+                        <Text style={{ fontSize: 14 }}>
+                          {`${adresse.street}, ${adresse.street_n} - ${
+                            adresse.city
+                          }`}
+                        </Text>
+                        <Text note>{adresse.neighborhood}</Text>
+                        <Text note>{adresse.complement}</Text>
+                      </Body>
+                    </Left>
+                    <TouchableOpacity
+                      style={{ backgroundColor: '#fff', marginLeft: 20 }}
+                      transparent
+                      onPress={() => handleRemove(adresse.id)}>
+                      {loading ? (
+                        <ActivityIndicator color="#F4A460" />
+                      ) : (
+                        <Icon name="trash" size={21} color="#FF0000" />
+                      )}
+                    </TouchableOpacity>
+                  </CardItem>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          ) : (
+            <View
+              style={{
+                marginTop: 200,
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Iconn name="emoticon-sad-outline" size={85} color="#CFCFCF" />
+              <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
+                Nenhum endereço para entrega cadastrado...
+              </Text>
+              <Text
                 onPress={() => {
                   setVisible(false);
-                  gravarendereco(adresse);
-                  AtualizaEndereco();
-                }}>
-                <CardItem key={adresse.id}>
-                  <Left>
-                    <Icon name="home" size={18} color="#F4A460" />
-                    <Body>
-                      <Text style={{ fontSize: 14 }}>
-                        {`${adresse.street}, ${adresse.street_n} - ${
-                          adresse.city
-                        }`}
-                      </Text>
-                      <Text note>{adresse.neighborhood}</Text>
-                      <Text note>{adresse.complement}</Text>
-                    </Body>
-                  </Left>
-                  <TouchableOpacity
-                    style={{ backgroundColor: '#fff', marginLeft: 20 }}
-                    transparent
-                    onPress={() => handleRemove(adresse.id)}>
-                    {loading ? (
-                      <ActivityIndicator color="#F4A460" />
-                    ) : (
-                      <Icon name="trash" size={21} color="#FF0000" />
-                    )}
-                  </TouchableOpacity>
-                </CardItem>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+                  navigation.navigate('NewAdress');
+                }}
+                style={{ color: '#F4A460', fontWeight: 'bold', fontSize: 16 }}>
+                Cadastar agora
+              </Text>
+            </View>
+          )}
         </Content>
 
         <TouchableOpacity style={styles.btn} onPress={() => setVisible(false)}>

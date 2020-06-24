@@ -1,5 +1,5 @@
 export default {
-  primary: '#3c8f2e',
+  primary: '#F4A460',
   white: '#fff',
   active_side_bar: '#fff',
   inactive_side_bar: '#fff',

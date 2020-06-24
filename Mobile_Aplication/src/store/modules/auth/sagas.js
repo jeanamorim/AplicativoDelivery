@@ -60,8 +60,11 @@ export function* signUp({ payload }) {
       cpf,
     });
     yield put(signUpSuccess());
-    Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
-    history.push('/SignIn');
+
+    Alert.alert(
+      'Sucesso',
+      'Cadastro realizado com sucesso! Agora so voltar a tela de login e acessar com seus dados',
+    );
   } catch (err) {
     Alert.alert(
       'Falha no cadastro',

@@ -35,9 +35,9 @@ export default function Home({ navigation }) {
   );
 }
 
-Home.navigationOptions = {
-  tabBarLabel: 'Home',
-  tabBarIcon: ({ tintColor }) => (
-    <Icon name="store-alt" size={20} color={tintColor} />
-  ),
-};
+//Home.navigationOptions = {
+//  tabBarLabel: 'Home',
+//  tabBarIcon: ({ tintColor }) => (
+//    <Icon name="store-alt" size={20} color={tintColor} />
+// ),
+//};
