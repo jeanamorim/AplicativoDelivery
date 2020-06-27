@@ -1,4 +1,4 @@
-import OpcaoVariacao from '../../models/OpcaoVariacao';
+import OpcaoVariacao from '../../models/Opcao';
 import Variacao from '../../models/Variacao';
 
 class OpcaoVariacaoEstabControllers {
@@ -12,7 +12,7 @@ class OpcaoVariacaoEstabControllers {
         {
           model: Variacao,
           as: 'variacao',
-          attributes: ['id', 'name'],
+          attributes: ['id', 'name', 'minimo', 'maximo', 'product_id'],
         },
       ],
     });

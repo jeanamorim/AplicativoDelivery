@@ -1,5 +1,6 @@
 import Variacao from '../../models/Variacao';
 import Product from '../../models/Product';
+import Opcao from '../../models/Opcao';
 
 class VariacaoProdutoControllers {
   async index(req, res) {
@@ -13,6 +14,12 @@ class VariacaoProdutoControllers {
           model: Product,
           as: 'product',
           attributes: ['id', 'name'],
+        },
+        {
+          model: Opcao,
+          as: 'opcao',
+          attributes: ['id', 'name', 'price', 'status'],
+          through: { attributes: [] },
         },
       ],
     });

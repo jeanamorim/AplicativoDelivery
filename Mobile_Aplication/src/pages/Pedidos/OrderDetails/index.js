@@ -24,7 +24,11 @@ import {
   Line,
   StatusContainer,
   LabelContainer,
-  Dot,
+  DotPendente,
+  DotProducao,
+  DotEnviado,
+  DotCancelado,
+  DotEntregue,
   Label,
   HeaderBackground,
 } from './styles';
@@ -78,26 +82,26 @@ export default function OrderDetails({ navigation, route }) {
       <Container>
         <StatusContainer>
           <LabelContainer>
-            <Dot filled={pendente} />
+            <DotPendente filled={pendente} />
             <Label>Pendente</Label>
           </LabelContainer>
 
           <LabelContainer>
-            <Dot filled={producao} />
+            <DotProducao filled={producao} />
             <Label>Produzindo</Label>
           </LabelContainer>
 
           <LabelContainer>
-            <Dot filled={enviado} />
+            <DotEnviado filled={enviado} />
             <Label>Enviado</Label>
           </LabelContainer>
 
           <LabelContainer>
-            <Dot filled={entregue} />
+            <DotEntregue filled={entregue} />
             <Label>Entregue</Label>
           </LabelContainer>
           <LabelContainer>
-            <Dot filled={cancelado} />
+            <DotCancelado filled={cancelado} />
             <Label>Rejeitado</Label>
           </LabelContainer>
         </StatusContainer>

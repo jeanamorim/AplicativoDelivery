@@ -40,14 +40,7 @@ export default function ProductsLojas({ navigation, route }) {
   const { product } = route.params;
   const cartSize = useSelector(state => state.cart.length);
   const id = product.id;
-
-  const cart = useSelector(state =>
-    state.cart.map(product => ({
-      ...product,
-      subtotal: formatPrice(product.amount * product.price),
-    })),
-  );
-
+  console.tron.log(id);
   useEffect(() => {
     async function loadId() {
       try {
@@ -166,7 +159,11 @@ export default function ProductsLojas({ navigation, route }) {
           <Separator style={styles.separator}>
             <Text style={styles.textseparator}>Categorias</Text>
           </Separator>
-          <CategoriaEstabelecimento id={id} navigation={navigation} />
+          <CategoriaEstabelecimento
+            id={id}
+            loja={product}
+            navigation={navigation}
+          />
         </Content>
       </Container>
     </Background>

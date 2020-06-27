@@ -52,9 +52,9 @@ class EstabelecimentoController {
   async index(req, res) {
     // await AdminCheckService.run({ user_id: req.userId });
 
-    const cached = await Cache.get('estabelecimento');
+    // const cached = await Cache.get('estabelecimento');
 
-    if (cached) return res.json(cached);
+    // if (cached) return res.json(cached);
 
     const estabelecimento = await Estabelecimento.findAll({
       attributes: [
@@ -80,7 +80,7 @@ class EstabelecimentoController {
       ],
     });
 
-    await Cache.set('estabelecimento', estabelecimento);
+    // await Cache.set('estabelecimento', estabelecimento);
 
     return res.json(estabelecimento);
   }

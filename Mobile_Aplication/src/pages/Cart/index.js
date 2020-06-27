@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { TouchableOpacity, Image, Text, View } from 'react-native';
+import { TouchableOpacity, Image, Text, View, Alert } from 'react-native';
 import Background from '../../components/Background';
 import translate from '../../locales';
 import Icons from 'react-native-vector-icons/FontAwesome5';
@@ -70,7 +70,7 @@ export default function Cart({ navigation }) {
       subtotal: formatPrice(product.amount * product.price),
     })),
   );
-  console.tron.log(cart);
+
   const subtotal = useSelector(state =>
     formatPrice(
       state.cart.reduce((totalSum, product) => {
@@ -133,30 +133,6 @@ export default function Cart({ navigation }) {
 
   return (
     <Background>
-      <Header style={{ backgroundColor: '#F4A460', height: 50 }}>
-        <Left>
-          <Button transparent>
-            <Icon
-              color="#fff"
-              size={25}
-              name="arrow-back"
-              onPress={() => navigation.navigate('ProductsLojas')}
-            />
-          </Button>
-        </Left>
-        <Body>
-          <Text
-            style={{
-              marginLeft: 20,
-              marginTop: 4,
-              color: '#fff',
-              fontFamily: 'CerebriSans-ExtraBold',
-              fontSize: 20,
-            }}>
-            Seu carrinho
-          </Text>
-        </Body>
-      </Header>
       {cart.length > 0 ? (
         <Container>
           <ProductList
@@ -213,6 +189,38 @@ export default function Cart({ navigation }) {
               </ProductContainer>
             )}
           />
+          <Button
+            onPress={() =>
+              Alert.alert(
+                'Tem certeza que deseja remover todos itens do seu carrinho?',
+                '=)',
+                [
+                  {
+                    text: 'Não',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'Sim',
+                    onPress: () => dispatch(CartActions.EmptyCart()),
+                  },
+                ],
+                { cancelable: false },
+              )
+            }
+            style={{
+              height: 25,
+              borderRadius: 7,
+              alignSelf: 'center',
+              backgroundColor: '#fff',
+              borderColor: '#FF0000',
+              borderWidth: 1,
+            }}>
+            <Text style={{ alignSelf: 'center', color: '#FF0000' }}>
+              Esvaziar carrinho
+            </Text>
+          </Button>
+
           <CartTotal>
             <CartTotalLabel>SUB-TOTAL</CartTotalLabel>
             <CartTotalValue>{total}</CartTotalValue>

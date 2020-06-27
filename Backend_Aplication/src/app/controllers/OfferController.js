@@ -6,7 +6,7 @@ import File from '../models/File';
 import Category from '../models/Category';
 import Estabelecimento from '../models/Estabelecimento';
 
-import Cache from '../../lib/Cache';
+// import Cache from '../../lib/Cache';
 
 // mport AdminCheckService from '../../services/AdminCheckService';
 
@@ -103,9 +103,9 @@ class OfferController {
       to,
     } = await offer.update(req.body);
 
-    await Cache.invalidate('offers');
+    // //await Cache.invalidate('offers');
 
-    await Cache.invalidate('products');
+    // await Cache.invalidate('products');
 
     return res.json({
       id,
@@ -126,7 +126,7 @@ class OfferController {
       },
     });
 
-    await Cache.invalidate('offers');
+    // await Cache.invalidate('offers');
 
     return res.json();
   }

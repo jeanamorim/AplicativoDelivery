@@ -31,7 +31,7 @@ import ValorTotalPedidoCntrollers from './app/controllers/ValorTotalPedidosContr
 import RelatorioPedidosData from './app/controllers/RelatorioPedidosDataControlers';
 import FreteController from './app/controllers/FreteController';
 import VariacaoControllers from './app/controllers/VariacaoController';
-import OpcaoVariacaoControllers from './app/controllers/OpcaoVariacaoController';
+import OpcaoControllers from './app/controllers/OpcaoController';
 import EstabelecimentoControllers from './app/controllers/EstabelecimentoController';
 import SessionEstabelecimentoController from './app/controllers/SessionEstabelecimentoController';
 import OfertasEstabelecimento from './app/controllers/ControllersMobile/OfertasestabelecimentoControllers';
@@ -212,10 +212,10 @@ routes.get('/variacao', VariacaoControllers.index);
 routes.put('/variacao/:id', VariacaoControllers.update);
 routes.delete('/variacao/:id', VariacaoControllers.delete);
 
-routes.post('/opcaovariacao', OpcaoVariacaoControllers.store);
-routes.get('/opcaovariacao', OpcaoVariacaoControllers.index);
-routes.put('/opcaovariacao/:id', OpcaoVariacaoControllers.update);
-routes.delete('/opcaovariacao/:id', OpcaoVariacaoControllers.delete);
+routes.post('/opcaovariacao', OpcaoControllers.store);
+routes.get('/opcaovariacao', OpcaoControllers.index);
+routes.put('/opcaovariacao/:id', OpcaoControllers.update);
+routes.delete('/opcaovariacao/:id', OpcaoControllers.delete);
 
 routes.get('/invalidate/all', async (req, res) => {
   await Cache.invalidateAll();

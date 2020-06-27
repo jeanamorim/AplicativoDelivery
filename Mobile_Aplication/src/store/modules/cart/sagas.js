@@ -3,7 +3,7 @@ import { select, put, all, takeLatest } from 'redux-saga/effects';
 import { addToCartSuccess, updateAmountSuccess } from './actions';
 
 function* addToCart({ payload }) {
-  const { product } = payload;
+  const { product, quantidade } = payload;
 
   const productExists = yield select(state =>
     state.cart.find(p => p.id === product.id),
@@ -32,7 +32,7 @@ function* addToCart({ payload }) {
   } else {
     const data = {
       ...product,
-      amount: 1,
+      amount: quantidade,
     };
 
     yield put(addToCartSuccess(data));

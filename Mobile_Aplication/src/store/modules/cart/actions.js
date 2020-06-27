@@ -1,14 +1,14 @@
-export function addToCartRequest(product) {
+export function addToCartRequest(product, quantidade) {
   return {
     type: '@cart/ADD_REQUEST',
-    payload: { product },
+    payload: { product, quantidade },
   };
 }
 
-export function addToCartSuccess(product) {
+export function addToCartSuccess(product, quantidade) {
   return {
     type: '@cart/ADD_SUCCESS',
-    payload: { product },
+    payload: { product, quantidade },
   };
 }
 

@@ -10,7 +10,7 @@ import { Button, Text, Body, CardItem, Thumbnail, View } from 'native-base';
 import api from '../../services/api';
 import { formatPrice } from '../../util/format';
 
-export default function OfertasPrincipal({ navigation, id }) {
+export default function OfertasPrincipal({ navigation, id, loja }) {
   const [categorias, setCategorias] = useState([]);
 
   const amount = useSelector(state =>
@@ -36,7 +36,7 @@ export default function OfertasPrincipal({ navigation, id }) {
           onPress={() =>
             navigation.navigate('ProductDetails', {
               categoria: item,
-              id_loja: id,
+              estabelecimento: loja,
             })
           }>
           <Thumbnail

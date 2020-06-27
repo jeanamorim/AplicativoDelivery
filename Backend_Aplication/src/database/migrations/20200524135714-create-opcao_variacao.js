@@ -1,6 +1,6 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('opcao_variacao', {
+    return queryInterface.createTable('opcao', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -11,16 +11,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      variacao_id: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        references: {
-          model: 'variacao',
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
+
       price: {
         type: Sequelize.FLOAT,
         allowNull: false,
@@ -41,6 +32,6 @@ module.exports = {
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable('opcao_variacao');
+    return queryInterface.dropTable('opcao');
   },
 };

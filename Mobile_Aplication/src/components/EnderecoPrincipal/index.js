@@ -131,7 +131,7 @@ export default function OfertasPrincipal({ navigation }) {
       ) : (
         <List
           style={{ backgroundColor: '#F4A460', elevation: 5, marginTop: 2 }}>
-          <ListItem avatar>
+          <ListItem avatarz>
             <Left>
               <Text
                 style={{ marginLeft: -10, marginTop: -30, color: '#FF0000' }}>

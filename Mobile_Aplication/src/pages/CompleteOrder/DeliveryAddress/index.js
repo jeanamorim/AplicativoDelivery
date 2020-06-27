@@ -57,30 +57,6 @@ export default function DeliveryAddress({ navigation, route }) {
 
   return (
     <Background>
-      <Header style={{ backgroundColor: '#F4A460', height: 50 }}>
-        <Left>
-          <Button transparent>
-            <Icon
-              color="#fff"
-              size={25}
-              name="arrow-back"
-              onPress={() => navigation.navigate('ProductsLojas')}
-            />
-          </Button>
-        </Left>
-        <Body>
-          <Text
-            style={{
-              marginLeft: 20,
-              marginTop: 4,
-              color: '#fff',
-              fontFamily: 'CerebriSans-ExtraBold',
-              fontSize: 20,
-            }}>
-            Seu carrinho
-          </Text>
-        </Body>
-      </Header>
       <Container>
         <View
           style={{
@@ -88,6 +64,7 @@ export default function DeliveryAddress({ navigation, route }) {
             height: 50,
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
+            elevation: 5,
           }}>
           <Text
             style={{
@@ -127,7 +104,7 @@ export default function DeliveryAddress({ navigation, route }) {
                     });
                     gravarendereco(endereco);
                   }}>
-                  <CardItem style={{ marginTop: 50 }}>
+                  <CardItem style={{ marginTop: 30 }}>
                     <Left>
                       <Icon name="home" size={18} color="#F4A460" />
                       <Body>

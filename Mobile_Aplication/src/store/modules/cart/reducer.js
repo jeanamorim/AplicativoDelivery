@@ -7,8 +7,10 @@ export default function cart(state = INITIAL_STATE, action) {
     switch (action.type) {
       case '@cart/ADD_SUCCESS': {
         draft.push(action.payload.product);
+
         break;
       }
+
       //remove do carrinho
       case '@cart/REMOVE': {
         const productIndex = draft.findIndex(p => p.id === action.payload.id);

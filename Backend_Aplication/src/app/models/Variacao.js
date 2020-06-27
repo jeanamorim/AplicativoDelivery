@@ -21,6 +21,11 @@ class Variacao extends Model {
       as: 'product',
       foreignKey: 'product_id',
     });
+    this.belongsToMany(models.Opcao, {
+      through: 'OpcaoVariacao',
+      as: 'opcao',
+      foreignKey: 'variacao_id',
+    });
   }
 }
 

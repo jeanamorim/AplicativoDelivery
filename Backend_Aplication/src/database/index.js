@@ -14,7 +14,7 @@ import Setting from '../app/models/Setting';
 import Estabelecimento from '../app/models/Estabelecimento';
 import Variacao from '../app/models/Variacao';
 import Frete from '../app/models/Frete';
-import Opcao_variacao from '../app/models/OpcaoVariacao';
+import Opcao from '../app/models/Opcao';
 
 import databaseConfig from '../config/database';
 
@@ -33,7 +33,7 @@ const models = [
   Estabelecimento,
   Variacao,
   Frete,
-  Opcao_variacao,
+  Opcao,
 ];
 
 class Database {

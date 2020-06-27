@@ -1,6 +1,6 @@
 import Sequelize, { Model } from 'sequelize';
 
-class OpcaoVariacao extends Model {
+class Opcao extends Model {
   static init(connection) {
     super.init(
       {
@@ -17,11 +17,12 @@ class OpcaoVariacao extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Variacao, {
-      as: 'variacao',
-      foreignKey: 'variacao_id',
+    this.belongsToMany(models.Variacao, {
+      through: 'OpcaoVariacao',
+      as: 'opcao',
+      foreignKey: 'opcao_id',
     });
   }
 }
 
-export default OpcaoVariacao;
+export default Opcao;

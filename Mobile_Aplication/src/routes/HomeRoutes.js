@@ -11,7 +11,7 @@ import PaymentMethod from '../pages/CompleteOrder/PaymentMethod';
 import PaymentResult from '../pages/CompleteOrder/PaymentResult';
 import OrderConfirmation from '../pages/CompleteOrder/OrderConfirmation';
 import ProductDetails from '../pages/ProductDetails';
-import DetalhesItens from '../pages/DetalhesItem';
+import DetalhesItens from '../pages/DetalhesItens';
 import Search from '../pages/Search';
 import Variacao from '../pages/Variacao';
 import NewAdress from '../pages/NewAdress';
@@ -28,7 +28,7 @@ export default function Delivery() {
         headerTitleAlign: 'center',
         headerTintColor: '#FFF',
         headerTitleStyle: {fontSize: 18},
-        headerTransparent: true,
+        headerTransparent: false,
 
 
       }}
@@ -67,9 +67,11 @@ export default function Delivery() {
 
         })}
         options={{
-          title: 'Carrinho',
-
-
+          title: 'Seu carrinho',
+          headerStyle: {
+          backgroundColor: '#f4a460',
+          },
+          headerTintColor: '#fff',
         }}
 
         name="Cart"
@@ -80,7 +82,11 @@ export default function Delivery() {
           onPress: navigation.goBack(),
         })}
         options={{
-          title: 'Detalhes do produto',
+          title: 'Produtos',
+          headerStyle: {
+          backgroundColor: '#f4a460',
+          },
+          headerTintColor: '#fff',
         }}
         name="ProductDetails"
         component={ProductDetails}
@@ -90,7 +96,11 @@ export default function Delivery() {
           onPress: navigation.goBack(),
         })}
         options={{
-          title: 'Detalhes dos itens',
+          title: 'Detalhes do item',
+          headerStyle: {
+          backgroundColor: '#f4a460',
+          },
+          headerTintColor: '#fff',
         }}
         name="DetalhesItens"
         component={DetalhesItens}
@@ -110,7 +120,11 @@ export default function Delivery() {
           onPress: navigation.goBack(),
         })}
         options={{
-          title: 'variacao do produto',
+          title: 'Selecione a variação ',
+          headerStyle: {
+          backgroundColor: '#f4a460',
+          },
+          headerTintColor: '#fff',
         }}
         name="Variacao"
         component={Variacao}
@@ -120,7 +134,11 @@ export default function Delivery() {
           onPress: navigation.goBack(),
         })}
         options={{
-          title: 'Endereços',
+          title: 'Selecione seu endereço',
+          headerStyle: {
+          backgroundColor: '#f4a460',
+          },
+          headerTintColor: '#fff',
         }}
         name="DeliveryAddress"
         component={DeliveryAddress}
@@ -130,7 +148,11 @@ export default function Delivery() {
           onPress: navigation.goBack(),
         })}
         options={{
-          title: 'pagamento',
+          title: 'Selecione seu pagamento',
+          headerStyle: {
+          backgroundColor: '#f4a460',
+          },
+          headerTintColor: '#fff',
         }}
         name="PaymentMethod"
         component={PaymentMethod}
@@ -140,17 +162,20 @@ export default function Delivery() {
           onPress: navigation.goBack(),
         })}
         options={{
-          title: 'Comfirmacao',
+          title: 'Comfirme seu pedido',
+          headerStyle: {
+          backgroundColor: '#f4a460',
+          },
+          headerTintColor: '#fff',
         }}
         name="OrderConfirmation"
         component={OrderConfirmation}
       />
        <Stack.Screen
-        headerLeft={({navigation}) => ({
-          onPress: navigation.goBack(),
-        })}
+
         options={{
           title: 'Resultado',
+          headerShown: false,
         }}
         name="PaymentResult"
         component={PaymentResult}

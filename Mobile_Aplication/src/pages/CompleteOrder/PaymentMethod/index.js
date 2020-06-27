@@ -44,30 +44,6 @@ export default function PaymentMethod({ navigation, route }) {
 
   return (
     <Wrapper>
-      <Header style={{ backgroundColor: '#F4A460', height: 50 }}>
-        <Left>
-          <Button transparent>
-            <Icon
-              color="#fff"
-              size={25}
-              name="arrow-back"
-              onPress={() => navigation.navigate('ProductsLojas')}
-            />
-          </Button>
-        </Left>
-        <Body>
-          <Text
-            style={{
-              marginLeft: 20,
-              marginTop: 4,
-              color: '#fff',
-              fontFamily: 'CerebriSans-ExtraBold',
-              fontSize: 20,
-            }}>
-            Seu carrinho
-          </Text>
-        </Body>
-      </Header>
       <Container>
         <PaymentMethodContainer>
           <CashPayment onPress={() => setMethodSelected('DINHEIRO')}>

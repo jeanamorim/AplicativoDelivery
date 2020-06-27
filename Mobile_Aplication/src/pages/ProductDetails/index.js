@@ -32,8 +32,8 @@ import {
 import styles from './styles';
 import api from '../../services/api';
 export default function ProductDetails({ navigation, route }) {
-  const { categoria, id_loja } = route.params;
-
+  const { categoria, estabelecimento } = route.params;
+  console.tron.log(estabelecimento);
   const [products, setProducts] = useState([]);
   const cartSize = useSelector(state => state.cart.length);
   const id = categoria.id;
@@ -61,7 +61,7 @@ export default function ProductDetails({ navigation, route }) {
                     onPress={() =>
                       navigation.navigate('DetalhesItens', {
                         produtoDetails: produtos,
-                        id_estabelecimento: id_loja,
+                        estabelecimento: estabelecimento,
                       })
                     }>
                     <Left>
@@ -115,31 +115,6 @@ export default function ProductDetails({ navigation, route }) {
   return (
     <Background>
       <Container>
-        <Header style={{ backgroundColor: '#F4A460', height: 50 }}>
-          <Left>
-            <Button transparent>
-              <Icon
-                color="#fff"
-                size={25}
-                name="arrow-back"
-                onPress={() => navigation.navigate('ProductsLojas')}
-              />
-            </Button>
-          </Left>
-          <Body>
-            <Text
-              style={{
-                marginLeft: 33,
-                marginTop: 4,
-                color: '#fff',
-                fontFamily: 'CerebriSans-ExtraBold',
-                fontSize: 20,
-              }}>
-              {categoria.name}
-            </Text>
-          </Body>
-        </Header>
-
         <RenderProdutos />
       </Container>
 

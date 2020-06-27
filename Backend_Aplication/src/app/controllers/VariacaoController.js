@@ -1,19 +1,24 @@
 import Product from '../models/Product';
 import Variacao from '../models/Variacao';
+import Opcao from '../models/Opcao';
 
 // import AdminCheckService from '../../services/AdminCheckService';
 
 class VariacaoController {
   async store(req, res) {
     // await AdminCheckService.run({ user_id: req.userId });
-    const { name, minimo, maximo, product_id } = req.body;
+    const { name, minimo, maximo, product_id, opcao } = req.body;
 
     const variacao = await Variacao.create({
       product_id,
       name,
       minimo,
       maximo,
+      opcao,
     });
+    if (opcao && opcao.length > 0) {
+      variacao.setOpcao(opcao);
+    }
 
     return res.json(variacao);
   }
@@ -27,6 +32,12 @@ class VariacaoController {
           as: 'product',
           attributes: ['id', 'name'],
         },
+        {
+          model: Opcao,
+          as: 'opcao',
+          attributes: ['id', 'name', 'price', 'status'],
+          through: { attributes: [] },
+        },
       ],
     });
 
@@ -38,13 +49,17 @@ class VariacaoController {
   async update(req, res) {
     // await AdminCheckService.run({ user_id: req.userId });
 
-    const variacao = await Variacao.findByPk(req.params.id);
+    const { id } = req.params;
+    const post = await Variacao.findByPk(id);
 
-    const { id, name, minimo, maximo, product_id } = await variacao.update(
-      req.body,
-    );
+    const { opcao, ...data } = req.body;
+    post.update(data);
 
-    return res.json({ id, name, minimo, maximo, product_id });
+    if (opcao && opcao.length > 0) {
+      post.setOpcao(opcao);
+    }
+
+    return res.json(post);
   }
 
   async delete(req, res) {
