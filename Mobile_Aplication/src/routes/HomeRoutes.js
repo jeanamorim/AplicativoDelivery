@@ -10,6 +10,7 @@ import DeliveryAddress from '../pages/CompleteOrder/DeliveryAddress';
 import PaymentMethod from '../pages/CompleteOrder/PaymentMethod';
 import PaymentResult from '../pages/CompleteOrder/PaymentResult';
 import OrderConfirmation from '../pages/CompleteOrder/OrderConfirmation';
+import Troco from '../pages/CompleteOrder/Troco';
 import ProductDetails from '../pages/ProductDetails';
 import DetalhesItens from '../pages/DetalhesItens';
 import Search from '../pages/Search';
@@ -29,8 +30,7 @@ export default function Delivery() {
         headerTintColor: '#FFF',
         headerTitleStyle: {fontSize: 18},
         headerTransparent: false,
-
-
+        tabBarVisible: false,
       }}
       initialRouteName="Home">
       <Stack.Screen
@@ -39,24 +39,29 @@ export default function Delivery() {
         options={{
           headerShown: false,
         }}
+
       />
       <Stack.Screen
         headerLeft={({navigation}) => ({
           onPress: navigation.goBack(),
         })}
         options={{
-          title: 'estabelecimento',
+          title: null,
+          headerStyle: {
+          backgroundColor: '#f4a460',
+          },
+          headerTintColor: '#fff',
         }}
         name="EstabelecimentoByCategory"
         component={EstabelecimentoByCategory}
       />
       <Stack.Screen
+
         headerLeft={({navigation}) => ({
           onPress: navigation.goBack(),
         })}
         options={{
-        headerShown: false,
-
+          headerShown: false,
         }}
         name="ProductsLojas"
         component={ProductsLojas}
@@ -67,7 +72,7 @@ export default function Delivery() {
 
         })}
         options={{
-          title: 'Seu carrinho',
+          title: 'Meu pedido',
           headerStyle: {
           backgroundColor: '#f4a460',
           },
@@ -110,7 +115,11 @@ export default function Delivery() {
           onPress: navigation.goBack(),
         })}
         options={{
-          title: 'buscar produto',
+          title: 'Buscar produtos',
+          headerStyle: {
+          backgroundColor: '#f4a460',
+          },
+          headerTintColor: '#fff',
         }}
         name="Search"
         component={Search}
@@ -157,6 +166,20 @@ export default function Delivery() {
         name="PaymentMethod"
         component={PaymentMethod}
       />
+        <Stack.Screen
+        headerLeft={({navigation}) => ({
+          onPress: navigation.goBack(),
+        })}
+        options={{
+          title: null,
+          headerStyle: {
+          backgroundColor: '#f4a460',
+          },
+          headerTintColor: '#fff',
+        }}
+        name="Troco"
+        component={Troco}
+      />
        <Stack.Screen
         headerLeft={({navigation}) => ({
           onPress: navigation.goBack(),
@@ -195,7 +218,11 @@ export default function Delivery() {
           onPress: navigation.goBack(),
         })}
         options={{
-          title: 'Novo endereço',
+          title: 'Endereço para entrega',
+          headerStyle: {
+          backgroundColor: '#f4a460',
+          },
+          headerTintColor: '#fff',
         }}
         name="NewAdress"
         component={NewAdress}

@@ -19,13 +19,16 @@ import api from '../../services/api';
 
 export default function EstabelecimentoPrincipal({ navigation }) {
   const [estabelecimento, setEstabelecimento] = useState([]);
+
   useEffect(() => {
     async function loadEstabelecimentos() {
       const response = await api.get('estabelecimento');
+
       setEstabelecimento(response.data);
     }
     loadEstabelecimentos();
   }, []);
+
   return (
     <Background>
       {estabelecimento.map(loja => (
@@ -76,7 +79,11 @@ export default function EstabelecimentoPrincipal({ navigation }) {
                 </Text>
               </Body>
               <Right>
-                <Text style={styles.status}>{loja.status}</Text>
+                {loja.status === 'ABERTO' ? (
+                  <Text style={styles.statusAberto}>{loja.status}</Text>
+                ) : (
+                  <Text style={styles.statusFechado}>{loja.status}</Text>
+                )}
               </Right>
             </CardItem>
           </Card>

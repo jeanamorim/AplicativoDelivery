@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { format, parseISO } from 'date-fns';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import Icons from 'react-native-vector-icons/MaterialIcons';
+
 import Iconn from 'react-native-vector-icons/MaterialCommunityIcons';
 import translate, { dateLanguage } from '../../../locales';
 import { TouchableOpacity, ScrollView } from 'react-native';
@@ -29,7 +29,11 @@ import {
   DotEnviado,
   DotCancelado,
   DotEntregue,
-  Label,
+  LabelPendente,
+  LabelProducao,
+  LabelEnviado,
+  LabelEntregue,
+  LabelCancelado,
   HeaderBackground,
 } from './styles';
 import {
@@ -45,9 +49,8 @@ import {
   FooterTab,
   Right,
 } from 'native-base';
-import colors from '../../../styles/colors';
+
 export default function OrderDetails({ navigation, route }) {
-  const [tableData, setTableData] = useState({});
   const [orderDetails, setOrderDetails] = useState({});
   const pendente = orderDetails.status === 'PENDENTE' ? 'PENDENTE' : null;
   const producao = orderDetails.status === 'PRODUCAO' ? 'PRODUCAO' : null;
@@ -55,6 +58,7 @@ export default function OrderDetails({ navigation, route }) {
   const entregue = orderDetails.status === 'ENTREGUE' ? 'ENTREGUE' : null;
   const cancelado = orderDetails.status === 'CANCELADO' ? 'CANCELADO' : null;
   const { order } = route.params;
+  console.tron.log(order);
   useEffect(() => {
     const orderDetailsFormatted = {
       ...order,
@@ -62,19 +66,7 @@ export default function OrderDetails({ navigation, route }) {
         locale: dateLanguage,
       }),
     };
-
     setOrderDetails(orderDetailsFormatted);
-
-    const tableHeader = ['Nome', 'Quantidade', 'Preço'];
-
-    const tableRows = orderDetailsFormatted.order_details.map(order => [
-      order.product.name,
-      order.quantity,
-
-      formatPrice(order.total),
-    ]);
-
-    setTableData({ tableHeader, tableRows });
   }, [navigation, order]);
 
   return (
@@ -82,82 +74,165 @@ export default function OrderDetails({ navigation, route }) {
       <Container>
         <StatusContainer>
           <LabelContainer>
-            <DotPendente filled={pendente} />
-            <Label>Pendente</Label>
+            <DotPendente filled={pendente}>
+              <Icon
+                size={40}
+                name="clipboard-list"
+                color="#000"
+                style={{ alignSelf: 'center', marginTop: 6 }}
+              />
+            </DotPendente>
+            {pendente === null ? (
+              <LabelPendente />
+            ) : (
+              <LabelPendente>Pendente</LabelPendente>
+            )}
           </LabelContainer>
 
           <LabelContainer>
-            <DotProducao filled={producao} />
-            <Label>Produzindo</Label>
+            <DotProducao filled={producao}>
+              <Icon
+                size={40}
+                name="house-damage"
+                color="#000"
+                style={{ alignSelf: 'center', marginTop: 6 }}
+              />
+            </DotProducao>
+            {producao === null ? (
+              <LabelProducao />
+            ) : (
+              <LabelProducao>Produção</LabelProducao>
+            )}
           </LabelContainer>
 
           <LabelContainer>
-            <DotEnviado filled={enviado} />
-            <Label>Enviado</Label>
+            <DotEnviado filled={enviado}>
+              <Icon
+                size={40}
+                name="motorcycle"
+                color="#000"
+                style={{ alignSelf: 'center', marginTop: 6 }}
+              />
+            </DotEnviado>
+            {enviado === null ? (
+              <LabelEnviado />
+            ) : (
+              <LabelEnviado>Enviado</LabelEnviado>
+            )}
           </LabelContainer>
 
           <LabelContainer>
-            <DotEntregue filled={entregue} />
-            <Label>Entregue</Label>
+            <DotEntregue filled={entregue}>
+              <Icon
+                size={40}
+                name="check"
+                color="#000"
+                style={{ alignSelf: 'center', marginTop: 6 }}
+              />
+            </DotEntregue>
+
+            {entregue === null ? (
+              <LabelEntregue />
+            ) : (
+              <LabelEntregue>Entregue</LabelEntregue>
+            )}
           </LabelContainer>
           <LabelContainer>
-            <DotCancelado filled={cancelado} />
-            <Label>Rejeitado</Label>
+            <DotCancelado filled={cancelado}>
+              <Icon
+                size={40}
+                name="times"
+                color="#000"
+                style={{ alignSelf: 'center', marginTop: 6 }}
+              />
+            </DotCancelado>
+            {cancelado === null ? (
+              <LabelCancelado />
+            ) : (
+              <LabelCancelado>Cancelado</LabelCancelado>
+            )}
           </LabelContainer>
         </StatusContainer>
-
         <ScrollView>
-          <HeaderBackground />
-          <DetailsCard orderDetails={orderDetails} />
-          <Card style={{ elevation: 3 }}>
-            <CardHeader>
-              <Icons size={25} name="event" color="#F4A460" />
-              <CardTitle>Situação da entrega e produtos</CardTitle>
-            </CardHeader>
-            <DateRow>
-              <DateContainer>
-                <Title>Status</Title>
-                <Subtitle>{orderDetails.status}</Subtitle>
-              </DateContainer>
+          <ListItem>
+            <Icon
+              size={40}
+              name="phone"
+              color="#00ff00"
+              style={{ alignSelf: 'center', marginTop: 6 }}
+            />
 
-              <DateContainer>
-                <Title>Estabelecimento</Title>
-                <Subtitle>ok</Subtitle>
-              </DateContainer>
-            </DateRow>
-
-            <DateRow>
-              <Table
-                header={tableData.tableHeader}
-                rows={tableData.tableRows}
+            <Text style={{ marginLeft: 10 }}>Ligar para o estabelecimento</Text>
+          </ListItem>
+          <ListItem>
+            <Thumbnail
+              source={{
+                uri: order.estabelecimento.image.url.replace(
+                  'localhost',
+                  '10.0.0.104',
+                ),
+              }}
+            />
+            <Body>
+              <Text style={{ marginLeft: 10 }}>
+                {order.estabelecimento.name_loja}
+              </Text>
+            </Body>
+          </ListItem>
+          <Left>
+            <Text>Pedido N° {order.id}</Text>
+          </Left>
+          <Text style={{ marginLeft: 5 }}>PRODUTOS</Text>
+          {order.order_details.map(item => (
+            <ListItem key={item.id}>
+              <Text>{item.quantity}x</Text>
+              <Thumbnail
+                small
+                source={{
+                  uri: order.estabelecimento.image.url.replace(
+                    'localhost',
+                    '10.0.0.104',
+                  ),
+                }}
               />
-            </DateRow>
-          </Card>
-
-          <Card style={{ elevation: 3 }}>
-            <CardHeader>
-              <Icons size={25} name="event" color="#F4A460" />
-              <CardTitle>Totais e pagamentos</CardTitle>
-            </CardHeader>
-
-            <DateRow>
-              <DateContainer>
-                <Subtitle>Produtos</Subtitle>
-                <Subtitle>Entrega</Subtitle>
-                <Subtitle>Total</Subtitle>
-                <Subtitle>Pagamento</Subtitle>
-              </DateContainer>
-
-              <DateContainer>
-                <Subtitle>{formatPrice(orderDetails.subtotal)}</Subtitle>
-                <Subtitle>{formatPrice(orderDetails.delivery_fee)}</Subtitle>
-                <Subtitle>{formatPrice(orderDetails.total)}</Subtitle>
-                <Subtitle>{orderDetails.payment_method}</Subtitle>
-              </DateContainer>
-            </DateRow>
-            <Title>Realizada em</Title>
-            <Subtitle>{orderDetails.dateFormatted}</Subtitle>
-          </Card>
+              <Body>
+                <Text style={{ marginLeft: 10 }}>{item.product.name}</Text>
+              </Body>
+              <Right>
+                <Text>{formatPrice(item.product.price)}</Text>
+              </Right>
+            </ListItem>
+          ))}
+          <Text style={{ marginLeft: 5 }}>ENTREGA</Text>
+          <ListItem>
+            <Body>
+              <Text note style={{ fontSize: 14 }}>
+                {`${order.ship_neighborhood}, ${order.ship_city} - ${
+                  order.ship_street_n
+                }`}
+              </Text>
+              <Text note>{order.ship_complement}</Text>
+              <Text note>{order.ship_reference}</Text>
+            </Body>
+          </ListItem>
+          <Text style={{ marginLeft: 5 }}>TOTAIS E PAGAMENTOS</Text>
+          <ListItem>
+            <Body>
+              <Text note>Produtos</Text>
+              <Text note>Entrega</Text>
+              <Text>Total</Text>
+              <Text>Pagamento</Text>
+            </Body>
+            <Right>
+              <Text note>{formatPrice(order.subtotal)}</Text>
+              <Text note>{formatPrice(order.delivery_fee)}</Text>
+              <Text>{formatPrice(order.total)}</Text>
+              <Text>{order.payment_method}</Text>
+            </Right>
+          </ListItem>
+          <Text note style={{ marginLeft: 10 }}>
+            Pedido realizado em {orderDetails.dateFormatted}
+          </Text>
         </ScrollView>
       </Container>
     </Background>

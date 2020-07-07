@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   ScrollView,
   TouchableOpacity,
@@ -39,8 +40,12 @@ export default function DeliveryAddress({ navigation, route }) {
       await storage.multiSet([
         ['KEY_VALUE_ADRESS_ENTREGA', JSON.stringify(endereco)],
       ]);
-    } catch (error) {
-      Alert.alert('Error:', error.message);
+    } catch (err) {
+      if (err.response) {
+        console.tron.log('Erro no servidor');
+      } else {
+        console.tron.log('Falha ao conectar com o servidor');
+      }
     }
   }
 
@@ -54,6 +59,10 @@ export default function DeliveryAddress({ navigation, route }) {
 
     checkHaveAddress();
   }, [userId]);
+
+  //useEffect(() => {
+  //  setTimeout(() => setIsVisible(true), 2000);
+  // }, []);
 
   return (
     <Background>
@@ -102,9 +111,9 @@ export default function DeliveryAddress({ navigation, route }) {
                     navigation.navigate('PaymentMethod', {
                       orderDetails,
                     });
-                    gravarendereco(endereco);
+                    gravarendereco(adresse);
                   }}>
-                  <CardItem style={{ marginTop: 30 }}>
+                  <CardItem style={{ marginTop: 2 }}>
                     <Left>
                       <Icon name="home" size={18} color="#F4A460" />
                       <Body>
@@ -115,9 +124,16 @@ export default function DeliveryAddress({ navigation, route }) {
                         </Text>
                         <Text note>{adresse.neighborhood}</Text>
                         <Text note>{adresse.complement}</Text>
+                        <Text style={{ color: '#F4A460' }}>
+                          Frete: R$ 10,00
+                        </Text>
                       </Body>
                     </Left>
-                    <Text style={{ color: '#F4A460' }}>Selecionar</Text>
+                    {loading ? (
+                      <ActivityIndicator color="#F4A460" />
+                    ) : (
+                      <Text style={{ color: '#F4A460' }}>Selecionar</Text>
+                    )}
                   </CardItem>
                 </TouchableOpacity>
               ))}

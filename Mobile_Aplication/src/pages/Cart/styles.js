@@ -48,7 +48,7 @@ export const Title = styled.Text`
 `;
 
 export const Value = styled.Text`
-  font-size: 12px;
+  font-size: 15px;
   color: #222;
 `;
 
@@ -77,7 +77,7 @@ export const Amount = styled.Text`
 
 export const CartItemTotalValue = styled.Text`
   color: #f4a460;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
 `;
 
@@ -173,4 +173,14 @@ export const EsvaziarCart = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+`;
+export const ObservacaoProducto = styled.View`
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #f7d3b0;
+`;
+export const TextoObs = styled.Text`
+  font-size: 14px;
+  font-family: 'CerebriSans-Regular';
 `;

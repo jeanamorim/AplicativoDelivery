@@ -13,7 +13,7 @@ export default function OfertasPrincipal({ navigation }) {
   const [offers, setOffers] = useState([]);
   useEffect(() => {
     async function loadOffers() {
-      const response = await api.get('offersGeral');
+      const response = await api.get('offers');
 
       const data = response.data.map(offer => ({
         ...offer,

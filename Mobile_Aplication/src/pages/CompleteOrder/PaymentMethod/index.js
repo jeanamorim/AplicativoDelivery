@@ -41,6 +41,7 @@ export default function PaymentMethod({ navigation, route }) {
   const [loading, setLoading] = useState(false);
 
   const { orderDetails } = route.params;
+  console.tron.log(methodSelected);
 
   return (
     <Wrapper>
@@ -102,16 +103,29 @@ export default function PaymentMethod({ navigation, route }) {
       </Container>
       <Footer>
         <FooterTab style={{ backgroundColor: '#F4A460' }}>
-          <Button
-            onPress={() =>
-              navigation.navigate('OrderConfirmation', {
-                orderDetails,
-                paymentMethod: methodSelected,
-              })
-            }
-            loading={loading}>
-            <Text style={{ fontSize: 15, color: '#fff' }}>Resumo</Text>
-          </Button>
+          {methodSelected === 'DINHEIRO' ? (
+            <Button
+              onPress={() =>
+                navigation.navigate('Troco', {
+                  orderDetails: orderDetails,
+                  paymentMethod: methodSelected,
+                })
+              }
+              loading={loading}>
+              <Text style={{ fontSize: 15, color: '#fff' }}>Finalização</Text>
+            </Button>
+          ) : (
+            <Button
+              onPress={() =>
+                navigation.navigate('OrderConfirmation', {
+                  orderDetails,
+                  paymentMethod: methodSelected,
+                })
+              }
+              loading={loading}>
+              <Text style={{ fontSize: 15, color: '#fff' }}>Finalização</Text>
+            </Button>
+          )}
         </FooterTab>
       </Footer>
     </Wrapper>

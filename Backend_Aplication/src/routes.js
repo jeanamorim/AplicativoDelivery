@@ -26,8 +26,6 @@ import ProductDetails from './app/controllers/ProductDetailsController';
 import CategoriaDetails from './app/controllers/CategoriaDetailsController';
 import StatusPedidoControllers from './app/controllers/StatusPedidoControllers';
 import ProductListControllers from './app/controllers/ProductListController';
-import Relatoriocontrollers from './app/controllers/RelatorioController';
-import ValorTotalPedidoCntrollers from './app/controllers/ValorTotalPedidosControllers';
 import RelatorioPedidosData from './app/controllers/RelatorioPedidosDataControlers';
 import FreteController from './app/controllers/FreteController';
 import VariacaoControllers from './app/controllers/VariacaoController';
@@ -44,6 +42,23 @@ import OpcaoVariacaoEstabControllers from './app/controllers/ControllersMobile/O
 import ListAdressesPorId from './app/controllers/ControllersMobile/ListAdressesPorIdController';
 import OrderUserControllers from './app/controllers/ControllersMobile/OrderUsersControllers';
 import BuscarPorCategoria from './app/controllers/ControllersMobile/BuscarEstabelecimentoCategoriaControllers';
+
+import TotalCancelados from './app/controllers/ControllerRelatorios/TotalCancelado';
+import TotalCartao from './app/controllers/ControllerRelatorios/TotalCartão';
+import TotalDinheiro from './app/controllers/ControllerRelatorios/TotalDinheiro';
+import Totalentregues from './app/controllers/ControllerRelatorios/TotalEntregues';
+import TotalPedidos from './app/controllers/ControllerRelatorios/TotalPedidos';
+import totalPendentes from './app/controllers/ControllerRelatorios/TotalPendentes';
+import ValorTotal from './app/controllers/ControllerRelatorios/ValorTotalPedidos';
+import FaturamentoTotal from './app/controllers/ControllerRelatorios/FaturamentoTotal';
+
+// listar produtos e categorias por id para o painel web
+import ListProductEdit from './app/controllers/ControllersEditsProductsCategoria/ListProductIds';
+import ListCategoriaEdit from './app/controllers/ControllersEditsProductsCategoria/ListCategoriaIds';
+import ListVariacaoEdit from './app/controllers/ControllersEditsProductsCategoria/ListVariacaoId';
+import ListOpcaoEdit from './app/controllers/ControllersEditsProductsCategoria/ListOpcaoIds';
+// coontrollers do adminstrador
+import OrderControllerAdmins from './app/controllers/ControllersAdmins/OrderController';
 // validators
 
 import validateCategoryStore from './app/validators/CategoryStore';
@@ -84,9 +99,12 @@ const bruteForce = new ExpressBruteFlexible(
 );
 
 // routes
+// routes do administrador
+routes.get('/OrderAdmin', OrderControllerAdmins.index);
 
 routes.post('/users', validateUserStore, UserController.store);
 routes.post('/estabelecimento', EstabelecimentoControllers.store);
+routes.put('/estabelecimento', EstabelecimentoControllers.update);
 
 routes.post(
   '/sessions',
@@ -152,6 +170,8 @@ routes.get('/opcao_variacao/:id', OpcaoVariacaoEstabControllers.index);
 
 routes.use(authMiddleware);
 
+routes.put('/estabelecimento', EstabelecimentoControllers.update);
+
 routes.post('/admins', AdminController.store);
 routes.get('/admins', AdminController.index);
 routes.delete('/admins/:id', AdminController.delete);
@@ -168,6 +188,8 @@ routes.get('/categories', CategoryController.index);
 routes.get('/categories/:id', CategoriaDetails.index);
 routes.delete('/categories/:id', CategoryController.delete);
 routes.put('/categories/:id', CategoryController.update);
+// Listar categoria por id p/editar painel web
+routes.get('/categorialist/:id', ListCategoriaEdit.index);
 
 routes.get('/estabelecimento', EstabelecimentoControllers.index);
 // routes.delete('/estabelecimento/:id', EstabelecimentoControllers.delete);
@@ -180,6 +202,8 @@ routes.get('/productsList', ProductListControllers.index);
 routes.get('/products/:id', ProductDetails.index);
 routes.delete('/products/:id', ProductController.delete);
 routes.put('/products/:id', validateProductUpdate, ProductController.update);
+// Listar product por id p/editar painel web
+routes.get('/productslist/:id', ListProductEdit.index);
 
 routes.post('/orders', validateOrderStore, OrderController.store);
 routes.get('/orders', OrderController.index);
@@ -193,10 +217,16 @@ routes.get('/offer_estab/:id', OfertasEstabelecimento.index);
 routes.get('/offers', OfferController.index);
 routes.put('/offers/:id', validateOfferUpdate, OfferController.update);
 routes.delete('/offers/:id', OfferController.delete);
-
-routes.get('/relatoriopedidosdata', RelatorioPedidosData.index);
-routes.get('/relatoriovalortotal', Relatoriocontrollers.index);
-routes.get('/totalpedido', ValorTotalPedidoCntrollers.index);
+// relatorio dos pedidos por dia do estabelecimento
+routes.get('/relatoriopedidos', RelatorioPedidosData.index);
+routes.get('/totalCancelado', TotalCancelados.index);
+routes.get('/totalCartao', TotalCartao.index);
+routes.get('/totalDinheiro', TotalDinheiro.index);
+routes.get('/totalEntregue', Totalentregues.index);
+routes.get('/totalPedido', TotalPedidos.index);
+routes.get('/totalPendente', totalPendentes.index);
+routes.get('/valorTotal', ValorTotal.index);
+routes.get('/faturamentoTotal', FaturamentoTotal.index);
 
 routes.post('/settings', SettingController.store);
 routes.get('/settings', SettingController.index);
@@ -211,11 +241,15 @@ routes.post('/variacao', validateVariacaoStore, VariacaoControllers.store);
 routes.get('/variacao', VariacaoControllers.index);
 routes.put('/variacao/:id', VariacaoControllers.update);
 routes.delete('/variacao/:id', VariacaoControllers.delete);
+// Listar variacao por id p/editar painel web
+routes.get('/variacaoedit/:id', ListVariacaoEdit.index);
 
 routes.post('/opcaovariacao', OpcaoControllers.store);
 routes.get('/opcaovariacao', OpcaoControllers.index);
 routes.put('/opcaovariacao/:id', OpcaoControllers.update);
 routes.delete('/opcaovariacao/:id', OpcaoControllers.delete);
+
+routes.get('/listOpcao/:id', ListOpcaoEdit.index);
 
 routes.get('/invalidate/all', async (req, res) => {
   await Cache.invalidateAll();

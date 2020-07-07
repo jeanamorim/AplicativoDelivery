@@ -18,7 +18,7 @@ export default function Orders() {
   useEffect(() => {
     async function loadOrders() {
       const response = await api.get('/orders');
-      console.log(response.data);
+      // console.log(response.data);
 
       setOrders(response.data);
       if (updatingStatus !== 0) {

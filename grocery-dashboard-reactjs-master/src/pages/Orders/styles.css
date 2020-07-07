@@ -1,0 +1,354 @@
+.menupedidos {
+  font-size: 18px;
+  display: inline-block;
+  padding: 0.4rem;
+  height: 50px;
+  width: 230px;
+  margin: 0px auto;
+  align-self: center;
+
+  background: rgb(250, 250, 250);
+  border-width: 1px;
+  border-style: solid;
+  border-color: #1b1a19;
+  border-radius: 2px;
+}
+
+@media only screen and (min-width: 95%) {
+  .menupedidos {
+      width: 280px;
+  }
+}
+
+@media only screen and (max-width: 1125px) {
+  .menupedidos {
+      width: 180px;
+      font-size: 15px;
+  }
+}
+
+@media only screen and (max-width: 1090px) {
+  .menupedidos {
+      width: 150px;
+      font-size: 15px;
+  }
+}
+
+@media only screen and (max-width: 948px) {
+  .menupedidos {
+      width: 134px;
+      font-size: 15px;
+  }
+}
+
+.iconpedidos {
+  width: 30px;
+  margin-top: -32px;
+  font-size: 35px;
+}
+
+@media only screen and (max-width: 1125px) {
+  .iconpedidos {
+      padding: 0.1rem;
+      font-size: 29px;
+      width: 20px;
+      margin-top: -24px;
+  }
+}
+
+.titulopedido {
+  width: 260px;
+  margin-top: 7px;
+}
+
+@media only screen and (max-width: 1125px) {
+  .titulopedido {
+      width: 110px;
+      height: 20px;
+      margin-top: 0px;
+      margin-left: 25px;
+  }
+}
+
+.menuPedidosstatus {
+display: flex;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+.board {
+  align-items: center;
+  margin: 6px auto;
+  margin-left: -10px;
+}
+
+
+.card .title {
+  width: 100%;
+  margin-top: 0px;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+
+}
+
+.list {
+  display: flex;
+  grid-template-columns: repeat(5, 1fr);
+  flex-direction: column;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  max-height: 20rem;
+  padding: 6px;
+}
+
+.title {
+  width: 232px;
+  margin-top: 200px;
+  font-size: 15px;
+  background-color: rgb(228, 113, 72);
+}
+
+.title:hover {
+  background-color: rgb(223, 93, 46);
+}
+
+.card .title {
+
+  display: flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.10rem;
+}
+
+.time {
+  color: #ffffff;
+  padding: 7px 60px;
+  display: grid;
+  grid-gap: 10px;
+  margin: 0 auto;
+}
+
+@media only screen and (max-width: 1125px) {
+  .time {
+      color: #ffffff;
+      padding: 2px 60px;
+      display: inline;
+      text-align: center;
+      margin-left: -50px;
+  }
+}
+
+.vartotal {
+  color: #ff4500;
+
+}
+
+.numpedido {
+  font-size: 23px;
+  color: #ff4500;
+
+}
+
+.card .content {
+
+  display: block;
+
+  min-height: 10rem;
+  font-weight: bold;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #da9175;
+}
+
+.image {
+  height: 25px;
+  width: 25px;
+  border-radius: 50px;
+}
+
+.qtd {
+  display: inline-block;
+  height: 25px;
+  width: 25px;
+  font-size: 12px;
+}
+
+.button {
+  padding: 0.9rem;
+  border-radius: 0px;
+  min-height: 1rem;
+  float: right;
+
+}
+
+.cartao {
+  float: right;
+  font-weight: bold;
+}
+
+.link {
+  color: #fff;
+
+}
+@media only screen and (max-width: 5500px) {
+  .cards {
+    width: 1048px;
+    margin-left:-7px;
+  }
+  .button_status{
+    width: 1060px;
+    margin: -20px;
+    margin-left:-20px;
+
+  }
+}
+@media only screen and (max-width: 4100px) {
+  .cards {
+    width: 780px;
+    margin-left:-7px;
+  }
+  .button_status{
+    width: 790px;
+    margin: -20px;
+    margin-left:-20px;
+  }
+}
+@media only screen and (max-width: 2740px) {
+  .cards {
+    width: 510px;
+    margin-left:-7px;
+  }
+  .button_status{
+    width: 525px;
+    margin: -20px;
+    margin-left:-20px;
+  }
+}
+@media only screen and (max-width: 2049px) {
+  .cards {
+    width: 380px;
+    margin-left:-7px;
+  }
+  .button_status{
+    width: 390px;
+    margin: -20px;
+    margin-left:-20px;
+  }
+}
+@media only screen and (max-width: 1925px) {
+  .cards {
+    width: 337px;
+    margin-left:-7px;
+  }
+  .button_status{
+    width: 349px;
+    margin: -20px;
+    margin-left:-20px;
+  }
+}
+@media only screen and (max-width: 1707px) {
+  .cards {
+    width: 308px;
+    margin-left:-7px;
+  }
+  .button_status{
+    width: 327px;
+    margin: -20px;
+    margin-left:-20px;
+  }
+}
+@media only screen and (max-width: 1607px) {
+  .cards {
+    width: 270px;
+    margin-left:-7px;
+  }
+  .button_status{
+    width: 289px;
+    margin: -20px;
+    margin-left:-20px;
+  }
+}
+@media only screen and (max-width: 1470px) {
+  .cards {
+    width: 247px;
+    margin-left:-7px;
+  }
+  .button_status{
+    width: 253px;
+    margin: -20px;
+    margin-left:-20px;
+  }
+}
+@media only screen and (max-width: 1250px) {
+  .cards {
+    width: 225px;
+    margin-left:-10px;
+  }
+  .button_status{
+    width: 237px;
+    margin: -20px;
+    margin-left:-20px;
+  }
+}
+@media only screen and (max-width: 1100px) {
+  .cards {
+    width: 190px;
+    margin-left:-7px;
+  }
+  .button_status{
+    width: 207px;
+    margin: -20px;
+    margin-left:-20px;
+  }
+
+}
+@media only screen and (max-width: 920px) {
+  .cards {
+    width: 147px;
+  }
+  .button_status{
+    width: 175px;
+    margin: -20px;
+    margin-left:-20px;
+  }
+
+
+}
+@media only screen and (max-width: 780px) {
+  .cards {
+    width: 128px;
+    margin-left:-7px;
+  }
+
+  .button_status {
+    width: 148px;
+    margin: -20px;
+    margin-left:-20px;
+  }
+
+
+}
+
+.button_status {
+  background: #E8E8E8;
+  color: #000;
+  border-Color: #fff;
+
+}
+.bairro {
+  font-size: 10px;
+  margin-left: -11px;
+}
+

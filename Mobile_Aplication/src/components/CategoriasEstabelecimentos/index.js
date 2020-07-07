@@ -9,10 +9,10 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button, Text, Body, CardItem, Thumbnail, View } from 'native-base';
 import api from '../../services/api';
 import { formatPrice } from '../../util/format';
-
+import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 export default function OfertasPrincipal({ navigation, id, loja }) {
   const [categorias, setCategorias] = useState([]);
-
+  const [isVisible, setIsVisible] = useState(false);
   const amount = useSelector(state =>
     state.cart.reduce((sumAmount, product) => {
       sumAmount[product.id] = product.amount;
@@ -28,6 +28,9 @@ export default function OfertasPrincipal({ navigation, id, loja }) {
 
     getData();
   }, [id]);
+  useEffect(() => {
+    setTimeout(() => setIsVisible(true), 500);
+  }, []);
 
   function renderCategoria({ item }) {
     return (
@@ -44,9 +47,10 @@ export default function OfertasPrincipal({ navigation, id, loja }) {
             source={{
               uri: item.image.url.replace('localhost', '10.0.0.106'),
             }}
-            style={{ borderColor: '#F4A460', borderWidth: 2 }}
+            style={{ borderColor: '#E25B08', borderWidth: 2 }}
           />
         </ImageContainer>
+
         <ProductTitle>{item.name}</ProductTitle>
       </Product>
     );
@@ -54,16 +58,12 @@ export default function OfertasPrincipal({ navigation, id, loja }) {
 
   return (
     <Background>
-      {categorias.length ? (
-        <ProductList
-          data={categorias}
-          extraData={amount}
-          keyExtractor={item => String(item.id)}
-          renderItem={renderCategoria}
-        />
-      ) : (
-        <ActivityIndicator size={50} color="#F4A460" />
-      )}
+      <ProductList
+        data={categorias}
+        extraData={amount}
+        keyExtractor={item => String(item.id)}
+        renderItem={renderCategoria}
+      />
     </Background>
   );
 }

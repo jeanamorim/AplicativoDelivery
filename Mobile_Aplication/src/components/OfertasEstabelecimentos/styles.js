@@ -88,8 +88,8 @@ export default {
     flex: 1,
     marginRight: 5,
     borderColor: '#E25B08',
-    borderWidth: 1,
-
+    borderWidth: 3,
+    marginLeft: 2,
     borderRadius: 6,
   },
   nameProducts: {

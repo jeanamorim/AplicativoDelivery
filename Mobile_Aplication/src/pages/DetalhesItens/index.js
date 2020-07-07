@@ -3,7 +3,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Image, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import storage from '@react-native-community/async-storage';
 import Background from '../../components/Background';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -29,22 +34,24 @@ import {
   FooterTab,
 } from 'native-base';
 import api from '../../services/api';
+import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
+//import { CheckBox } from 'react-native-elements';
 import CheckBox from '@react-native-community/checkbox';
 export default function DetalhesItens({ navigation, route }) {
   const { produtoDetails, estabelecimento } = route.params;
   const [variacao, setVariacao] = useState([]);
   const [quantidade, setQuantidade] = useState(1);
-
+  const [isVisible, setIsVisible] = useState(false);
   const [total, setTotal] = useState(produtoDetails.price);
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const [checked, setChecked] = useState(false);
   const [valor, setValor] = useState([]);
+  const [observacao, setObservação] = useState('');
+
   const status = estabelecimento.status === 'ABERTO' ? true : false;
 
   const id = produtoDetails.id;
-
+  console.tron.log(observacao);
   const dispatch = useDispatch();
-
-  const VarTotal = 0;
 
   useEffect(() => {
     async function getData() {
@@ -69,54 +76,29 @@ export default function DetalhesItens({ navigation, route }) {
     return totalSum + product.price;
   }, 0);
 
-  const totalItem = total * quantidade;
-  const valorTotalPedido = totalItem + totalOpcao;
+  const totalItem = total + totalOpcao;
 
-  function handleAddProduct(product, quantidade) {
-    dispatch(addToCartRequest(product, quantidade));
-  }
-  //metodo verica se existem objetos iguais no array e remove caso tenha
-  function onChancet(item) {
-    let index = valor.indexOf(val => val.name === item.name);
+  const valorTotalPedido = totalItem * quantidade;
 
-    if (index > -1) {
-      valor.splice(index, 1);
-      setToggleCheckBox({ toggleCheckBox: false });
-      return;
-    }
-    setValor([...valor, item]);
-    setToggleCheckBox({ toggleCheckBox: true });
+  function handleAddProduct(product, quantidade, valorTotalPedido, observacao) {
+    dispatch(
+      addToCartRequest(product, quantidade, valorTotalPedido, observacao),
+    );
   }
 
-  function onChanced(item) {
-    var encontrou = false;
-
-    for (var index = 0, total = valor.length; index < total; index++) {
-      var obj = valor[index];
-
-      if (obj.name === item) {
-        valor.splice(index, 1);
-        setToggleCheckBox({ toggleCheckBox: false });
-        encontrou = true;
-        break;
-      }
-    }
-
-    if (encontrou === false) {
-      setValor([...valor, item]);
-      setToggleCheckBox({ toggleCheckBox: true });
-    }
-  }
+  useEffect(() => {
+    setTimeout(() => setIsVisible(true), 500);
+  }, []);
 
   function onChance(id) {
-    let index = valor.findIndex(val => val.name === id.name);
+    let index = valor.findIndex(val => val.id === id.id);
     if (index > -1) {
       valor.splice(index, 1);
-      setToggleCheckBox({ toggleCheckBox: false });
+      setChecked(false);
       return;
     }
     setValor([...valor, id]);
-    setToggleCheckBox({ toggleCheckBox: true });
+    setChecked(true);
   }
 
   console.tron.log(valor);
@@ -188,46 +170,59 @@ export default function DetalhesItens({ navigation, route }) {
               <List style={{ marginLeft: -20 }} key={variacoes.id}>
                 <ListItem>
                   <Body>
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        fontFamily: 'CerebriSans-ExtraBold',
-                        color: '#F4A460',
-                        textTransform: 'uppercase',
-                      }}>
-                      {variacoes.name}
-                    </Text>
-                    <Text
-                      note
-                      style={{
-                        fontFamily: 'CerebriSans-ExtraBold',
-                        color: '#999',
-                        fontSize: 9,
-                      }}>
-                      No mínimo {variacoes.minimo}. No máximo {variacoes.maximo}
-                    </Text>
+                    <ShimmerPlaceHolder autoRun={true} visible={isVisible}>
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          fontFamily: 'CerebriSans-ExtraBold',
+                          color: '#F4A460',
+                          textTransform: 'uppercase',
+                        }}>
+                        {variacoes.name}
+                      </Text>
+                      <Text
+                        note
+                        style={{
+                          fontFamily: 'CerebriSans-ExtraBold',
+                          color: '#999',
+                          fontSize: 9,
+                        }}>
+                        No mínimo {variacoes.minimo}. No máximo{' '}
+                        {variacoes.maximo}
+                      </Text>
+                    </ShimmerPlaceHolder>
+
                     {variacoes.opcao.map(op => (
-                      <ListItem>
+                      <ListItem key={op.id}>
                         <Body>
+                          <ShimmerPlaceHolder
+                            autoRun={true}
+                            visible={isVisible}>
+                            <Text
+                              style={{
+                                fontFamily: 'CerebriSans-ExtraBold',
+                              }}>
+                              {op.name}
+                            </Text>
+                          </ShimmerPlaceHolder>
+                        </Body>
+                        <ShimmerPlaceHolder autoRun={true} visible={isVisible}>
                           <Text
                             style={{
                               fontFamily: 'CerebriSans-ExtraBold',
+                              color: '#20B402',
                             }}>
-                            {op.name}
+                            +{formatPrice(op.price)}
                           </Text>
-                        </Body>
-                        <Text
-                          style={{
-                            fontFamily: 'CerebriSans-ExtraBold',
-                            color: '#20B402',
-                          }}>
-                          +{formatPrice(op.price)}
-                        </Text>
-                        <CheckBox
-                          onCheckColor={'#F4A460'}
-                          value={valor.includes(op.id)}
-                          onValueChange={() => onChancet(op)}
-                        />
+                        </ShimmerPlaceHolder>
+                        <ShimmerPlaceHolder autoRun={true} visible={isVisible}>
+                          <CheckBox
+                            checked={checked}
+                            onCheckColor={'#F4A460'}
+                            value={valor.includes(op)}
+                            onValueChange={() => onChance(op)}
+                          />
+                        </ShimmerPlaceHolder>
                       </ListItem>
                     ))}
                   </Body>
@@ -239,10 +234,13 @@ export default function DetalhesItens({ navigation, route }) {
             <Form>
               <Textarea
                 bordered
+                value={observacao}
+                onChangeText={setObservação}
                 style={{
                   borderRadius: 20,
                   fontFamily: 'CerebriSans-ExtraBold',
                   height: 90,
+                  color: '#999',
                 }}
                 rowSpan={5}
                 placeholder="Alguma observação para os itens acima?"
@@ -320,8 +318,13 @@ export default function DetalhesItens({ navigation, route }) {
           {status === true ? (
             <Button
               onPress={() => {
-                handleAddProduct(produtoDetails, quantidade);
-                navigation.goBack();
+                handleAddProduct(
+                  produtoDetails,
+                  quantidade,
+                  valorTotalPedido,
+                  observacao,
+                );
+                navigation.navigate('ProductsLojas');
               }}>
               <Text style={{ fontSize: 15, color: '#fff' }}>
                 Adicionar ao carrinho

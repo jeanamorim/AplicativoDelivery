@@ -255,121 +255,95 @@ export default function Pedidos() {
           <div className="row">
             <div className="col-md-12">
               <div className="panel panel-default">
-                <div className="panel-heading">
-                  <Link to="/lista">
-                    <button className="buttonheader" variant="contained">
-                      <div className="titulopedidoHeader">Listar Pedidos</div>
-                      <div className="iconsButtonHeader">
-                        <MdReceipt />
-                      </div>
-                    </button>
-                  </Link>
-
-                  <button
-                    className="buttonheader"
-                    variant="contained"
-                    type="button"
-                    onClick={refreshPage}
-                  >
-                    <div className="titulopedidoHeader">Atualizar Página</div>
-                    <div className="iconsButtonHeader">
-                      <MdRefresh />
-                    </div>
-                  </button>
-
-                  <Link to="/categoria">
-                    <button className="buttonheader" variant="contained">
-                      <div className="titulopedidoHeader"> Testar Som</div>
-                      <div className="iconsButtonHeader">
-                        <MdVolumeUp />
-                      </div>
-                    </button>
-                  </Link>
-                </div>
-
                 <div className="menuPedidosstatus">
                   <div className="panel-body">
-                    <button type="button" className="menupedidos">
-                      <div className="titulopedido"> Pedidos Pendentes</div>
-
-                      <div className="iconpedidos">
-                        <Avatar className={classes.pink}>
-                          <MdReceipt />
-                        </Avatar>
-                      </div>
-                    </button>
                     <div className="board" id="boardjsplain">
                       <div className="list">
                         <>
                           {pendente_.map(order => (
-                            <div className="card" key={order.id}>
-                              <Link
-                                to={{
-                                  pathname: '/pedido',
-                                  search: `?id=${order.id}`,
-                                  state: {
-                                    orderData: order,
-                                  },
-                                }}
-                                className="title"
+                            <div
+                              className="col-md-13"
+                              style={{ width: '100%' }}
+                            >
+                              <div
+                                className="panel panel-default"
+                                style={{ borderColor: '#F4A460' }}
                               >
-                                <div className="time">{order.timeDistance}</div>
-                              </Link>
+                                <Link
+                                  to="/orders"
+                                  className="block-anchor panel-footer text-center"
+                                  style={{
+                                    background: '#F4A460',
+                                    color: '#fff',
+                                  }}
+                                >
+                                  {order.timeDistance}
+                                </Link>
+                                <div className="panel-body bk-secondary text-dark">
+                                  <div className="stat-panel">
+                                    <div>{order.ship_neighborhood}</div>
+                                    <div
+                                      className="text-right"
+                                      style={{ marginTop: -20 }}
+                                    >
+                                      <div>#{order.id}</div>
+                                      <div>{formatPrice(order.total)}</div>
+                                      <div>{order.payment_method}</div>
+                                    </div>
 
-                              <div className="content">
-                                {order.order_details.map(image => (
-                                  <img
-                                    className="image"
-                                    src={image.product.image.url}
-                                    alt={image.product.name}
-                                  />
-                                ))}
-
-                                <div className="cartao">
-                                  <div className="numpedido"> #{order.id}</div>
-                                  {order.payment_method}
-                                  <div className="vartotal">
-                                    {formatPrice(order.total)}
+                                    <div
+                                      className="stat-panel-title"
+                                      style={{ marginTop: -20 }}
+                                    >
+                                      {order.order_details.map(image => (
+                                        <img
+                                          className="image"
+                                          src={image.product.image.url}
+                                          alt={image.product.name}
+                                        />
+                                      ))}
+                                    </div>
+                                    <div className="stat-panel-title">
+                                      {order.order_details.map(qtd => (
+                                        <div className="qtd">
+                                          {' '}
+                                          {qtd.quantity}x{' '}
+                                        </div>
+                                      ))}
+                                    </div>
                                   </div>
                                 </div>
-                                {order.order_details.map(qtd => (
-                                  <div className="qtd">{qtd.quantity}x</div>
-                                ))}
-
-                                <div>{order.ship_neighborhood}</div>
-                                <div className="OrgButton1">
-                                  <div className="buttonPendente">
-                                    <button
-                                      id={order.id}
-                                      onClick={handleChange}
-                                      className="linkbuttonAprovar"
-                                      type="button"
-                                      value="PRODUCAO"
-                                    >
-                                      Aprovar
-                                    </button>
-                                  </div>
-
-                                  <div className="buttonPendente">
-                                    <button
-                                      id={order.id}
-                                      onClick={handleChange}
-                                      className="linkbuttonRejeitar"
-                                      type="button"
-                                      value="CANCELADO"
-                                    >
-                                      Rejeitar
-                                    </button>
-                                  </div>
-
-                                  <div className="buttonPendente">
-                                    <button
-                                      className="linkbuttonImprimitPend"
-                                      type="button"
-                                    >
-                                      Imprimir
-                                    </button>
-                                  </div>
+                                <div
+                                  style={{ display: 'flex', marginTop: -20 }}
+                                >
+                                  <button
+                                    style={{
+                                      width: '50%',
+                                      background: '#F43C04',
+                                      color: '#fff',
+                                      borderColor: '#fff',
+                                    }}
+                                    id={order.id}
+                                    onClick={handleChange}
+                                    type="button"
+                                    value="CANCELADO"
+                                  >
+                                    Rejeitar
+                                  </button>
+                                  <button
+                                    style={{
+                                      width: '50%',
+                                      background: '#048923',
+                                      color: '#fff',
+                                      borderColor: '#fff',
+                                    }}
+                                    id={order.id}
+                                    onClick={handleChange}
+                                    type="button"
+                                    value="PRODUCAO"
+                                  >
+                                    Aprovar
+                                  </button>
                                 </div>
                               </div>
                             </div>
@@ -378,72 +352,97 @@ export default function Pedidos() {
                       </div>
                     </div>
                   </div>
-
                   <div className="panel-body">
                     <button type="button" className="menupedidos">
-                      <div className="titulopedido"> Pedidos em produção</div>
-
+                      <div className="titulopedido"> Pedidos em produção </div>
                       <div className="iconpedidos">
                         <Avatar className={classes.red}>
                           <MdHotTub color="#fff" />
                         </Avatar>
                       </div>
                     </button>
-
                     <div className="board" id="boardjsplain">
                       <div className="list">
                         <>
                           {producao_.map(order => (
-                            <div className="card" key={order.id}>
-                              <Link
-                                to={{
-                                  pathname: '/pedido',
-                                  search: `?id=${order.id}`,
-                                  state: {
-                                    orderData: order,
-                                  },
-                                }}
-                                className="title"
+                            <div
+                              className="col-md-13"
+                              style={{ width: '100%' }}
+                            >
+                              <div
+                                className="panel panel-default"
+                                style={{ borderColor: '#F4A460' }}
                               >
-                                <div className="time">{order.timeDistance}</div>
-                              </Link>
+                                <Link
+                                  to="/orders"
+                                  className="block-anchor panel-footer text-center"
+                                  style={{
+                                    background: '#F4A460',
+                                    color: '#fff',
+                                  }}
+                                >
+                                  {order.timeDistance}
+                                </Link>
+                                <div className="panel-body bk-secondary text-dark">
+                                  <div className="stat-panel">
+                                    <div>{order.ship_neighborhood}</div>
+                                    <div
+                                      className="text-right"
+                                      style={{ marginTop: -20 }}
+                                    >
+                                      <div>#{order.id}</div>
+                                      <div>{formatPrice(order.total)}</div>
+                                      <div>{order.payment_method}</div>
+                                    </div>
 
-                              <div className="content">
-                                {order.order_details.map(image => (
-                                  <img
-                                    className="image"
-                                    src={image.product.image.url}
-                                    alt={image.product.name}
-                                  />
-                                ))}
-                                <div className="cartao">
-                                  <div className="numpedido"> #{order.id}</div>
-                                  {order.payment_method}
-                                  <div className="vartotal">
-                                    {formatPrice(order.total)}
+                                    <div
+                                      className="stat-panel-title"
+                                      style={{ marginTop: -20 }}
+                                    >
+                                      {order.order_details.map(image => (
+                                        <img
+                                          className="image"
+                                          src={image.product.image.url}
+                                          alt={image.product.name}
+                                        />
+                                      ))}
+                                    </div>
+                                    <div className="stat-panel-title">
+                                      {order.order_details.map(qtd => (
+                                        <div className="qtd">
+                                          {' '}
+                                          {qtd.quantity}x{' '}
+                                        </div>
+                                      ))}
+                                    </div>
                                   </div>
                                 </div>
-                                {order.order_details.map(qtd => (
-                                  <div className="qtd">{qtd.quantity}x</div>
-                                ))}
-                                <div>{order.ship_neighborhood}</div>
-
-                                <div className="OrgButton">
+                                <div
+                                  style={{ display: 'flex', marginTop: -20 }}
+                                >
                                   <button
+                                    style={{
+                                      width: '50%',
+                                      background: '#9999',
+                                      color: '#fff',
+                                      borderColor: '#fff',
+                                    }}
+                                  >
+                                    Imprimir
+                                  </button>
+                                  <button
+                                    style={{
+                                      width: '50%',
+                                      background: '#048923',
+                                      color: '#fff',
+                                      borderColor: '#fff',
+                                    }}
                                     id={order.id}
                                     onClick={handleChange}
-                                    className="linkbuttonEnv"
                                     type="button"
                                     value="ENVIADO"
                                   >
                                     Enviar
-                                  </button>
-
-                                  <button
-                                    className="linkbuttonenvI"
-                                    type="button"
-                                  >
-                                    Imprimir
                                   </button>
                                 </div>
                               </div>
@@ -455,67 +454,95 @@ export default function Pedidos() {
                   </div>
                   <div className="panel-body">
                     <button type="button" className="menupedidos">
-                      <div className="titulopedido"> Pedidos Enviados</div>
+                      <div className="titulopedido"> Pedidos Enviados </div>
                       <div className="iconpedidos">
                         <Avatar className={classes.blue}>
                           <MdMotorcycle color="#fff" />
                         </Avatar>
                       </div>
                     </button>
-
                     <div className="board" id="boardjsplain">
                       <div className="list">
                         <>
                           {enviado_.map(order => (
-                            <div className="card" key={order.id}>
-                              <Link
-                                to={{
-                                  pathname: '/pedido',
-                                  search: `?id=${order.id}`,
-                                  state: {
-                                    orderData: order,
-                                  },
-                                }}
-                                className="title"
+                            <div
+                              className="col-md-13"
+                              style={{ width: '100%' }}
+                            >
+                              <div
+                                className="panel panel-default"
+                                style={{ borderColor: '#F4A460' }}
                               >
-                                <div className="time">{order.timeDistance}</div>
-                              </Link>
+                                <Link
+                                  to="/orders"
+                                  className="block-anchor panel-footer text-center"
+                                  style={{
+                                    background: '#F4A460',
+                                    color: '#fff',
+                                  }}
+                                >
+                                  {order.timeDistance}
+                                </Link>
+                                <div className="panel-body bk-secondary text-dark">
+                                  <div className="stat-panel">
+                                    <div>{order.ship_neighborhood}</div>
+                                    <div
+                                      className="text-right"
+                                      style={{ marginTop: -20 }}
+                                    >
+                                      <div>#{order.id}</div>
+                                      <div>{formatPrice(order.total)}</div>
+                                      <div>{order.payment_method}</div>
+                                    </div>
 
-                              <div className="content">
-                                {order.order_details.map(image => (
-                                  <img
-                                    className="image"
-                                    src={image.product.image.url}
-                                    alt={image.product.name}
-                                  />
-                                ))}
-                                <div className="cartao">
-                                  <div className="numpedido"> {order.id}</div>
-                                  {order.payment_method}
-                                  <div className="vartotal">
-                                    {formatPrice(order.total)}
+                                    <div
+                                      className="stat-panel-title"
+                                      style={{ marginTop: -20 }}
+                                    >
+                                      {order.order_details.map(image => (
+                                        <img
+                                          className="image"
+                                          src={image.product.image.url}
+                                          alt={image.product.name}
+                                        />
+                                      ))}
+                                    </div>
+                                    <div className="stat-panel-title">
+                                      {order.order_details.map(qtd => (
+                                        <div className="qtd">
+                                          {' '}
+                                          {qtd.quantity}x{' '}
+                                        </div>
+                                      ))}
+                                    </div>
                                   </div>
                                 </div>
-                                {order.order_details.map(qtd => (
-                                  <div className="qtd">{qtd.quantity}x</div>
-                                ))}
-                                <div>{order.ship_neighborhood}</div>
-                                <div className="OrgButton">
+                                <div
+                                  style={{ display: 'flex', marginTop: -20 }}
+                                >
                                   <button
+                                    style={{
+                                      width: '50%',
+                                      background: '#F43C04',
+                                      color: '#fff',
+                                      borderColor: '#fff',
+                                    }}
+                                  >
+                                    Imprimir
+                                  </button>
+                                  <button
+                                    style={{
+                                      width: '50%',
+                                      background: '#048923',
+                                      color: '#fff',
+                                      borderColor: '#fff',
+                                    }}
                                     id={order.id}
                                     onClick={handleChange}
-                                    className="linkbuttonEnv"
                                     type="button"
                                     value="ENTREGUE"
                                   >
                                     Entregar
-                                  </button>
-
-                                  <button
-                                    className="linkbuttonenvI"
-                                    type="button"
-                                  >
-                                    Imprimir
                                   </button>
                                 </div>
                               </div>
@@ -531,7 +558,7 @@ export default function Pedidos() {
                       className="menupedidos"
                       onClick={_entregue}
                     >
-                      <div className="titulopedido"> Pedidos Entregues</div>
+                      <div className="titulopedido"> Pedidos Entregues </div>
                       <div className="iconpedidos">
                         <Avatar className={classes.green}>
                           <MdDone color="#fff" />
@@ -543,44 +570,82 @@ export default function Pedidos() {
                         <div className="list">
                           <>
                             {entregue_.map(order => (
-                              <div className="card" key={order.id}>
-                                <Link
-                                  to={{
-                                    pathname: '/pedido',
-                                    search: `?id=${order.id}`,
-                                    state: {
-                                      orderData: order,
-                                    },
-                                  }}
-                                  className="title"
+                              <div
+                                className="col-md-13"
+                                style={{ width: '100%' }}
+                              >
+                                <div
+                                  className="panel panel-default"
+                                  style={{ borderColor: '#F4A460' }}
                                 >
-                                  <div className="time">
+                                  <Link
+                                    to="/orders"
+                                    className="block-anchor panel-footer text-center"
+                                    style={{
+                                      background: '#F4A460',
+                                      color: '#fff',
+                                    }}
+                                  >
                                     {order.timeDistance}
-                                  </div>
-                                </Link>
-                                <div className="content">
-                                  {order.order_details.map(image => (
-                                    <img
-                                      className="image"
-                                      src={image.product.image.url}
-                                      alt={image.product.name}
-                                    />
-                                  ))}
-                                  <div className="cartao">
-                                    <div className="numpedido"> {order.id}</div>
-                                    {order.payment_method}
-                                    <div className="vartotal">
-                                      {formatPrice(order.total)}
+                                  </Link>
+                                  <div className="panel-body bk-secondary text-dark">
+                                    <div className="stat-panel">
+                                      <div>{order.ship_neighborhood}</div>
+                                      <div
+                                        className="text-right"
+                                        style={{ marginTop: -20 }}
+                                      >
+                                        <div>#{order.id}</div>
+                                        <div>{formatPrice(order.total)}</div>
+                                        <div>{order.payment_method}</div>
+                                      </div>
+
+                                      <div
+                                        className="stat-panel-title"
+                                        style={{ marginTop: -20 }}
+                                      >
+                                        {order.order_details.map(image => (
+                                          <img
+                                            className="image"
+                                            src={image.product.image.url}
+                                            alt={image.product.name}
+                                          />
+                                        ))}
+                                      </div>
+                                      <div className="stat-panel-title">
+                                        {order.order_details.map(qtd => (
+                                          <div className="qtd">
+                                            {' '}
+                                            {qtd.quantity}x{' '}
+                                          </div>
+                                        ))}
+                                      </div>
                                     </div>
                                   </div>
-                                  {order.order_details.map(qtd => (
-                                    <div className="qtd">{qtd.quantity}x</div>
-                                  ))}
-                                  <div>{order.ship_neighborhood}</div>
-
-                                  <button className="linkbuttonEntre">
-                                    Imprimir
-                                  </button>
+                                  <div
+                                    style={{ display: 'flex', marginTop: -20 }}
+                                  >
+                                    <button
+                                      style={{
+                                        width: '50%',
+                                        background: '#F43C04',
+                                        color: '#fff',
+                                        borderColor: '#fff',
+                                      }}
+                                    >
+                                      Rejeitar
+                                    </button>
+                                    <button
+                                      style={{
+                                        width: '50%',
+                                        background: '#048923',
+                                        color: '#fff',
+                                        borderColor: '#fff',
+                                      }}
+                                    >
+                                      Aprovar
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
                             ))}
@@ -597,7 +662,7 @@ export default function Pedidos() {
                       className="menupedidos"
                       onClick={_cancelado}
                     >
-                      <div className="titulopedido"> Pedidos Cancelados</div>
+                      <div className="titulopedido"> Pedidos Cancelados </div>
                       <div className="iconpedidos">
                         <Avatar className={classes.vermelho}>
                           <MdPhonelinkErase color="#fff" />
@@ -609,62 +674,81 @@ export default function Pedidos() {
                         <div className="list">
                           <>
                             {cancelado_.map(order => (
-                              <div className="card" key={order.id}>
-                                <Link
-                                  to={{
-                                    pathname: '/pedido',
-                                    search: `?id=${order.id}`,
-                                    state: {
-                                      orderData: order,
-                                    },
-                                  }}
-                                  className="title"
+                              <div
+                                className="col-md-13"
+                                style={{ width: '100%' }}
+                              >
+                                <div
+                                  className="panel panel-default"
+                                  style={{ borderColor: '#F4A460' }}
                                 >
-                                  <div className="time">
+                                  <Link
+                                    to="/orders"
+                                    className="block-anchor panel-footer text-center"
+                                    style={{
+                                      background: '#F4A460',
+                                      color: '#fff',
+                                    }}
+                                  >
                                     {order.timeDistance}
-                                  </div>
-                                </Link>
+                                  </Link>
+                                  <div className="panel-body bk-secondary text-dark">
+                                    <div className="stat-panel">
+                                      <div>{order.ship_neighborhood}</div>
+                                      <div
+                                        className="text-right"
+                                        style={{ marginTop: -20 }}
+                                      >
+                                        <div>#{order.id}</div>
+                                        <div>{formatPrice(order.total)}</div>
+                                        <div>{order.payment_method}</div>
+                                      </div>
 
-                                <div className="content">
-                                  {order.order_details.map(image => (
-                                    <img
-                                      className="image"
-                                      src={image.product.image.url}
-                                      alt={image.product.name}
-                                    />
-                                  ))}
-                                  <div className="cartao">
-                                    <div className="numpedido">
-                                      {' '}
-                                      #{order.id}
-                                    </div>
-                                    {order.payment_method}
-                                    <div className="vartotal">
-                                      {formatPrice(order.total)}
+                                      <div
+                                        className="stat-panel-title"
+                                        style={{ marginTop: -20 }}
+                                      >
+                                        {order.order_details.map(image => (
+                                          <img
+                                            className="image"
+                                            src={image.product.image.url}
+                                            alt={image.product.name}
+                                          />
+                                        ))}
+                                      </div>
+                                      <div className="stat-panel-title">
+                                        {order.order_details.map(qtd => (
+                                          <div className="qtd">
+                                            {' '}
+                                            {qtd.quantity}x{' '}
+                                          </div>
+                                        ))}
+                                      </div>
                                     </div>
                                   </div>
-                                  {order.order_details.map(qtd => (
-                                    <div className="qtd">{qtd.quantity}x</div>
-                                  ))}
-                                  <div>{order.ship_neighborhood}</div>
-                                  <div>
-                                    <Link
-                                      to={{
-                                        pathname: '/pedido',
-                                        search: `?id=${order.id}`,
-                                        state: {
-                                          orderData: order,
-                                        },
+                                  <div
+                                    style={{ display: 'flex', marginTop: -20 }}
+                                  >
+                                    <button
+                                      style={{
+                                        width: '50%',
+                                        background: '#F43C04',
+                                        color: '#fff',
+                                        borderColor: '#fff',
                                       }}
                                     >
-                                      <button
-                                        className="linkbuttonCanc"
-                                        type="button"
-                                        color="#000"
-                                      >
-                                        Imprimir
-                                      </button>
-                                    </Link>
+                                      Rejeitar
+                                    </button>
+                                    <button
+                                      style={{
+                                        width: '50%',
+                                        background: '#048923',
+                                        color: '#fff',
+                                        borderColor: '#fff',
+                                      }}
+                                    >
+                                      Aprovar
+                                    </button>
                                   </div>
                                 </div>
                               </div>

@@ -37,6 +37,8 @@ import {
   EmptyCartSubText,
   ProductInfoValor,
   RemoveCart,
+  ObservacaoProducto,
+  TextoObs,
 } from './styles';
 import {
   Button,
@@ -70,7 +72,7 @@ export default function Cart({ navigation }) {
       subtotal: formatPrice(product.amount * product.price),
     })),
   );
-
+  console.tron.log(cart);
   const subtotal = useSelector(state =>
     formatPrice(
       state.cart.reduce((totalSum, product) => {
@@ -145,7 +147,7 @@ export default function Cart({ navigation }) {
                     source={{
                       uri: item.image.url.replace('localhost', '10.0.0.106'),
                     }}
-                    style={{ width: 58, height: 58, borderRadius: 50 }}
+                    style={{ width: 50, height: 50, borderRadius: 50 }}
                   />
                   <ProductInfo>
                     <Title>{item.name}</Title>
@@ -155,12 +157,20 @@ export default function Cart({ navigation }) {
                     <CartItemTotalValue>{item.subtotal}</CartItemTotalValue>
                   </ProductInfoValor>
                 </Product>
+                {item.observacao ? (
+                  <ObservacaoProducto>
+                    <TextoObs>{item.observacao}</TextoObs>
+                  </ObservacaoProducto>
+                ) : (
+                  <Text />
+                )}
+
                 <CartItemSubTotal>
                   <CartItemCount>
                     <TouchableOpacity onPress={() => decrement(item)}>
                       <Icon
                         name="remove-circle-outline"
-                        size={20}
+                        size={25}
                         color="#F4A460"
                       />
                     </TouchableOpacity>
@@ -168,7 +178,7 @@ export default function Cart({ navigation }) {
                     <TouchableOpacity onPress={() => increment(item)}>
                       <Icon
                         name="add-circle-outline"
-                        size={20}
+                        size={25}
                         color="#F4A460"
                       />
                     </TouchableOpacity>

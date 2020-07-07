@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useRef, useState, useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { ScrollView } from 'react-native';
 import { TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -32,19 +33,6 @@ export default function NewAdress({ navigation, route }) {
   const [loading, setLoading] = useState(false);
   const [dados, setDados] = useState([]);
 
-  // { dados } = route.params;
-  useEffect(() => {
-    async function buscarCep() {
-      setLoading(true);
-      const response = await api.get('https://viacep.com.br/ws/49400000/json/');
-
-      setDados(response.data);
-      setLoading(false);
-    }
-
-    buscarCep();
-  }, []);
-
   async function handleSubmit() {
     setLoading(true);
     await api.post('/address_estab', {
@@ -71,30 +59,6 @@ export default function NewAdress({ navigation, route }) {
 
   return (
     <Background>
-      <Header style={{ backgroundColor: '#F4A460', height: 50 }}>
-        <Left>
-          <Button transparent>
-            <Icon
-              color="#fff"
-              size={25}
-              name="arrow-back"
-              onPress={() => navigation.navigate('ProductDetails')}
-            />
-          </Button>
-        </Left>
-        <Body>
-          <Text
-            style={{
-              marginLeft: 0,
-              marginTop: 4,
-              color: '#fff',
-              fontFamily: 'CerebriSans-ExtraBold',
-              fontSize: 20,
-            }}>
-            Detalhes do item
-          </Text>
-        </Body>
-      </Header>
       <ScrollView>
         <Container>
           <Form>
@@ -106,7 +70,7 @@ export default function NewAdress({ navigation, route }) {
               placeholder="Cep"
               returnKeyType="send"
               onSubmitEditing={() => streetRef.current.focus()}
-              value={dados.cep}
+              value="49400-000"
               onChangeText={setPostal_code}
             />
             <Label style={{ color: '#F4A460' }}>Rua</Label>
@@ -149,7 +113,7 @@ export default function NewAdress({ navigation, route }) {
               ref={cityRef}
               returnKeyType="send"
               onSubmitEditing={() => stateRef.current.focus()}
-              value={dados.localidade}
+              value="Lagarto"
               onChangeText={setCity}
             />
             <Label style={{ color: '#F4A460' }}>Estado</Label>
@@ -160,7 +124,7 @@ export default function NewAdress({ navigation, route }) {
               ref={stateRef}
               returnKeyType="send"
               onSubmitEditing={() => complementRef.current.focus()}
-              value={dados.uf}
+              value="Sergipe"
               onChangeText={setState}
             />
             <Label style={{ color: '#F4A460' }}>Complemento</Label>

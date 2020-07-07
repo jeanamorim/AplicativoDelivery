@@ -27,13 +27,17 @@ export default function App() {
           borderTopColor: 'rgba(0,0,0,0.1)',
           elevation: 3,
           color: '#999',
+
         },
-      }}>
+
+      }}
+    >
       <Tab.Screen
         name="HomeRoutes"
         component={HomeRoutes}
         options={{
           tabBarLabel: 'Home',
+
           tabBarIcon: ({color}) => (
             <Icon name="reorder" size={20} color={color} />
           ),

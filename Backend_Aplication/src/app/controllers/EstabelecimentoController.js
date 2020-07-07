@@ -29,6 +29,7 @@ class EstabelecimentoController {
       birthday,
       gender,
       cpf,
+      image_id,
     } = await Estabelecimento.create(req.body);
 
     await Cache.invalidate('estabelecimento');
@@ -46,6 +47,7 @@ class EstabelecimentoController {
       birthday,
       gender,
       cpf,
+      image_id,
     });
   }
 
@@ -57,6 +59,7 @@ class EstabelecimentoController {
     // if (cached) return res.json(cached);
 
     const estabelecimento = await Estabelecimento.findAll({
+      order: [['status']],
       attributes: [
         'id',
         'name',
@@ -75,7 +78,7 @@ class EstabelecimentoController {
         {
           model: File,
           as: 'image',
-          attributes: ['path', 'url'],
+          attributes: ['name', 'path', 'url'],
         },
       ],
     });

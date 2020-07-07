@@ -1,7 +1,8 @@
+/* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect } from 'react';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Iconn from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { YellowBox, Image } from 'react-native';
@@ -9,11 +10,11 @@ YellowBox.ignoreWarnings(['VirtualizedLists']);
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import storage from '@react-native-community/async-storage';
 import Background from '../../components/Background';
-
+import * as CartActions from '../../store/modules/cart/actions';
 import { ItemCount } from './styles';
 
 import styles from './style';
-import { StatusBar } from 'react-native';
+import { StatusBar, Alert, BackHandler } from 'react-native';
 import colors from '../../styles/colors';
 
 import {
@@ -32,19 +33,28 @@ import {
   Card,
   Icon,
 } from 'native-base';
-import { formatPrice } from '../../util/format';
+
 import OfertasEstabelecimento from '../../components/OfertasEstabelecimentos';
 import CategoriaEstabelecimento from '../../components/CategoriasEstabelecimentos';
 export default function ProductsLojas({ navigation, route }) {
   StatusBar.setBackgroundColor(colors.finalisar);
   const { product } = route.params;
-  const cartSize = useSelector(state => state.cart.length);
+  const totalCart = useSelector(state => state.cart);
+  const qtdItensCart = useSelector(state => state.cart.length);
+  console.tron.log(qtdItensCart);
+  const dispatch = useDispatch();
   const id = product.id;
-  console.tron.log(id);
+  //quantidade de itens no carrinho
+  const cartSize = totalCart.reduce((totalSum, product) => {
+    return totalSum + product.amount;
+  }, 0);
+
   useEffect(() => {
     async function loadId() {
       try {
-        await storage.setItem('KEY_VALUE_ID_ESTABELECIMENTO', id.toString());
+        await storage.multiSet([
+          ['KEY_VALUE_ID_ESTABELECIMENTO', JSON.stringify(product)],
+        ]);
       } catch (err) {
         if (err.response) {
           console.tron.log('Erro no servidor');
@@ -55,35 +65,65 @@ export default function ProductsLojas({ navigation, route }) {
     }
 
     loadId();
-  }, [id]);
+  }, [product]);
+  //---------------------------------------------------------------------------
+  function handlerClickVoltar() {
+    if (qtdItensCart > 0) {
+      Alert.alert(
+        'Atenção!',
+        'Você possui produtos no carrinho. Deseja removê-los?',
+        [
+          {
+            text: 'Não quero remover',
+            onPress: () => null,
+            style: 'cancel',
+          },
+          {
+            text: 'Sim, desejo remover',
+            onPress: () => {
+              dispatch(CartActions.EsvaziarCart());
+              navigation.goBack();
+            },
+          },
+        ],
+      );
+      return true;
+    }
+    return navigation.goBack();
+  }
+  //---------------------------------------------------------------------------
 
+  //------------------------------------------------------------------------------
   return (
     <Background>
+      <Header style={{ backgroundColor: '#F4A460' }}>
+        <Body>
+          <Icons
+            style={{ marginLeft: 10 }}
+            name="arrow-left"
+            size={20}
+            color="#FFF"
+          />
+        </Body>
+      </Header>
       <Container style={styles.container}>
-        <Header span style={styles.headerButton}>
-          <Left>
-            <Button transparent>
-              <Icon
-                size={25}
-                name="arrow-back"
-                onPress={() => navigation.goBack()}
-              />
-            </Button>
-          </Left>
+        <Header style={styles.headerNameLoja}>
+          <Button transparent textStyle={{ color: '#87838B' }}>
+            <Icons name="credit-card" size={20} color="#FFF" />
+            <Text>Aceitamos Cartão</Text>
+          </Button>
           <Right style={styles.iconPesquisar}>
             <Button transparent>
               <Iconn
                 name="magnify"
                 color="#FFF"
                 size={26}
-                onPress={() => navigation.navigate('Search')}
+                onPress={() =>
+                  navigation.navigate('Search', { estabelecimento: product })
+                }
               />
             </Button>
           </Right>
-        </Header>
-
-        <Header style={styles.headerNameLoja}>
-          <Text style={styles.nameLoja}>{product.name_loja}</Text>
         </Header>
 
         <Button
@@ -96,26 +136,29 @@ export default function ProductsLojas({ navigation, route }) {
         <Content style={{ flex: 1 }}>
           <Card
             style={{
+              elevation: 5,
               flex: 1,
             }}>
-            <Image
-              source={{
-                uri: product.image.url.replace('localhost', '10.0.0.106'),
-              }}
-              style={styles.imageGrande}
-            />
-
-            <Thumbnail
-              large
-              source={{
-                uri: product.image.url.replace('localhost', '10.0.0.106'),
-              }}
-              style={styles.avatar}
-            />
-            <Text numberOfLines={2} style={styles.descricaoLoja}>
-              "Nova pizzaria. Nosso lema é qualidade um bom atendimento e preço
-              baixo fdfcedefefeedsde."
-            </Text>
+            <CardItem>
+              <Left>
+                <Thumbnail
+                  source={{
+                    uri: product.image.url.replace('localhost', '10.0.0.106'),
+                  }}
+                />
+                <Body>
+                  <Text>{product.name_loja} sera que fica bom ate</Text>
+                  <Button transparent textStyle={{ color: '#87838B' }}>
+                    <Icons
+                      color="#F4A460"
+                      name="angle-double-right"
+                      size={20}
+                    />
+                    <Text style={{ color: '#F4A460' }}>Ver Informação</Text>
+                  </Button>
+                </Body>
+              </Left>
+            </CardItem>
 
             <CardItem>
               <Left>
@@ -137,18 +180,33 @@ export default function ProductsLojas({ navigation, route }) {
                   </Text>
                 </Text>
               </Body>
-              <Right>
-                <Text>
-                  <Text
-                    note
-                    style={{
-                      fontFamily: 'CerebriSans-Regular',
-                      color: '#20B402',
-                    }}>
-                    {product.status}
+              {product.status === 'ABERTO' ? (
+                <Right>
+                  <Text>
+                    <Text
+                      note
+                      style={{
+                        fontFamily: 'CerebriSans-Regular',
+                        color: '#20B402',
+                      }}>
+                      {product.status}
+                    </Text>
                   </Text>
-                </Text>
-              </Right>
+                </Right>
+              ) : (
+                <Right>
+                  <Text>
+                    <Text
+                      note
+                      style={{
+                        fontFamily: 'CerebriSans-Regular',
+                        color: '#B22222',
+                      }}>
+                      {product.status}
+                    </Text>
+                  </Text>
+                </Right>
+              )}
             </CardItem>
           </Card>
 

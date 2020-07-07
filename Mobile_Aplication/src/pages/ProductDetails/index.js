@@ -6,6 +6,7 @@ import Background from '../../components/Background';
 import Iconn from 'react-native-vector-icons/MaterialCommunityIcons';
 import { addToCartRequest } from '../../store/modules/cart/actions';
 import { formatPrice } from '../../util/format';
+import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 import {
   Button,
   Container,
@@ -35,8 +36,13 @@ export default function ProductDetails({ navigation, route }) {
   const { categoria, estabelecimento } = route.params;
   console.tron.log(estabelecimento);
   const [products, setProducts] = useState([]);
-  const cartSize = useSelector(state => state.cart.length);
+  const [isVisible, setIsVisible] = useState(false);
+  const totalCart = useSelector(state => state.cart);
   const id = categoria.id;
+  //total de itens no carrinho
+  const cartSize = totalCart.reduce((totalSum, product) => {
+    return totalSum + product.amount;
+  }, 0);
 
   useEffect(() => {
     async function getData() {
@@ -46,70 +52,68 @@ export default function ProductDetails({ navigation, route }) {
     }
     getData();
   }, [id]);
+  useEffect(() => {
+    setTimeout(() => setIsVisible(true), 500);
+  }, []);
 
   function RenderProdutos() {
-    if (products) {
-      if (products.length) {
-        return (
-          <ScrollView>
-            <Card>
-              <List>
-                {products.map(produtos => (
-                  <ListItem
-                    key={produtos.id}
-                    avatar
-                    onPress={() =>
-                      navigation.navigate('DetalhesItens', {
-                        produtoDetails: produtos,
-                        estabelecimento: estabelecimento,
-                      })
-                    }>
-                    <Left>
-                      <Thumbnail
-                        square
-                        source={{
-                          uri: produtos.image.url.replace(
-                            'localhost',
-                            '10.0.0.106',
-                          ),
-                        }}
-                        style={{ height: 64, width: 64 }}
-                      />
-                    </Left>
-                    <Body>
-                      <Text
-                        numberOfLines={1}
-                        style={{ fontFamily: 'CerebriSans-Regular' }}>
-                        {produtos.name}
-                      </Text>
-                      <Text
-                        note
-                        numberOfLines={2}
-                        style={{ fontFamily: 'CerebriSans-Regular' }}>
-                        {produtos.description}
-                      </Text>
-                    </Body>
-                    <Text style={styles.price}>
-                      {formatPrice(produtos.price)}
+    return (
+      <ScrollView>
+        <Card>
+          <List>
+            {products.map(produtos => (
+              <ShimmerPlaceHolder
+                key={produtos.id}
+                style={{
+                  height: 65,
+                  margin: 7,
+                  width: '97%',
+                }}
+                autoRun={true}
+                visible={isVisible}>
+                <ListItem
+                  avatar
+                  onPress={() =>
+                    navigation.navigate('DetalhesItens', {
+                      produtoDetails: produtos,
+                      estabelecimento: estabelecimento,
+                    })
+                  }>
+                  <Left>
+                    <Thumbnail
+                      square
+                      source={{
+                        uri: produtos.image.url.replace(
+                          'localhost',
+                          '10.0.0.106',
+                        ),
+                      }}
+                      style={{ height: 64, width: 64 }}
+                    />
+                  </Left>
+                  <Body>
+                    <Text
+                      numberOfLines={1}
+                      style={{ fontFamily: 'CerebriSans-Regular' }}>
+                      {produtos.name}
                     </Text>
-                  </ListItem>
-                ))}
-              </List>
-            </Card>
-          </ScrollView>
-        );
-      }
-
-      return (
-        <ActivityIndicator
-          style={{ marginTop: 200 }}
-          size={50}
-          color="#F4A460"
-        />
-      );
-    }
-
-    return null;
+                    <Text
+                      note
+                      numberOfLines={2}
+                      style={{ fontFamily: 'CerebriSans-Regular' }}>
+                      {produtos.description}
+                    </Text>
+                  </Body>
+                  <Text style={styles.price}>
+                    {formatPrice(produtos.price)}
+                  </Text>
+                </ListItem>
+              </ShimmerPlaceHolder>
+            ))}
+          </List>
+        </Card>
+      </ScrollView>
+    );
   }
 
   return (

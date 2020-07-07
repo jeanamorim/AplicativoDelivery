@@ -25,12 +25,12 @@ import {
 } from 'native-base';
 import api from '../../services/api';
 
-export default function Search({ navigation }) {
+export default function Search({ navigation, route }) {
   const [searchResult, setSearchResult] = useState(null);
   const [searchText, setSearchText] = useState('');
   const [searching, setSearching] = useState(false);
   const [focused, setFocused] = useState(false);
-
+  const { estabelecimento } = route.params;
   const timerRef = useRef();
 
   function handleChangeText(text) {
@@ -50,7 +50,7 @@ export default function Search({ navigation }) {
 
       const data = response.data.map(product => ({
         ...product,
-        priceFormatted: formatPrice(product.promo_price || product.price),
+        priceFormatted: formatPrice(product.price),
       }));
 
       setSearchResult(data);
@@ -66,7 +66,14 @@ export default function Search({ navigation }) {
     return (
       <Card style={styles.boxShadow}>
         <List>
-          <ListItem avatar onPress={() => navigation.navigate('DetalhesItens')}>
+          <ListItem
+            avatar
+            onPress={() =>
+              navigation.navigate('DetalhesItens', {
+                produtoDetails: item,
+                estabelecimento: estabelecimento,
+              })
+            }>
             <Left>
               <Thumbnail
                 square
@@ -91,7 +98,7 @@ export default function Search({ navigation }) {
                 note
                 numberOfLines={2}
                 style={{ fontFamily: 'CerebriSans-Regular' }}>
-                Pizza deliciosa podendo escolher ate 2 sabores nela e se quiser
+                {item.description}
               </Text>
             </Body>
             <Text style={styles.price}>{item.priceFormatted}</Text>
@@ -138,30 +145,6 @@ export default function Search({ navigation }) {
   return (
     <Background>
       <Container>
-        <Header style={{ backgroundColor: '#F4A460', height: 50 }}>
-          <Left>
-            <Button transparent>
-              <Icon
-                color="#fff"
-                size={25}
-                name="arrow-back"
-                onPress={() => navigation.navigate('ProductsLojas')}
-              />
-            </Button>
-          </Left>
-          <Body>
-            <Text
-              style={{
-                marginLeft: 33,
-                marginTop: 4,
-                color: '#fff',
-                fontFamily: 'CerebriSans-ExtraBold',
-                fontSize: 20,
-              }}>
-              Buscar
-            </Text>
-          </Body>
-        </Header>
         <Header searchBar rounded style={{ backgroundColor: '#fff' }}>
           <Item focused={focused}>
             <Input

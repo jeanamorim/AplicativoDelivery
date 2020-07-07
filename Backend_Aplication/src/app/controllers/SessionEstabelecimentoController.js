@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-
+import File from '../models/File';
 import Estabelecimento from '../models/Estabelecimento';
 import authConfig from '../../config/auth';
 
@@ -9,6 +9,13 @@ class SessionEstabelecimentoController {
 
     const user = await Estabelecimento.findOne({
       where: { email },
+      include: [
+        {
+          model: File,
+          as: 'image',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
     });
 
     if (!user) {
@@ -36,6 +43,8 @@ class SessionEstabelecimentoController {
       birthday,
       gender,
       cpf,
+      categoria,
+      image,
     } = user;
 
     return res.json({
@@ -51,6 +60,8 @@ class SessionEstabelecimentoController {
         birthday,
         gender,
         cpf,
+        categoria,
+        image,
       },
       token: jwt.sign({ id }, authConfig.secret, {
         expiresIn: authConfig.expiresIn,

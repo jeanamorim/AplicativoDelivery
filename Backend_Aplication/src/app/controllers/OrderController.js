@@ -77,7 +77,7 @@ class OrderController {
           {
             model: Estabelecimento,
             as: 'estabelecimento',
-            attributes: ['id', 'name_loja'],
+            attributes: ['id', 'name_loja', 'phone'],
           },
           {
             model: User,
@@ -139,7 +139,7 @@ class OrderController {
         {
           model: Estabelecimento,
           as: 'estabelecimento',
-          attributes: ['id', 'name_loja'],
+          attributes: ['id', 'name_loja', 'phone'],
         },
         {
           model: User,

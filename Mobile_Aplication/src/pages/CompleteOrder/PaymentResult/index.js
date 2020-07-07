@@ -13,8 +13,8 @@ import {
 } from './styles';
 
 export default function PaymentResult({ navigation, route }) {
-  const { status } = route.params;
-
+  const { status, idPedido } = route.params;
+  console.tron.log(idPedido);
   return (
     <Container status={status}>
       {status === 'success' ? (

@@ -51,19 +51,6 @@ export default function EstabelecimentoByCategory({ navigation, route }) {
   return (
     <Background>
       <Container>
-        <Header span style={{ backgroundColor: '#F4A460', height: 60 }}>
-          <Left>
-            <Button transparent>
-              <Icons
-                size={25}
-                name="arrow-back"
-                color="#FFF"
-                style={{ marginLeft: -100 }}
-              />
-            </Button>
-          </Left>
-        </Header>
-
         <Header style={{ backgroundColor: '#F4A460', height: 50 }}>
           <Text
             style={{

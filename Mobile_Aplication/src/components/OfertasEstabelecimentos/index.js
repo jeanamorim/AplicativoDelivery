@@ -8,9 +8,10 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button, Text, Body, CardItem, Thumbnail, View } from 'native-base';
 import api from '../../services/api';
 import { formatPrice } from '../../util/format';
-
+import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 export default function OfertasEstabelecimentos({ navigation, id }) {
   const [offers, setOffers] = useState([]);
+  const [isVisible, setIsVisible] = useState(false);
   useEffect(() => {
     async function loadOffers() {
       const response = await api.get(`offer_estab/${id}`);
@@ -29,92 +30,104 @@ export default function OfertasEstabelecimentos({ navigation, id }) {
 
     loadOffers();
   }, [id]);
+  useEffect(() => {
+    setTimeout(() => setIsVisible(true), 500);
+  }, []);
 
   function RenderOfertas() {
-    if (offers) {
-      if (offers.length) {
-        return (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.ofertas}>
-            {offers.map(oferta => (
-              <Body key={oferta.id}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('ProductDetails', {
-                      categoria: oferta,
-                    })
-                  }>
-                  <CardItem cardBody>
-                    <Thumbnail
-                      square
-                      large
-                      source={{
-                        uri: oferta.product.image.url.replace(
-                          'localhost',
-                          '10.0.0.106',
-                        ),
-                      }}
-                      style={styles.off}
-                    />
-                  </CardItem>
-                  <Text>
-                    <Text
-                      note
-                      style={{
-                        textDecorationLine: 'line-through',
-                        textDecorationStyle: 'solid',
-                        fontFamily: 'CerebriSans-ExtraBold',
-                      }}>
-                      {formatPrice(oferta.from)}
-                    </Text>
-                    <Text
-                      note
-                      style={{
-                        color: '#FF0000',
-                        fontFamily: 'CerebriSans-ExtraBold',
-                      }}>
-                      {formatPrice(oferta.to)}
-                    </Text>
+    return (
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.ofertas}>
+        {offers.map(oferta => (
+          <Body key={oferta.id}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('ProductDetails', {
+                  categoria: oferta,
+                })
+              }>
+              <ShimmerPlaceHolder
+                style={{
+                  maxWidth: 110,
+                  height: 110,
+                  width: 110,
+                  flex: 1,
+                  marginRight: 5,
+                  borderColor: '#fff',
+                  borderWidth: 1,
+
+                  borderRadius: 6,
+                }}
+                autoRun={true}
+                visible={isVisible}>
+                <CardItem>
+                  <Thumbnail
+                    square
+                    large
+                    source={{
+                      uri: oferta.product.image.url.replace(
+                        'localhost',
+                        '10.0.0.106',
+                      ),
+                    }}
+                    style={styles.off}
+                  />
+                </CardItem>
+              </ShimmerPlaceHolder>
+              <ShimmerPlaceHolder
+                style={{
+                  height: 12,
+                  margin: 7,
+                  width: 128,
+                }}
+                autoRun={true}
+                visible={isVisible}>
+                <Text>
+                  <Text
+                    note
+                    style={{
+                      textDecorationLine: 'line-through',
+                      textDecorationStyle: 'solid',
+                      fontFamily: 'CerebriSans-ExtraBold',
+                    }}>
+                    {formatPrice(oferta.from)}
                   </Text>
                   <Text
                     note
                     style={{
-                      color: '#F4A460',
+                      color: '#FF0000',
                       fontFamily: 'CerebriSans-ExtraBold',
                     }}>
-                    {oferta.product.name}
+                    {formatPrice(oferta.to)}
                   </Text>
-                </TouchableOpacity>
-              </Body>
-            ))}
-          </ScrollView>
-        );
-      }
-
-      return (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text
-            style={{
-              fontFamily: 'CerebriSans-ExtraBold',
-              color: '#F4A460',
-              fontWeight: 'bold',
-              fontSize: 16,
-            }}>
-            Estabelecimento sem ofertas.
-          </Text>
-        </View>
-      );
-    }
-
-    return null;
+                </Text>
+              </ShimmerPlaceHolder>
+              <ShimmerPlaceHolder
+                style={{
+                  height: 12,
+                  margin: 7,
+                  width: 128,
+                }}
+                autoRun={true}
+                visible={isVisible}>
+                <Text
+                  note
+                  style={{
+                    color: '#F4A460',
+                    fontFamily: 'CerebriSans-ExtraBold',
+                  }}>
+                  {oferta.product.name}
+                </Text>
+              </ShimmerPlaceHolder>
+            </TouchableOpacity>
+          </Body>
+        ))}
+      </ScrollView>
+    );
   }
+
   return (
     <Background>
       <RenderOfertas />

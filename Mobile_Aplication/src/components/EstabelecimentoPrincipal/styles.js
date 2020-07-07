@@ -69,10 +69,14 @@ export default {
     width: 20,
     flex: 1,
   },
-  status: {
+  statusAberto: {
     flex: 1,
-
     color: '#20B402',
+    fontFamily: 'CerebriSans-Regular',
+  },
+  statusFechado: {
+    flex: 1,
+    color: '#B22222',
     fontFamily: 'CerebriSans-Regular',
   },
   ofertas: {

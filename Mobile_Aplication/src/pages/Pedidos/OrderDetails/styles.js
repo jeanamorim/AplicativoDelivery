@@ -98,67 +98,95 @@ export const DotPendente = styled.View`
   width: 60px;
   height: 60px;
   border: 1px solid #ee9a49;
-  border-color: #0000cd;
   border-width: 2;
-  border-color: #0000cd;
   border-width: 2;
   border-radius: 30px;
   background: #ee9a49;
-  opacity: ${props => (props.filled ? 4 : 0.6)};
+  opacity: ${props => (props.filled ? 4 : 0.1)};
   margin-bottom: 5px;
+`;
+export const LabelPendente = styled.Text`
+  color: #ee9a49;
+  font-weight: bold;
+  font-size: 11px;
+  max-width: 90px;
+  text-align: center;
 `;
 export const DotProducao = styled.View`
   width: 60px;
   height: 60px;
   border: 1px solid #ff0000;
-  border-color: #0000cd;
   border-width: 2;
   border-radius: 30px;
   background: #ff0000;
   opacity: ${props => (props.filled ? 4 : 0.1)};
   margin-bottom: 5px;
 `;
+export const LabelProducao = styled.Text`
+  color: #ff0000;
+  font-weight: bold;
+  font-size: 11px;
+  max-width: 90px;
+  text-align: center;
+`;
 export const DotEnviado = styled.View`
   width: 60px;
   height: 60px;
   border: 1px solid #0000cd;
-  border-color: #0000cd;
   border-width: 2;
   border-radius: 30px;
   background: #0000cd;
   opacity: ${props => (props.filled ? 4 : 0.1)};
   margin-bottom: 5px;
 `;
+export const LabelEnviado = styled.Text`
+  color: #0000cd;
+  font-weight: bold;
+  font-size: 11px;
+  max-width: 90px;
+  text-align: center;
+`;
 export const DotEntregue = styled.View`
   width: 60px;
   height: 60px;
   border: 1px solid #00ff00;
-  border-color: #0000cd;
   border-width: 2;
   border-radius: 30px;
   background: #00ff00;
   opacity: ${props => (props.filled ? 4 : 0.1)};
   margin-bottom: 5px;
 `;
+export const LabelEntregue = styled.Text`
+  color: #00ff00;
+  font-weight: bold;
+  font-size: 11px;
+  max-width: 90px;
+  text-align: center;
+`;
 export const DotCancelado = styled.View`
   width: 60px;
   height: 60px;
   border: 1px solid #ff0000;
-  border-color: #0000cd;
   border-width: 2;
   border-radius: 30px;
   background: #ff0000;
   opacity: ${props => (props.filled ? 4 : 0.1)};
   margin-bottom: 5px;
 `;
-
+export const LabelCancelado = styled.Text`
+  color: #ff0000;
+  font-weight: bold;
+  font-size: 11px;
+  max-width: 90px;
+  text-align: center;
+`;
 export const LabelContainer = styled.View`
   flex-direction: column;
   align-items: center;
 `;
 
 export const Label = styled.Text`
-  color: #000;
+  color: #f4a460;
   font-weight: bold;
   font-size: 8px;
   max-width: 90px;

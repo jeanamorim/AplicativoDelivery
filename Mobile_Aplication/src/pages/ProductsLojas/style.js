@@ -60,10 +60,10 @@ export default {
     position: 'absolute',
     borderWidth: 2,
     flex: 1,
-    marginTop: 9,
     height: 90,
     width: 90,
     borderRadius: 50,
+    alignItems: 'center',
   },
 
   nota: {
