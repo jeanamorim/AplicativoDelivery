@@ -7,6 +7,6 @@ export default {
     pass: process.env.MAIL_PASS,
   },
   default: {
-    from: 'Equipe Grocery <noreply@grocery.com>',
+    from: 'Equipe Delivery <noreply@delivery.com>',
   },
 };

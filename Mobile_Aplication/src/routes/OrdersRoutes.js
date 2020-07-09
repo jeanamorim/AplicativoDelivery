@@ -16,15 +16,17 @@ export default function Delivery() {
         headerTintColor: '#FFF',
         headerTitleStyle: {fontSize: 18},
         headerTransparent: false,
-
+        tabBarVisible: false,
 
 
       }}
 
       initialRouteName="Orders">
       <Stack.Screen
-        name="Orders"
-        component={Orders}
+          headerLeft={({navigation}) => ({
+            onPress: navigation.goBack(),
+          })}
+
         options={{
           title: 'Pedidos',
           headerStyle: {
@@ -32,11 +34,15 @@ export default function Delivery() {
           },
           headerTintColor: '#fff',
         }}
+        name="Orders"
+    component={Orders}
+
       />
       <Stack.Screen
         headerLeft={({navigation}) => ({
           onPress: navigation.goBack(),
         })}
+
         options={{
           title: 'Detalhes do pedido',
           headerStyle: {
@@ -45,8 +51,9 @@ export default function Delivery() {
           headerTintColor: '#fff',
 
  }}
-        name="OrdersDetails"
-        component={OrdersDetails}
+ name="OrdersDetails"
+ component={OrdersDetails}
+
       />
 
 

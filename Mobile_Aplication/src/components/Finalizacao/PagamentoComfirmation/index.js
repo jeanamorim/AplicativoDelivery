@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -39,7 +38,7 @@ import {
 export default function PaymentMethod({ navigation, route }) {
   const [methodSelected, setMethodSelected] = useState('DINHEIRO');
   const [loading, setLoading] = useState(false);
-  const { orderDetails } = route.params;
+
   console.tron.log(methodSelected);
 
   return (
@@ -107,7 +106,6 @@ export default function PaymentMethod({ navigation, route }) {
               onPress={() =>
                 navigation.navigate('Troco', {
                   paymentMethod: methodSelected,
-                  orderDetails: orderDetails,
                 })
               }
               loading={loading}>
@@ -116,12 +114,12 @@ export default function PaymentMethod({ navigation, route }) {
           ) : (
             <Button
               onPress={() =>
-                navigation.navigate('DeliveryAddress', {
+                navigation.navigate('OrderConfirmation', {
                   paymentMethod: methodSelected,
                 })
               }
               loading={loading}>
-              <Text style={{ fontSize: 15, color: '#fff' }}>Selecionar</Text>
+              <Text style={{ fontSize: 15, color: '#fff' }}>Finalização</Text>
             </Button>
           )}
         </FooterTab>

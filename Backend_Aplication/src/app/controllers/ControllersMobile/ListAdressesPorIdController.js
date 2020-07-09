@@ -1,8 +1,12 @@
 import Address from '../../models/Address';
+import Cache from '../../../lib/Cache';
 
 class AdressesUserLogadoController {
   async index(req, res) {
-    const category = await Address.findAll({
+    const cached = await Cache.get('endereco_user');
+
+    if (cached) return res.json(cached);
+    const endereco = await Address.findAll({
       where: {
         id: req.params.id,
       },
@@ -20,7 +24,9 @@ class AdressesUserLogadoController {
       ],
     });
 
-    return res.json(category);
+    await Cache.set('endereco_user', endereco);
+
+    return res.json(endereco);
   }
 }
 

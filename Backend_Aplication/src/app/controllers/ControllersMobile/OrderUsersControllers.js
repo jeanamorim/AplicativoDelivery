@@ -5,10 +5,16 @@ import OrderDetail from '../../models/OrderDetail';
 import User from '../../models/User';
 import Estabelecimento from '../../models/Estabelecimento';
 import Product from '../../models/Product';
+import Cache from '../../../lib/Cache';
 
 class OrderUsersControllers {
   async index(req, res) {
+    const cached = await Cache.get('orders_user_id');
+
+    if (cached) return res.json(cached);
     const orders = await Order.findAll({
+      order: [['date', 'DESC']],
+
       where: {
         user_id: req.params.id,
       },
@@ -69,6 +75,8 @@ class OrderUsersControllers {
         },
       ],
     });
+
+    await Cache.set('orders_user_id', orders);
 
     return res.json(orders);
   }

@@ -53,19 +53,14 @@ export default function Order({ location }) {
         {orderData.map(order => (
           <Containerr>
             <div style={{ display: 'flex' }}>
-              <button
+              <Button
                 onClick={history.goBack}
-                style={{
-                  background: '#32cd32',
-                  width: 150,
-                  color: '#fff',
-                  margin: 1,
-                  borderRadius: 5,
-                  borderColor: '#fff',
-                }}
+                variant="contained"
+                color="primary"
+                startIcon={<ArrowBackIcon />}
               >
                 Voltar
-              </button>
+              </Button>
             </div>
 
             <header>

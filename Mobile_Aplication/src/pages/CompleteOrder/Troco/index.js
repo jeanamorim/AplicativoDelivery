@@ -53,13 +53,12 @@ export default function Troco({ navigation, route }) {
         <FooterTab style={{ backgroundColor: '#F4A460' }}>
           <Button
             onPress={() =>
-              navigation.navigate('OrderConfirmation', {
-                orderDetails: orderDetails,
+              navigation.navigate('DeliveryAddress', {
                 paymentMethod: paymentMethod,
                 troco: troco,
               })
             }>
-            <Text style={{ fontSize: 15, color: '#fff' }}>Finalização</Text>
+            <Text style={{ fontSize: 15, color: '#fff' }}>Comfirmar</Text>
           </Button>
         </FooterTab>
       </Footer>

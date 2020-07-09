@@ -69,7 +69,7 @@ export default function OfertasEstabelecimentos({ navigation, id }) {
                     source={{
                       uri: oferta.product.image.url.replace(
                         'localhost',
-                        '10.0.0.106',
+                        '10.0.0.104',
                       ),
                     }}
                     style={styles.off}

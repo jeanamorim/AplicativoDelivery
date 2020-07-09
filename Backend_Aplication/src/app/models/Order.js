@@ -7,6 +7,8 @@ class Order extends Model {
         date: Sequelize.DATE,
         status: Sequelize.STRING,
         addressee: Sequelize.STRING,
+        observacao: Sequelize.STRING,
+        troco: Sequelize.STRING,
         ship_postal_code: Sequelize.STRING,
         ship_street: Sequelize.STRING,
         ship_street_n: Sequelize.INTEGER,

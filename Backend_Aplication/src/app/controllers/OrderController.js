@@ -7,7 +7,7 @@ import Product from '../models/Product';
 import File from '../models/File';
 import User from '../models/User';
 
-// import Cache from '../../lib/Cache';
+import Cache from '../../lib/Cache';
 
 import CreateOrderService from '../../services/CreateOrderService';
 import CancelOrderService from '../../services/CancelOrderService';
@@ -34,6 +34,8 @@ class OrderController {
           'id',
           'date',
           'status',
+          'observacao',
+          'troco',
           'payment_method',
           'ship_postal_code',
           'ship_street',
@@ -90,9 +92,9 @@ class OrderController {
       return res.json(order);
     }
 
-    // const cached = await Cache.get('orders:users:all');
+    const cached = await Cache.get('orders:users:all');
 
-    // if (cached) return res.json(cached);
+    if (cached) return res.json(cached);
 
     const orders = await Order.findAll({
       where: {
@@ -102,6 +104,8 @@ class OrderController {
         'id',
         'date',
         'status',
+        'observacao',
+        'troco',
         'payment_method',
         'ship_postal_code',
         'ship_street',
@@ -149,7 +153,7 @@ class OrderController {
       ],
     });
 
-    // await Cache.set('orders:users:all', orders);
+    await Cache.set('orders:users:all', orders);
 
     return res.json(orders);
   }
@@ -167,6 +171,8 @@ class OrderController {
         date,
         estabelecimento_id,
         status,
+        observacao,
+        troco,
         name,
         ship_postal_code,
         ship_street,
@@ -186,7 +192,7 @@ class OrderController {
         cc_last_4_digits,
       } = await order.update(req.body, transaction);
 
-      // await Cache.invalidate('orders:users:all');
+      await Cache.invalidate('orders:users:all');
 
       if (req.body.products) {
         req.body.products.map(async product => {
@@ -199,7 +205,7 @@ class OrderController {
           await orderDetail.update(product, transaction);
         });
 
-        // await Cache.invalidate('orders:users:all');
+        await Cache.invalidate('orders:users:all');
 
         await transaction.commit();
 
@@ -208,6 +214,8 @@ class OrderController {
           date,
           estabelecimento_id,
           status,
+          observacao,
+          troco,
           name,
           ship_postal_code,
           ship_street,
@@ -236,6 +244,8 @@ class OrderController {
         date,
         estabelecimento_id,
         status,
+        observacao,
+        troco,
         name,
         ship_postal_code,
         ship_street,

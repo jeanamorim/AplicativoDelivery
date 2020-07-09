@@ -134,7 +134,7 @@ export default {
   modal: {
     bottom: -20,
     position: 'absolute',
-    height: '90%',
+    height: '92%',
     marginLeft: 0,
     marginRight: 0,
     backgroundColor: '#fff',
@@ -146,14 +146,14 @@ export default {
   btn: {
     width: '100%',
     height: 50,
-
+    borderRadius: 10,
     backgroundColor: '#F4A460',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 30,
   },
   title: {
-    backgroundColor: '#F4A460',
+    backgroundColor: '#fff',
     height: 50,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -162,5 +162,23 @@ export default {
     textAlign: 'center',
     marginLeft: 15,
     marginRight: 15,
+  },
+  modalComfirmation: {
+    bottom: -20,
+    position: 'absolute',
+    height: '20%',
+    marginLeft: 0,
+    marginRight: 0,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    width: '100%',
+  },
+  btnNovo: {
+    height: 50,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30,
   },
 };

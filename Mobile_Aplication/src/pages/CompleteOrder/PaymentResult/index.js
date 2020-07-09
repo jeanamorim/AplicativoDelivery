@@ -1,20 +1,54 @@
-import React from 'react';
-
+/* eslint-disable no-shadow */
+import React, { useState, useEffect } from 'react';
+import { Alert } from 'react-native';
+import { useSelector } from 'react-redux';
+import storage from '@react-native-community/async-storage';
+import { dateLanguage } from '../../../locales';
+import { formatPrice } from '../../../util/format';
+import { format, parseISO, formatDistanceStrict } from 'date-fns';
+import pt from 'date-fns/locale/pt';
 import {
   Container,
   SuccessAnimationContainer,
   SuccessAnimation,
   SucessTextContainer,
   SucessTextHeader,
-  SucessText,
   FailedAnimationContainer,
   FailedAnimation,
-  ContinueButton,
 } from './styles';
-
+import api from '../../../services/api';
 export default function PaymentResult({ navigation, route }) {
-  const { status, idPedido } = route.params;
-  console.tron.log(idPedido);
+  const id = useSelector(state => state.user.profile.id);
+  const { status, orderId } = route.params;
+  const [order, setOrder] = useState([]);
+
+  useEffect(() => {
+    async function loadOrders() {
+      const response = await api.get(`orders_user/${56}`);
+
+      navigation.navigate('OrdersRoutes', {
+        screen: 'OrdersDetails',
+        order: response.data[0],
+      });
+    }
+
+    loadOrders();
+  }, [id, navigation]);
+
+  useEffect(() => {
+    async function deleteCart() {
+      const response = await api.get(`orders_user/${56}`);
+
+      navigation.navigate('OrdersRoutes', {
+        screen: 'OrdersDetails',
+        order: response.data[0],
+      });
+    }
+
+    deleteCart();
+  }, [id, navigation]);
+
+
   return (
     <Container status={status}>
       {status === 'success' ? (
@@ -24,11 +58,6 @@ export default function PaymentResult({ navigation, route }) {
           </SuccessAnimationContainer>
           <SucessTextContainer>
             <SucessTextHeader>Pedido confirmado com Sucesso</SucessTextHeader>
-            <SucessText>
-              O app Meu delivery agradece. Agora é so aguardar que o
-              estabelecimento irá levar ate você. Para mais detalhes, consulte
-              Meus Pedidos.
-            </SucessText>
           </SucessTextContainer>
         </>
       ) : (
@@ -38,9 +67,6 @@ export default function PaymentResult({ navigation, route }) {
           </FailedAnimationContainer>
         </>
       )}
-      <ContinueButton onPress={() => navigation.navigate('Home')}>
-        Sair
-      </ContinueButton>
     </Container>
   );
 }

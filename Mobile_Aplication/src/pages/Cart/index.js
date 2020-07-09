@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
+import { Picker } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { TouchableOpacity, Image, Text, View, Alert } from 'react-native';
@@ -62,37 +63,52 @@ import {
   FooterTab,
 } from 'native-base';
 
-export default function Cart({ navigation }) {
+export default function Cart({ navigation, route }) {
+  const { id } = route.params;
+
   const [feeConfig, setFeeConfig] = useState([]);
   const [deliveryFee, setDeliveryFee] = useState(0);
+  const [products, setProducts] = useState([]);
 
-  const cart = useSelector(state =>
-    state.cart.map(product => ({
-      ...product,
-      subtotal: formatPrice(product.amount * product.price),
-    })),
-  );
-  console.tron.log(cart);
-  const subtotal = useSelector(state =>
-    formatPrice(
-      state.cart.reduce((totalSum, product) => {
-        return totalSum + product.amount * product.price;
-      }, 0),
-    ),
-  );
+  useEffect(() => {
+    async function getData() {
+      const response = await api.get(`cart/${id}`);
+      setProducts(response.data);
+    }
+    getData();
+  }, [id]);
 
-  const unformattedSubtotal = useSelector(state =>
-    state.cart.reduce((totalSum, product) => {
-      return totalSum + product.amount * product.price;
+  async function HandleRemove(item) {
+    await api.delete(`cart/${item}`);
+    const response = await api.get(`cart/${id}`);
+    setProducts(response.data);
+  }
+  async function HandlerUpdate(itemValue, item) {
+    await api.put(`cart/${item}`, {
+      quantidade: itemValue,
+    });
+    const response = await api.get(`cart/${id}`);
+    setProducts(response.data);
+  }
+  const cart = products.map(product => ({
+    ...product,
+    subtotal: formatPrice(product.quantidade * product.product.price),
+  }));
+
+  const subtotal = formatPrice(
+    products.reduce((totalSum, product) => {
+      return totalSum + product.quantidade * product.product.price;
     }, 0),
   );
 
-  const total = useSelector(state =>
-    formatPrice(
-      state.cart.reduce((totalSum, product) => {
-        return totalSum + product.amount * product.price;
-      }, 0) + deliveryFee,
-    ),
+  const unformattedSubtotal = products.reduce((totalSum, product) => {
+    return totalSum + product.quantidade * product.product.price;
+  }, 0);
+
+  const total = formatPrice(
+    products.reduce((totalSum, product) => {
+      return totalSum + product.quantidade * product.product.price;
+    }, 0) + deliveryFee,
   );
 
   const formattedDeliveryFee = formatPrice(deliveryFee);
@@ -145,15 +161,18 @@ export default function Cart({ navigation }) {
                 <Product>
                   <Image
                     source={{
-                      uri: item.image.url.replace('localhost', '10.0.0.106'),
+                      uri: item.product.image.url.replace(
+                        'localhost',
+                        '10.0.0.104',
+                      ),
                     }}
                     style={{ width: 50, height: 50, borderRadius: 50 }}
                   />
                   <ProductInfo>
-                    <Title>{item.name}</Title>
+                    <Title>{item.product.name}</Title>
                   </ProductInfo>
                   <ProductInfoValor>
-                    <Value>{formatPrice(item.price)}</Value>
+                    <Value>{formatPrice(item.product.price)}</Value>
                     <CartItemTotalValue>{item.subtotal}</CartItemTotalValue>
                   </ProductInfoValor>
                 </Product>
@@ -167,27 +186,27 @@ export default function Cart({ navigation }) {
 
                 <CartItemSubTotal>
                   <CartItemCount>
-                    <TouchableOpacity onPress={() => decrement(item)}>
-                      <Icon
-                        name="remove-circle-outline"
-                        size={25}
-                        color="#F4A460"
-                      />
-                    </TouchableOpacity>
-                    <Amount>{item.amount}</Amount>
-                    <TouchableOpacity onPress={() => increment(item)}>
-                      <Icon
-                        name="add-circle-outline"
-                        size={25}
-                        color="#F4A460"
-                      />
-                    </TouchableOpacity>
+                    <Picker
+                      selectedValue={item.quantidade}
+                      style={{ height: 50, width: 100 }}
+                      onValueChange={(itemValue, itemIndex) =>
+                        HandlerUpdate(itemValue, item.id)
+                      }>
+                      <Picker.Item label="1" value="1" />
+                      <Picker.Item label="2" value="2" />
+                      <Picker.Item label="3" value="3" />
+                      <Picker.Item label="4" value="4" />
+                      <Picker.Item label="5" value="5" />
+                      <Picker.Item label="6" value="6" />
+                      <Picker.Item label="7" value="7" />
+                      <Picker.Item label="8" value="8" />
+                      <Picker.Item label="9" value="9" />
+                      <Picker.Item label="10" value="10" />
+                    </Picker>
+                    <Text>Quantidade</Text>
                   </CartItemCount>
 
-                  <TouchableOpacity
-                    onPress={() =>
-                      dispatch(CartActions.removeFromCart(item.id))
-                    }>
+                  <TouchableOpacity onPress={() => HandleRemove(item.id)}>
                     <RemoveCart>
                       <Icon name="delete-forever" color="#FF0000" size={17} />
                       <Text style={{ fontSize: 12, color: '#FF0000' }}>
@@ -199,6 +218,7 @@ export default function Cart({ navigation }) {
               </ProductContainer>
             )}
           />
+
           <Button
             onPress={() =>
               Alert.alert(
@@ -246,6 +266,7 @@ export default function Cart({ navigation }) {
                       total,
                       deliveryFee: formattedDeliveryFee,
                     },
+                    id: id,
                   })
                 }>
                 <Text style={{ fontSize: 15, color: '#fff' }}>

@@ -34,6 +34,14 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      observacao: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      troco: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       addressee: {
         type: Sequelize.STRING,
         allowNull: false,

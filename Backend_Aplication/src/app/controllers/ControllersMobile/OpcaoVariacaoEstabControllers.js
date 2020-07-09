@@ -1,9 +1,13 @@
 import OpcaoVariacao from '../../models/Opcao';
 import Variacao from '../../models/Variacao';
+import Cache from '../../../lib/Cache';
 
 class OpcaoVariacaoEstabControllers {
   async index(req, res) {
-    const category = await OpcaoVariacao.findAll({
+    const cached = await Cache.get('opcao_variacao');
+
+    if (cached) return res.json(cached);
+    const opcao = await OpcaoVariacao.findAll({
       where: {
         variacao_id: req.params.id,
       },
@@ -17,7 +21,9 @@ class OpcaoVariacaoEstabControllers {
       ],
     });
 
-    return res.json(category);
+    await Cache.set('opcao_variacao', opcao);
+
+    return res.json(opcao);
   }
 }
 

@@ -4,10 +4,13 @@ import Product from '../../models/Product';
 import File from '../../models/File';
 import Category from '../../models/Category';
 import Estabelecimento from '../../models/Estabelecimento';
+import Cache from '../../../lib/Cache';
 
 class ProductEstabelecimentoController {
   async index(req, res) {
-    // const cached = await Cache.get('offers');
+    const cached = await Cache.get('ofertas_geral');
+
+    if (cached) return res.json(cached);
 
     const offers = await Offer.findAll({
       attributes: [
@@ -57,6 +60,8 @@ class ProductEstabelecimentoController {
     );
 
     // await Cache.set('offers', expiredCheck);
+
+    await Cache.set('ofertas_geral', expiredCheck);
 
     return res.json(expiredCheck);
   }

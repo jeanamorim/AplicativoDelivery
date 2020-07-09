@@ -45,7 +45,7 @@ export default function OfertasPrincipal({ navigation, id, loja }) {
           <Thumbnail
             large
             source={{
-              uri: item.image.url.replace('localhost', '10.0.0.106'),
+              uri: item.image.url.replace('localhost', '10.0.0.104'),
             }}
             style={{ borderColor: '#E25B08', borderWidth: 2 }}
           />

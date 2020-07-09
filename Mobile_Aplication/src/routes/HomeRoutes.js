@@ -61,7 +61,11 @@ export default function Delivery() {
           onPress: navigation.goBack(),
         })}
         options={{
-          headerShown: false,
+          title: null,
+          headerStyle: {
+          backgroundColor: '#f4a460',
+          },
+          headerTintColor: '#fff',
         }}
         name="ProductsLojas"
         component={ProductsLojas}
@@ -143,7 +147,7 @@ export default function Delivery() {
           onPress: navigation.goBack(),
         })}
         options={{
-          title: 'Selecione seu endereço',
+          title: 'Endereço e pagamento',
           headerStyle: {
           backgroundColor: '#f4a460',
           },

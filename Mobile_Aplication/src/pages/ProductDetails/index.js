@@ -34,7 +34,7 @@ import styles from './styles';
 import api from '../../services/api';
 export default function ProductDetails({ navigation, route }) {
   const { categoria, estabelecimento } = route.params;
-  console.tron.log(estabelecimento);
+  const [quantItensCart, setQuantCart] = useState([]);
   const [products, setProducts] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   const totalCart = useSelector(state => state.cart);
@@ -43,6 +43,14 @@ export default function ProductDetails({ navigation, route }) {
   const cartSize = totalCart.reduce((totalSum, product) => {
     return totalSum + product.amount;
   }, 0);
+
+  useEffect(() => {
+    async function getData() {
+      const response = await api.get(`cart/${estabelecimento.id}`);
+      setQuantCart(response.data.length);
+    }
+    getData();
+  }, [estabelecimento.id, id]);
 
   useEffect(() => {
     async function getData() {
@@ -85,7 +93,7 @@ export default function ProductDetails({ navigation, route }) {
                       source={{
                         uri: produtos.image.url.replace(
                           'localhost',
-                          '10.0.0.106',
+                          '10.0.0.104',
                         ),
                       }}
                       style={{ height: 64, width: 64 }}
@@ -139,9 +147,16 @@ export default function ProductDetails({ navigation, route }) {
               onPress={() => navigation.navigate('ProductsLojas')}
             />
           </Button>
-          <Button badge vertical onPress={() => navigation.navigate('Cart')}>
+          <Button
+            badge
+            vertical
+            onPress={() =>
+              navigation.navigate('Cart', {
+                id: estabelecimento.id,
+              })
+            }>
             <Badge>
-              <Text>{cartSize || 0}</Text>
+              <Text>{quantItensCart || 0}</Text>
             </Badge>
             <Icon name="basket" style={{ color: '#fff' }} />
           </Button>

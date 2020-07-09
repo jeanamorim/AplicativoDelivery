@@ -201,15 +201,15 @@ export default function Pedidos() {
             <div className="col-md-12">
               <div className="panel panel-default">
                 <div className="panel-heading">
-                  <div style={{ display: 'flex' }}>
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Link to="/lista">
                       <button
                         style={{
-                          background: '#32cd32',
+                          background: '#FF8C00',
                           width: 150,
                           color: '#fff',
                           margin: 1,
-                          borderRadius: 5,
+                          borderRadius: 7,
                           borderColor: '#fff',
                         }}
                       >
@@ -219,11 +219,11 @@ export default function Pedidos() {
 
                     <button
                       style={{
-                        background: '#32cd32',
+                        background: '#FF8C00',
                         width: 150,
                         color: '#fff',
                         margin: 1,
-                        borderRadius: 5,
+                        borderRadius: 7,
                         borderColor: '#fff',
                       }}
                       onClick={refreshPage}
@@ -232,11 +232,11 @@ export default function Pedidos() {
                     </button>
                     <button
                       style={{
-                        background: '#32cd32',
+                        background: '#FF8C00',
                         width: 150,
                         color: '#fff',
                         margin: 1,
-                        borderRadius: 5,
+                        borderRadius: 7,
                         borderColor: '#fff',
                       }}
                     >
@@ -244,223 +244,300 @@ export default function Pedidos() {
                     </button>
                   </div>
                 </div>
+                <div
+                  className="panel-heading"
+                  style={{
+                    background: '#fff',
+                    borderColor: '#FF8C00',
+                  }}
+                >
+                  <div style={{ display: 'flex' }}>
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        background: '#9999',
+                        width: '20%',
+                        color: '#000',
+                        margin: 1,
+                        borderWidth: 2,
+                        borderColor: '#000',
+                      }}
+                    >
+                      Pendente
+                    </div>
 
-                <div className="menuPedidosstatus">
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        background: '#9999',
+                        width: '20%',
+                        color: '#000',
+                        margin: 1,
+                        borderWidth: 2,
+                        borderColor: '#000',
+                      }}
+                    >
+                      Produzindo
+                    </div>
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        background: '#9999',
+                        width: '20%',
+                        color: '#000',
+                        margin: 1,
+                        borderWidth: 2,
+                        borderColor: '#000',
+                      }}
+                    >
+                      Enviado
+                    </div>
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        background: '#9999',
+                        width: '20%',
+                        color: '#000',
+                        margin: 1,
+                        borderWidth: 2,
+                        borderColor: '#000',
+                      }}
+                    >
+                      Entregue
+                    </div>
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        background: '#9999',
+                        width: '20%',
+                        color: '#000',
+                        margin: 1,
+                        borderWidth: 2,
+                        borderColor: '#000',
+                      }}
+                    >
+                      Cancelado
+                    </div>
+                  </div>
+                </div>
+
+                <div className="menuPedidosstatus" style={{ display: 'flex' }}>
                   <div
                     className="panel-heading"
                     style={{ background: '#fff' }}
                   />
-                  <div className="panel-body">
-                    <button disabled type="button" className="button_status">
-                      Pendentes
-                    </button>
 
+                  <div className="panel-body" style={{ width: '20%' }}>
                     <div className="board" id="boardjsplain">
-                      <div className="list">
-                        <>
-                          {pendente_.map(order => (
-                            <div className="cards">
-                              <div
-                                className="panel panel-default"
-                                style={{ borderColor: '#F4A460' }}
+                      <>
+                        {pendente_.map(order => (
+                          <div className="cards">
+                            <div
+                              className="panel panel-default"
+                              style={{ borderColor: '#F4A460' }}
+                            >
+                              <Link
+                                to={{
+                                  pathname: '/order',
+                                  search: `?id=${order.id}`,
+                                  state: {
+                                    orderData: order,
+                                  },
+                                }}
+                                className="block-anchor panel-footer text-center"
+                                style={{
+                                  background: '#F4A460',
+                                  color: '#fff',
+                                  height: 35,
+                                }}
                               >
-                                <Link
-                                  to={{
-                                    pathname: '/order',
-                                    search: `?id=${order.id}`,
-                                    state: {
-                                      orderData: order,
-                                    },
-                                  }}
-                                  className="block-anchor panel-footer text-center"
-                                  style={{
-                                    background: '#F4A460',
-                                    color: '#fff',
-                                  }}
-                                >
-                                  {order.timeDistance}
-                                </Link>
-                                <div className="panel-body bk-secondary text-dark">
-                                  <div className="stat-panel">
-                                    <div className="bairro">
-                                      {order.ship_neighborhood}
+                                {order.timeDistance}
+                              </Link>
+                              <div className="panel-body bk-secondary text-dark">
+                                <div className="stat-panel">
+                                  <div className="bairro">
+                                    {order.ship_neighborhood}
+                                  </div>
+                                  <div
+                                    className="text-right"
+                                    style={{
+                                      marginTop: 10,
+                                      display: 'flex',
+                                    }}
+                                  >
+                                    <div style={{ color: '#D2691E' }}>
+                                      #{order.id}
                                     </div>
-                                    <div
-                                      className="text-right"
-                                      style={{ marginTop: -20 }}
-                                    >
-                                      <div>#{order.id}</div>
-                                      <div>{formatPrice(order.total)}</div>
-                                      <div>{order.payment_method}</div>
+                                    <div style={{ marginLeft: '12%' }}>
+                                      {formatPrice(order.total)}
                                     </div>
-
-                                    <div
-                                      className="stat-panel-title"
-                                      style={{ marginTop: -20 }}
-                                    >
-                                      {order.order_details.map(image => (
-                                        <img
-                                          className="image"
-                                          src={image.product.image.url}
-                                          alt={image.product.name}
-                                        />
-                                      ))}
-                                    </div>
-                                    <div className="stat-panel-title">
-                                      {order.order_details.map(qtd => (
-                                        <div className="qtd">
-                                          {' '}
-                                          {qtd.quantity}x{' '}
-                                        </div>
-                                      ))}
+                                    <div style={{ marginLeft: '5%' }}>
+                                      {order.payment_method}
                                     </div>
                                   </div>
-                                </div>
-                                <div
-                                  style={{ display: 'flex', marginTop: -20 }}
-                                >
-                                  <button
-                                    style={{
-                                      width: '50%',
-                                      background: '#F43C04',
-                                      color: '#fff',
-                                      borderColor: '#fff',
-                                    }}
-                                    id={order.id}
-                                    onClick={handleChange}
-                                    type="button"
-                                    value="CANCELADO"
-                                  >
-                                    Rejeitar
-                                  </button>
-                                  <button
-                                    style={{
-                                      width: '50%',
-                                      background: '#048923',
-                                      color: '#fff',
-                                      borderColor: '#fff',
-                                    }}
-                                    id={order.id}
-                                    onClick={handleChange}
-                                    type="button"
-                                    value="PRODUCAO"
-                                  >
-                                    Aprovar
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="panel-body">
-                    <button disabled type="button" className="button_status">
-                      Produzindo
-                    </button>
 
-                    <div className="board" id="boardjsplain">
-                      <div className="list">
-                        <>
-                          {producao_.map(order => (
-                            <div className="cards">
-                              <div
-                                className="panel panel-default"
-                                style={{ borderColor: '#F4A460' }}
-                              >
-                                <Link
-                                  to={{
-                                    pathname: '/order',
-                                    search: `?id=${order.id}`,
-                                    state: {
-                                      orderData: order,
-                                    },
-                                  }}
-                                  className="block-anchor panel-footer text-center"
-                                  style={{
-                                    background: '#F4A460',
-                                    color: '#fff',
-                                  }}
-                                >
-                                  {order.timeDistance}
-                                </Link>
-                                <div className="panel-body bk-secondary text-dark">
-                                  <div className="stat-panel">
-                                    <div className="bairro">
-                                      {order.ship_neighborhood}
-                                    </div>
-                                    <div
-                                      className="text-right"
-                                      style={{ marginTop: -20 }}
-                                    >
-                                      <div>#{order.id}</div>
-                                      <div>{formatPrice(order.total)}</div>
-                                      <div>{order.payment_method}</div>
-                                    </div>
-
-                                    <div
-                                      className="stat-panel-title"
-                                      style={{ marginTop: -20 }}
-                                    >
-                                      {order.order_details.map(image => (
-                                        <img
-                                          className="image"
-                                          src={image.product.image.url}
-                                          alt={image.product.name}
-                                        />
-                                      ))}
-                                    </div>
-                                    <div className="stat-panel-title">
-                                      {order.order_details.map(qtd => (
-                                        <div className="qtd">
-                                          {' '}
-                                          {qtd.quantity}x{' '}
-                                        </div>
-                                      ))}
-                                    </div>
+                                  <div
+                                    className="stat-panel-title"
+                                    style={{ marginTop: -20 }}
+                                  >
+                                    {order.order_details.map(image => (
+                                      <img
+                                        className="image"
+                                        src={image.product.image.url}
+                                        alt={image.product.name}
+                                      />
+                                    ))}
+                                  </div>
+                                  <div className="stat-panel-title">
+                                    {order.order_details.map(qtd => (
+                                      <div className="qtd">
+                                        {' '}
+                                        {qtd.quantity}x{' '}
+                                      </div>
+                                    ))}
                                   </div>
                                 </div>
-                                <div
-                                  style={{ display: 'flex', marginTop: -20 }}
+                              </div>
+                              <div style={{ display: 'flex', marginTop: -20 }}>
+                                <button
+                                  style={{
+                                    width: '50%',
+                                    background: '#F43C04',
+                                    color: '#fff',
+                                    borderColor: '#fff',
+                                  }}
+                                  id={order.id}
+                                  onClick={handleChange}
+                                  type="button"
+                                  value="CANCELADO"
                                 >
-                                  <button
-                                    style={{
-                                      width: '50%',
-                                      background: '#999',
-                                      color: '#fff',
-                                      borderColor: '#fff',
-                                    }}
-                                  >
-                                    Imprimir
-                                  </button>
-                                  <button
-                                    style={{
-                                      width: '50%',
-                                      background: '#048923',
-                                      color: '#fff',
-                                      borderColor: '#fff',
-                                    }}
-                                    id={order.id}
-                                    onClick={handleChange}
-                                    type="button"
-                                    value="ENVIADO"
-                                  >
-                                    Enviar
-                                  </button>
-                                </div>
+                                  Rejeitar
+                                </button>
+                                <button
+                                  style={{
+                                    width: '50%',
+                                    background: '#048923',
+                                    color: '#fff',
+                                    borderColor: '#fff',
+                                  }}
+                                  id={order.id}
+                                  onClick={handleChange}
+                                  type="button"
+                                  value="PRODUCAO"
+                                >
+                                  Aprovar
+                                </button>
                               </div>
                             </div>
-                          ))}
-                        </>
-                      </div>
+                          </div>
+                        ))}
+                      </>
                     </div>
                   </div>
-                  <div className="panel-body">
-                    <button disabled type="button" className="button_status">
-                      Enviados
-                    </button>
+                  <div className="panel-body" style={{ width: '20%' }}>
+                    <div className="board" id="boardjsplain">
+                      <>
+                        {producao_.map(order => (
+                          <div className="cards">
+                            <div
+                              className="panel panel-default"
+                              style={{ borderColor: '#F4A460' }}
+                            >
+                              <Link
+                                to={{
+                                  pathname: '/order',
+                                  search: `?id=${order.id}`,
+                                  state: {
+                                    orderData: order,
+                                  },
+                                }}
+                                className="block-anchor panel-footer text-center"
+                                style={{
+                                  background: '#F4A460',
+                                  color: '#fff',
+                                  height: 35,
+                                }}
+                              >
+                                {order.timeDistance}
+                              </Link>
+                              <div className="panel-body bk-secondary text-dark">
+                                <div className="stat-panel">
+                                  <div className="bairro">
+                                    {order.ship_neighborhood}
+                                  </div>
+                                  <div
+                                    className="text-right"
+                                    style={{
+                                      marginTop: 10,
+                                      display: 'flex',
+                                    }}
+                                  >
+                                    <div style={{ color: '#D2691E' }}>
+                                      #{order.id}
+                                    </div>
+                                    <div style={{ marginLeft: '12%' }}>
+                                      {formatPrice(order.total)}
+                                    </div>
+                                    <div style={{ marginLeft: '5%' }}>
+                                      {order.payment_method}
+                                    </div>
+                                  </div>
 
+                                  <div
+                                    className="stat-panel-title"
+                                    style={{ marginTop: -20 }}
+                                  >
+                                    {order.order_details.map(image => (
+                                      <img
+                                        className="image"
+                                        src={image.product.image.url}
+                                        alt={image.product.name}
+                                      />
+                                    ))}
+                                  </div>
+                                  <div className="stat-panel-title">
+                                    {order.order_details.map(qtd => (
+                                      <div className="qtd">
+                                        {' '}
+                                        {qtd.quantity}x{' '}
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                              <div style={{ display: 'flex', marginTop: -20 }}>
+                                <button
+                                  style={{
+                                    width: '50%',
+                                    background: '#999',
+                                    color: '#fff',
+                                    borderColor: '#fff',
+                                  }}
+                                >
+                                  Imprimir
+                                </button>
+                                <button
+                                  style={{
+                                    width: '50%',
+                                    background: '#048923',
+                                    color: '#fff',
+                                    borderColor: '#fff',
+                                  }}
+                                  id={order.id}
+                                  onClick={handleChange}
+                                  type="button"
+                                  value="ENVIADO"
+                                >
+                                  Enviar
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </>
+                    </div>
+                  </div>
+                  <div className="panel-body" style={{ width: '20%' }}>
                     <div className="board" id="boardjsplain">
                       <div className="list">
                         <>
@@ -482,6 +559,7 @@ export default function Pedidos() {
                                   style={{
                                     background: '#F4A460',
                                     color: '#fff',
+                                    height: 35,
                                   }}
                                 >
                                   {order.timeDistance}
@@ -493,11 +571,20 @@ export default function Pedidos() {
                                     </div>
                                     <div
                                       className="text-right"
-                                      style={{ marginTop: -20 }}
+                                      style={{
+                                        marginTop: 10,
+                                        display: 'flex',
+                                      }}
                                     >
-                                      <div>#{order.id}</div>
-                                      <div>{formatPrice(order.total)}</div>
-                                      <div>{order.payment_method}</div>
+                                      <div style={{ color: '#D2691E' }}>
+                                        #{order.id}
+                                      </div>
+                                      <div style={{ marginLeft: '12%' }}>
+                                        {formatPrice(order.total)}
+                                      </div>
+                                      <div style={{ marginLeft: '5%' }}>
+                                        {order.payment_method}
+                                      </div>
                                     </div>
 
                                     <div
@@ -557,98 +644,96 @@ export default function Pedidos() {
                       </div>
                     </div>
                   </div>
-                  <div className="panel-body">
-                    <button disabled type="button" className="button_status">
-                      Entregues
-                    </button>
-
+                  <div className="panel-body" style={{ width: '20%' }}>
                     <div className="board" id="boardjsplain">
-                      <div className="list">
-                        <>
-                          {entregue_.map(order => (
-                            <div className="cards">
-                              <div
-                                className="panel panel-default"
-                                style={{ borderColor: '#F4A460' }}
+                      <>
+                        {entregue_.map(order => (
+                          <div className="cards">
+                            <div
+                              className="panel panel-default"
+                              style={{ borderColor: '#F4A460' }}
+                            >
+                              <Link
+                                to={{
+                                  pathname: '/order',
+                                  search: `?id=${order.id}`,
+                                  state: {
+                                    orderData: order,
+                                  },
+                                }}
+                                className="block-anchor panel-footer text-center"
+                                style={{
+                                  background: '#F4A460',
+                                  color: '#fff',
+                                  height: 35,
+                                }}
                               >
-                                <Link
-                                  to={{
-                                    pathname: '/order',
-                                    search: `?id=${order.id}`,
-                                    state: {
-                                      orderData: order,
-                                    },
-                                  }}
-                                  className="block-anchor panel-footer text-center"
-                                  style={{
-                                    background: '#F4A460',
-                                    color: '#fff',
-                                  }}
-                                >
-                                  {order.timeDistance}
-                                </Link>
-                                <div className="panel-body bk-secondary text-dark">
-                                  <div className="stat-panel">
-                                    <div className="bairro">
-                                      {order.ship_neighborhood}
-                                    </div>
-                                    <div
-                                      className="text-right"
-                                      style={{ marginTop: -20 }}
-                                    >
-                                      <div>#{order.id}</div>
-                                      <div>{formatPrice(order.total)}</div>
-                                      <div>{order.payment_method}</div>
-                                    </div>
-
-                                    <div
-                                      className="stat-panel-title"
-                                      style={{ marginTop: -20 }}
-                                    >
-                                      {order.order_details.map(image => (
-                                        <img
-                                          className="image"
-                                          src={image.product.image.url}
-                                          alt={image.product.name}
-                                        />
-                                      ))}
-                                    </div>
-                                    <div className="stat-panel-title">
-                                      {order.order_details.map(qtd => (
-                                        <div className="qtd">
-                                          {' '}
-                                          {qtd.quantity}x{' '}
-                                        </div>
-                                      ))}
-                                    </div>
+                                {order.timeDistance}
+                              </Link>
+                              <div className="panel-body bk-secondary text-dark">
+                                <div className="stat-panel">
+                                  <div className="bairro">
+                                    {order.ship_neighborhood}
                                   </div>
-                                </div>
-                                <div
-                                  style={{ display: 'flex', marginTop: -20 }}
-                                >
-                                  <button
+                                  <div
+                                    className="text-right"
                                     style={{
-                                      width: '100%',
-                                      background: '#999',
-                                      color: '#fff',
-                                      borderColor: '#fff',
+                                      marginTop: 10,
+                                      display: 'flex',
                                     }}
                                   >
-                                    Imprimir
-                                  </button>
+                                    <div style={{ color: '#D2691E' }}>
+                                      #{order.id}
+                                    </div>
+                                    <div style={{ marginLeft: '12%' }}>
+                                      {formatPrice(order.total)}
+                                    </div>
+                                    <div style={{ marginLeft: '5%' }}>
+                                      {order.payment_method}
+                                    </div>
+                                  </div>
+
+                                  <div
+                                    className="stat-panel-title"
+                                    style={{ marginTop: -20 }}
+                                  >
+                                    {order.order_details.map(image => (
+                                      <img
+                                        className="image"
+                                        src={image.product.image.url}
+                                        alt={image.product.name}
+                                      />
+                                    ))}
+                                  </div>
+                                  <div className="stat-panel-title">
+                                    {order.order_details.map(qtd => (
+                                      <div className="qtd">
+                                        {' '}
+                                        {qtd.quantity}x{' '}
+                                      </div>
+                                    ))}
+                                  </div>
                                 </div>
                               </div>
+                              <div style={{ display: 'flex', marginTop: -20 }}>
+                                <button
+                                  style={{
+                                    width: '100%',
+                                    background: '#999',
+                                    color: '#fff',
+                                    borderColor: '#fff',
+                                  }}
+                                >
+                                  Imprimir
+                                </button>
+                              </div>
                             </div>
-                          ))}
-                        </>
-                      </div>
+                          </div>
+                        ))}
+                      </>
                     </div>
                   </div>
-                  <div className="panel-body">
-                    <button disabled type="button" className="button_status">
-                      Cancelados
-                    </button>
-
+                  <div className="panel-body" style={{ width: '20%' }}>
                     <div className="board" id="boardjsplain">
                       <div className="list">
                         <>
@@ -670,6 +755,7 @@ export default function Pedidos() {
                                   style={{
                                     background: '#F4A460',
                                     color: '#fff',
+                                    height: 35,
                                   }}
                                 >
                                   {order.timeDistance}
@@ -681,11 +767,20 @@ export default function Pedidos() {
                                     </div>
                                     <div
                                       className="text-right"
-                                      style={{ marginTop: -20 }}
+                                      style={{
+                                        marginTop: 10,
+                                        display: 'flex',
+                                      }}
                                     >
-                                      <div>#{order.id}</div>
-                                      <div>{formatPrice(order.total)}</div>
-                                      <div>{order.payment_method}</div>
+                                      <div style={{ color: '#D2691E' }}>
+                                        #{order.id}
+                                      </div>
+                                      <div style={{ marginLeft: '12%' }}>
+                                        {formatPrice(order.total)}
+                                      </div>
+                                      <div style={{ marginLeft: '5%' }}>
+                                        {order.payment_method}
+                                      </div>
                                     </div>
 
                                     <div

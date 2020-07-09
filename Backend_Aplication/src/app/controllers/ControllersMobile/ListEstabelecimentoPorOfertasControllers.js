@@ -1,12 +1,15 @@
 import File from '../../models/File';
 import Product from '../../models/Product';
-
+import Cache from '../../../lib/Cache';
 import Category from '../../models/Category';
 import Ofertas from '../../models/Offer';
 
 class ListEstabelecimentoPorOfertasControllers {
   async index(req, res) {
-    const category = await Ofertas.findAll({
+    const cached = await Cache.get('list_ofers_loja');
+
+    if (cached) return res.json(cached);
+    const listOffers = await Ofertas.findAll({
       where: {
         estabelecimento_id: req.params.id,
       },
@@ -47,7 +50,9 @@ class ListEstabelecimentoPorOfertasControllers {
       ],
     });
 
-    return res.json(category);
+    await Cache.set('list_ofers_loja', listOffers);
+
+    return res.json(listOffers);
   }
 }
 

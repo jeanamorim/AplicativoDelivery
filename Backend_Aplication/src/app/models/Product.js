@@ -9,6 +9,7 @@ class Product extends Model {
         price: Sequelize.FLOAT,
         quantity: Sequelize.FLOAT,
         unit: Sequelize.STRING,
+        observacao: Sequelize.STRING,
       },
       {
         sequelize: connection,

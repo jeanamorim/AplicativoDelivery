@@ -19,6 +19,7 @@ import CategoryController from './app/controllers/CategoryController';
 import BannerController from './app/controllers/BannerController';
 import ProductController from './app/controllers/ProductController';
 import OrderController from './app/controllers/OrderController';
+import CartControllers from './app/controllers/CartControllers';
 import UserOrderController from './app/controllers/UserOrderController';
 import OfferController from './app/controllers/OfferController';
 import SettingController from './app/controllers/SettingController';
@@ -151,6 +152,8 @@ routes.delete('/address_estab/:id', AddressesUserEstab.delete);
 routes.put('/address_estab/:id', AddressesUserEstab.update);
 // cadastra um endereco do usuario logado no app
 routes.post('/address_estab', AddressesUserEstab.store);
+// buscar ofertas por estabelecimento no mobile
+routes.get('/offer_estab/:id', OfertasEstabelecimento.index);
 routes.put(
   '/address',
   authMiddlewareUsers,
@@ -167,6 +170,11 @@ routes.get('/offersGeral', OfertasGeral.index);
 routes.get('/variacao_produto/:id', VariacaoProduto.index);
 // lista todas as opcoes das variacoes passando o id da variacao
 routes.get('/opcao_variacao/:id', OpcaoVariacaoEstabControllers.index);
+
+routes.post('/cart', CartControllers.store);
+routes.get('/cart/:id', CartControllers.index);
+routes.put('/cart/:id', CartControllers.update);
+routes.delete('/cart/:id', CartControllers.delete);
 
 routes.use(authMiddleware);
 
@@ -213,7 +221,6 @@ routes.put('/orders/:id', validateOrderUpdate, OrderController.update);
 routes.delete('/orders/:id', OrderController.delete);
 
 routes.post('/offers', validateOfferStore, OfferController.store);
-routes.get('/offer_estab/:id', OfertasEstabelecimento.index);
 routes.get('/offers', OfferController.index);
 routes.put('/offers/:id', validateOfferUpdate, OfferController.update);
 routes.delete('/offers/:id', OfferController.delete);

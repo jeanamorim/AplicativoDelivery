@@ -6,7 +6,7 @@ import File from '../models/File';
 import Category from '../models/Category';
 import Estabelecimento from '../models/Estabelecimento';
 
-// import Cache from '../../lib/Cache';
+import Cache from '../../lib/Cache';
 
 // mport AdminCheckService from '../../services/AdminCheckService';
 
@@ -28,11 +28,22 @@ class OfferController {
       expiration_date,
     });
 
+    await Cache.invalidate('offers');
+
+    await Cache.invalidate('products');
+
     return res.json(id);
   }
 
   async index(req, res) {
-    // const cached = await Cache.get('offers');
+    const cached = await Cache.get('offers');
+
+    if (cached) {
+      const expiredCheck = cached.filter(
+        offer => !isBefore(parseISO(offer.expiration_date), new Date()),
+      );
+      return res.json(expiredCheck);
+    }
 
     const offers = await Offer.findAll({
       where: {
@@ -84,7 +95,7 @@ class OfferController {
       offer => !isBefore(parseISO(offer.expiration_date), new Date()),
     );
 
-    // await Cache.set('offers', expiredCheck);
+    await Cache.set('offers', expiredCheck);
 
     return res.json(expiredCheck);
   }
@@ -103,9 +114,9 @@ class OfferController {
       to,
     } = await offer.update(req.body);
 
-    // //await Cache.invalidate('offers');
+    await Cache.invalidate('offers');
 
-    // await Cache.invalidate('products');
+    await Cache.invalidate('products');
 
     return res.json({
       id,
@@ -126,7 +137,7 @@ class OfferController {
       },
     });
 
-    // await Cache.invalidate('offers');
+    await Cache.invalidate('offers');
 
     return res.json();
   }

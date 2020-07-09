@@ -15,6 +15,7 @@ import Estabelecimento from '../app/models/Estabelecimento';
 import Variacao from '../app/models/Variacao';
 import Frete from '../app/models/Frete';
 import Opcao from '../app/models/Opcao';
+import Cart from '../app/models/Cart';
 
 import databaseConfig from '../config/database';
 
@@ -34,6 +35,7 @@ const models = [
   Variacao,
   Frete,
   Opcao,
+  Cart,
 ];
 
 class Database {

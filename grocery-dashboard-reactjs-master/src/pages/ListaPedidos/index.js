@@ -89,7 +89,7 @@ export default function Orders() {
       view: (
         <Link
           to={{
-            pathname: '/pedido',
+            pathname: '/order',
             search: `?id=${order.id}`,
             state: {
               orderData: order,

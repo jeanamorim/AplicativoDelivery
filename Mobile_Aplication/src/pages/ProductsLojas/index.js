@@ -1,10 +1,10 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import Iconn from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import api from '../../services/api';
 import { YellowBox, Image } from 'react-native';
 YellowBox.ignoreWarnings(['VirtualizedLists']);
 import Icons from 'react-native-vector-icons/FontAwesome5';
@@ -38,74 +38,27 @@ import OfertasEstabelecimento from '../../components/OfertasEstabelecimentos';
 import CategoriaEstabelecimento from '../../components/CategoriasEstabelecimentos';
 export default function ProductsLojas({ navigation, route }) {
   StatusBar.setBackgroundColor(colors.finalisar);
+  const [quantItensCart, setQuantCart] = useState([]);
   const { product } = route.params;
-  const totalCart = useSelector(state => state.cart);
-  const qtdItensCart = useSelector(state => state.cart.length);
-  console.tron.log(qtdItensCart);
+
   const dispatch = useDispatch();
   const id = product.id;
-  //quantidade de itens no carrinho
-  const cartSize = totalCart.reduce((totalSum, product) => {
-    return totalSum + product.amount;
-  }, 0);
 
-  useEffect(() => {
-    async function loadId() {
-      try {
-        await storage.multiSet([
-          ['KEY_VALUE_ID_ESTABELECIMENTO', JSON.stringify(product)],
-        ]);
-      } catch (err) {
-        if (err.response) {
-          console.tron.log('Erro no servidor');
-        } else {
-          console.tron.log('Falha ao conectar com o servidor');
-        }
-      }
+  useFocusEffect(() => {
+    async function getData() {
+      const response = await api.get(`cart/${id}`);
+      setQuantCart(response.data.length);
     }
+    getData();
+  }, [id, product.id]);
 
-    loadId();
-  }, [product]);
   //---------------------------------------------------------------------------
-  function handlerClickVoltar() {
-    if (qtdItensCart > 0) {
-      Alert.alert(
-        'Atenção!',
-        'Você possui produtos no carrinho. Deseja removê-los?',
-        [
-          {
-            text: 'Não quero remover',
-            onPress: () => null,
-            style: 'cancel',
-          },
-          {
-            text: 'Sim, desejo remover',
-            onPress: () => {
-              dispatch(CartActions.EsvaziarCart());
-              navigation.goBack();
-            },
-          },
-        ],
-      );
-      return true;
-    }
-    return navigation.goBack();
-  }
+
   //---------------------------------------------------------------------------
 
   //------------------------------------------------------------------------------
   return (
     <Background>
-      <Header style={{ backgroundColor: '#F4A460' }}>
-        <Body>
-          <Icons
-            style={{ marginLeft: 10 }}
-            name="arrow-left"
-            size={20}
-            color="#FFF"
-          />
-        </Body>
-      </Header>
       <Container style={styles.container}>
         <Header style={styles.headerNameLoja}>
           <Button transparent textStyle={{ color: '#87838B' }}>
@@ -128,9 +81,13 @@ export default function ProductsLojas({ navigation, route }) {
 
         <Button
           style={styles.buttonCart}
-          onPress={() => navigation.navigate('Cart')}>
+          onPress={() =>
+            navigation.navigate('Cart', {
+              id: id,
+            })
+          }>
           <Iconn style={styles.iconCart} name="basket" color="#FFF" size={33} />
-          <ItemCount>{cartSize || 0}</ItemCount>
+          <ItemCount>{quantItensCart || 0}</ItemCount>
         </Button>
 
         <Content style={{ flex: 1 }}>
@@ -143,7 +100,7 @@ export default function ProductsLojas({ navigation, route }) {
               <Left>
                 <Thumbnail
                   source={{
-                    uri: product.image.url.replace('localhost', '10.0.0.106'),
+                    uri: product.image.url.replace('localhost', '10.0.0.104'),
                   }}
                 />
                 <Body>

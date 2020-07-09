@@ -46,11 +46,9 @@ export default function DetalhesItens({ navigation, route }) {
   const [checked, setChecked] = useState(false);
   const [valor, setValor] = useState([]);
   const [observacao, setObservação] = useState('');
-
-  const status = estabelecimento.status === 'ABERTO' ? true : false;
-
+  const userId = useSelector(state => state.user.profile.id);
   const id = produtoDetails.id;
-  console.tron.log(observacao);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -60,6 +58,16 @@ export default function DetalhesItens({ navigation, route }) {
     }
     getData();
   }, [id]);
+
+  async function HandlersubmitCart(product) {
+    await api.post('cart', {
+      product_id: product,
+      estabelecimento_id: estabelecimento.id,
+      user_id: userId,
+      observacao: observacao,
+      quantidade: quantidade,
+    });
+  }
 
   function decrement() {
     if (quantidade > 1) {
@@ -119,7 +127,7 @@ export default function DetalhesItens({ navigation, route }) {
                 source={{
                   uri: produtoDetails.image.url.replace(
                     'localhost',
-                    '10.0.0.106',
+                    '10.0.0.104',
                   ),
                 }}
                 style={{
@@ -315,15 +323,10 @@ export default function DetalhesItens({ navigation, route }) {
       </Item>
       <Footer>
         <FooterTab style={{ backgroundColor: '#F4A460' }}>
-          {status === true ? (
+          {estabelecimento.status === 'ABERTO' ? (
             <Button
               onPress={() => {
-                handleAddProduct(
-                  produtoDetails,
-                  quantidade,
-                  valorTotalPedido,
-                  observacao,
-                );
+                HandlersubmitCart(produtoDetails.id);
                 navigation.navigate('ProductsLojas');
               }}>
               <Text style={{ fontSize: 15, color: '#fff' }}>

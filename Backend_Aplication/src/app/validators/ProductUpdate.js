@@ -10,6 +10,7 @@ export default async (req, res, next) => {
       quantity: Yup.number(),
       unit: Yup.string(),
       price: Yup.number(),
+      observacao: Yup.string(),
     });
 
     await schema.validate(req.body, { abortEarly: false });

@@ -1,10 +1,14 @@
 import Variacao from '../../models/Variacao';
 import Product from '../../models/Product';
 import Opcao from '../../models/Opcao';
+import Cache from '../../../lib/Cache';
 
 class VariacaoProdutoControllers {
   async index(req, res) {
-    const category = await Variacao.findAll({
+    const cached = await Cache.get('variacao_product');
+
+    if (cached) return res.json(cached);
+    const variacao = await Variacao.findAll({
       where: {
         product_id: req.params.id,
       },
@@ -24,7 +28,9 @@ class VariacaoProdutoControllers {
       ],
     });
 
-    return res.json(category);
+    await Cache.set('variacao_product', variacao);
+
+    return res.json(variacao);
   }
 }
 

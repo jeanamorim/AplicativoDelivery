@@ -1,4 +1,5 @@
 import Address from '../../models/Address';
+import Cache from '../../../lib/Cache';
 
 class AdressesUserLogadoController {
   async store(req, res) {
@@ -26,11 +27,17 @@ class AdressesUserLogadoController {
       reference,
     });
 
+    await Cache.invalidate('endereco_user_logado');
+
     return res.json(endereco);
   }
 
   async index(req, res) {
-    const category = await Address.findAll({
+    const cached = await Cache.get('endereco_user_logado');
+
+    if (cached) return res.json(cached);
+
+    const endereco = await Address.findAll({
       where: {
         user_id: req.params.id,
       },
@@ -47,8 +54,8 @@ class AdressesUserLogadoController {
         'reference',
       ],
     });
-
-    return res.json(category);
+    await Cache.set('endereco_user_logado', endereco);
+    return res.json(endereco);
   }
 
   async update(req, res) {
@@ -69,7 +76,7 @@ class AdressesUserLogadoController {
       complement,
       reference,
     } = await address.update(req.body);
-
+    await Cache.invalidate('endereco_user_logado');
     return res.json({
       id,
       postal_code,
@@ -91,7 +98,7 @@ class AdressesUserLogadoController {
         id: req.params.id,
       },
     });
-
+    await Cache.invalidate('endereco_user_logado');
     return res.json();
   }
 }

@@ -51,13 +51,14 @@ import {
 } from 'native-base';
 
 export default function OrderDetails({ navigation, route }) {
+  const { order } = route.params;
   const [orderDetails, setOrderDetails] = useState({});
   const pendente = orderDetails.status === 'PENDENTE' ? 'PENDENTE' : null;
   const producao = orderDetails.status === 'PRODUCAO' ? 'PRODUCAO' : null;
   const enviado = orderDetails.status === 'ENVIADO' ? 'ENVIADO' : null;
   const entregue = orderDetails.status === 'ENTREGUE' ? 'ENTREGUE' : null;
   const cancelado = orderDetails.status === 'CANCELADO' ? 'CANCELADO' : null;
-  const { order } = route.params;
+
   console.tron.log(order);
   useEffect(() => {
     const orderDetailsFormatted = {

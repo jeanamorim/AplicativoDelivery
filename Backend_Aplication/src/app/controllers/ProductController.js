@@ -21,6 +21,7 @@ class ProductController {
       image_id,
       category_id,
       price,
+      observacao,
     } = req.body;
 
     const products = await Product.create({
@@ -32,15 +33,24 @@ class ProductController {
       image_id,
       category_id,
       price,
+      observacao,
     });
-
+    await Cache.invalidate('products');
     return res.json(products);
   }
 
   async index(req, res) {
     if (req.params.id) {
       const product = await Product.findByPk(req.params.id, {
-        attributes: ['id', 'name', 'description', 'quantity', 'unit', 'price'],
+        attributes: [
+          'id',
+          'name',
+          'description',
+          'quantity',
+          'unit',
+          'price',
+          'observacao',
+        ],
         include: [
           {
             model: File,
@@ -78,6 +88,7 @@ class ProductController {
             'quantity',
             'unit',
             'price',
+            'observacao',
           ],
           include: [
             {
@@ -116,6 +127,7 @@ class ProductController {
             'quantity',
             'unit',
             'price',
+            'observacao',
           ],
           include: [
             {
@@ -144,7 +156,17 @@ class ProductController {
       }
     }
 
+    const cached = await Cache.get('products');
+
+    if (cached) {
+      const productsFormatted = await FormatProductService.run(cached);
+
+      return res.json(productsFormatted);
+    }
+
     const productsFormatted = await FormatProductService.run();
+
+    await Cache.set('products', productsFormatted);
 
     return res.json(productsFormatted);
   }
@@ -166,6 +188,7 @@ class ProductController {
       quantity,
       unit,
       price,
+      observacao,
     } = await product.update(req.body);
 
     return res.json({
@@ -178,6 +201,7 @@ class ProductController {
       quantity,
       unit,
       price,
+      observacao,
     });
   }
 
