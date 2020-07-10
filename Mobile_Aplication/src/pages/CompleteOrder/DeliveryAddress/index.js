@@ -51,7 +51,7 @@ export default function OfertasPrincipal({ navigation, route }) {
   const { orderDetails, paymentMethod, troco, id } = route.params;
   const userId = useSelector(state => state.user.profile.id);
   const name = useSelector(state => state.user.profile.name);
-  console.tron.log(idPedido);
+  console.tron.log('aqui', paymentMethod);
   useEffect(() => {
     async function BuscarEndereco() {
       try {
@@ -136,6 +136,7 @@ export default function OfertasPrincipal({ navigation, route }) {
       navigation.navigate('PaymentResult', {
         status: 'success',
         orderId: idPedido,
+        idLoja: id,
       }),
         setLoading(false);
     } catch (err) {
@@ -143,8 +144,6 @@ export default function OfertasPrincipal({ navigation, route }) {
       navigation.navigate('PaymentResult', { status: 'failed' });
     }
   }
-
-  async function deleteCart() {}
 
   return (
     <Background>
@@ -168,15 +167,27 @@ export default function OfertasPrincipal({ navigation, route }) {
               </Text>
             </List>
             <Left>
-              <Text
-                note
-                style={{
-                  marginLeft: -170,
-                  marginTop: 30,
-                  color: '#000000',
-                }}>
-                Você selecionou: {paymentMethod}
-              </Text>
+              {paymentMethod === undefined ? (
+                <Text
+                  note
+                  style={{
+                    marginLeft: -170,
+                    marginTop: 30,
+                    color: '#000000',
+                  }}>
+                  Selecione aqui um método para pagamento
+                </Text>
+              ) : (
+                <Text
+                  note
+                  style={{
+                    marginLeft: -170,
+                    marginTop: 30,
+                    color: '#000000',
+                  }}>
+                  Você selecionou: {paymentMethod}
+                </Text>
+              )}
             </Left>
             <Right>
               <Icon
@@ -215,19 +226,32 @@ export default function OfertasPrincipal({ navigation, route }) {
             </Body>
             <Right style={{ marginTop: -10 }}>
               <Text note>{orderDetails.subtotal}</Text>
-              <Text note>{orderDetails.deliveryFee}</Text>
+              {orderDetails.deliveryFee === 0 ? (
+                <Text note>Gratis</Text>
+              ) : (
+                <Text note>{orderDetails.deliveryFee}</Text>
+              )}
+
               <Text>{orderDetails.total}</Text>
-              <Text>{paymentMethod}</Text>
+              {paymentMethod === undefined ? (
+                <Text style={{ color: '#FF0000' }}>Selecione</Text>
+              ) : (
+                <Text style={{ color: '#FF0000' }}>{paymentMethod}</Text>
+              )}
             </Right>
           </ListItem>
-          <ListItem>
-            <Body style={{ marginLeft: -20, marginTop: -10 }}>
-              <Text>Troco para</Text>
-            </Body>
-            <Right style={{ marginTop: -10 }}>
-              <Text>{formatPrice(troco)}</Text>
-            </Right>
-          </ListItem>
+          {troco === undefined ? (
+            <Text />
+          ) : (
+            <ListItem>
+              <Body style={{ marginLeft: -20, marginTop: -10 }}>
+                <Text>Troco para</Text>
+              </Body>
+              <Right style={{ marginTop: -10 }}>
+                <Text>{formatPrice(troco)}</Text>
+              </Right>
+            </ListItem>
+          )}
         </Card>
         <Card
           style={{

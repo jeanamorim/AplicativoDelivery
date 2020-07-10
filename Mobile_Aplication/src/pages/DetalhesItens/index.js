@@ -88,20 +88,15 @@ export default function DetalhesItens({ navigation, route }) {
 
   const valorTotalPedido = totalItem * quantidade;
 
-  function handleAddProduct(product, quantidade, valorTotalPedido, observacao) {
-    dispatch(
-      addToCartRequest(product, quantidade, valorTotalPedido, observacao),
-    );
-  }
-
   useEffect(() => {
-    setTimeout(() => setIsVisible(true), 500);
+    setTimeout(() => setIsVisible(true), 50);
   }, []);
 
   function onChance(id) {
     let index = valor.findIndex(val => val.id === id.id);
     if (index > -1) {
       valor.splice(index, 1);
+
       setChecked(false);
       return;
     }
@@ -334,12 +329,7 @@ export default function DetalhesItens({ navigation, route }) {
               </Text>
             </Button>
           ) : (
-            <Button
-              disabled
-              onPress={() => {
-                handleAddProduct(produtoDetails, quantidade);
-                navigation.goBack();
-              }}>
+            <Button disabled>
               <Text style={{ fontSize: 15, color: '#fff' }}>
                 Estabelecimento fechado
               </Text>

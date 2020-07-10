@@ -57,9 +57,11 @@ class EstabelecimentoController {
     // const cached = await Cache.get('estabelecimento');
 
     // if (cached) return res.json(cached);
-
+    const { page = 1 } = req.query;
     const estabelecimento = await Estabelecimento.findAll({
       order: [['status']],
+      limit: 5,
+      offset: (page - 1) * 5,
       attributes: [
         'id',
         'name',

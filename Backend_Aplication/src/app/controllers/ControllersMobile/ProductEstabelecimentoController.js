@@ -1,16 +1,16 @@
 import File from '../../models/File';
-import Cache from '../../../lib/Cache';
+
 import Product from '../../models/Product';
 
 class ProductEstabelecimentoController {
   async index(req, res) {
-    const cached = await Cache.get('products_lojas');
-
-    if (cached) return res.json(cached);
+    const { page = 1 } = req.query;
     const category = await Product.findAll({
       where: {
         category_id: req.params.id,
       },
+      limit: 8,
+      offset: (page - 1) * 8,
       attributes: ['id', 'name', 'description', 'quantity', 'unit', 'price'],
       include: [
         {
@@ -20,8 +20,6 @@ class ProductEstabelecimentoController {
         },
       ],
     });
-
-    await Cache.set('products_lojas', category);
 
     return res.json(category);
   }

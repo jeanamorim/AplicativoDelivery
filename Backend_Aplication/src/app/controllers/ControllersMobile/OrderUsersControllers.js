@@ -5,15 +5,16 @@ import OrderDetail from '../../models/OrderDetail';
 import User from '../../models/User';
 import Estabelecimento from '../../models/Estabelecimento';
 import Product from '../../models/Product';
-import Cache from '../../../lib/Cache';
 
 class OrderUsersControllers {
   async index(req, res) {
-    const cached = await Cache.get('orders_user_id');
+    const { page = 1 } = req.query;
+    const count = await Order.findAndCountAll();
 
-    if (cached) return res.json(cached);
     const orders = await Order.findAll({
       order: [['date', 'DESC']],
+      limit: 6,
+      offset: (page - 1) * 6,
 
       where: {
         user_id: req.params.id,
@@ -75,9 +76,7 @@ class OrderUsersControllers {
         },
       ],
     });
-
-    await Cache.set('orders_user_id', orders);
-
+    res.header('X-Total-Count', count.count);
     return res.json(orders);
   }
 }

@@ -34,10 +34,3 @@ export default function Home({ navigation }) {
     </Background>
   );
 }
-
-//Home.navigationOptions = {
-//  tabBarLabel: 'Home',
-//  tabBarIcon: ({ tintColor }) => (
-//    <Icon name="store-alt" size={20} color={tintColor} />
-// ),
-//};

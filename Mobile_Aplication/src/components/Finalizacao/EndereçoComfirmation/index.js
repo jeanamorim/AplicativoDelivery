@@ -12,6 +12,7 @@ import Background from '../../../components/Background';
 import { useSelector } from 'react-redux';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Iconn from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {
   Text,
@@ -61,6 +62,18 @@ export default function EnderecoComfirmation({ navigation }) {
     BuscarEndereco();
   }, [userId]);
 
+  const deleteidEstabelecimento = async () => {
+    try {
+      await storage.removeItem(`KEY_VALUE_ID/${userId}`);
+      const response = JSON.parse(
+        await storage.getItem(`KEY_VALUE_ID/${userId}`),
+      );
+      setAdresses(response);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   async function AtualizaEndereco() {
     try {
       const response = JSON.parse(
@@ -94,48 +107,93 @@ export default function EnderecoComfirmation({ navigation }) {
 
   return (
     <Background>
-      <Card
-        style={{
-          backgroundColor: '#fff',
-          elevation: 5,
-          marginTop: 8,
-          maxHeight: 130,
-          minHeight: 130,
-          borderColor: '#000',
-          borderWidth: 2,
-        }}>
-        <ListItem>
-          <List>
-            <Text style={{ marginLeft: -14, marginTop: -60, color: '#FF0000' }}>
-              Entregar em
-            </Text>
-          </List>
-          <Left>
-            <Text
-              note
-              style={{
-                marginLeft: -95,
-                marginTop: 30,
-                color: '#000000',
-              }}>
-              {`${adresses.street},${adresses.street_n} - ${adresses.city}\n${
-                adresses.neighborhood
-              }\n${adresses.complement}\n${adresses.reference}`}
-            </Text>
-          </Left>
-          <Right>
-            <Icon
-              style={{ marginTop: 10, marginLeft: 20 }}
-              name="angle-down"
-              size={35}
-              color="#FF0000"
-              onPress={() => {
-                setVisible(true);
-              }}
-            />
-          </Right>
-        </ListItem>
-      </Card>
+      {adresses ? (
+        <Card
+          style={{
+            backgroundColor: '#fff',
+            elevation: 5,
+            marginTop: 8,
+            maxHeight: 130,
+            minHeight: 130,
+            borderColor: '#000',
+            borderWidth: 2,
+          }}>
+          <ListItem>
+            <List>
+              <Text
+                style={{ marginLeft: -14, marginTop: -60, color: '#FF0000' }}>
+                Entregar em
+              </Text>
+            </List>
+            <Left>
+              <Text
+                note
+                style={{
+                  marginLeft: -95,
+                  marginTop: 30,
+                  color: '#000000',
+                }}>
+                {`${adresses.street},${adresses.street_n} - ${adresses.city}\n${
+                  adresses.neighborhood
+                }\n${adresses.complement}\n${adresses.reference}`}
+              </Text>
+            </Left>
+            <Right>
+              <Icon
+                style={{ marginTop: 10, marginLeft: 20 }}
+                name="angle-down"
+                size={35}
+                color="#FF0000"
+                onPress={() => {
+                  setVisible(true);
+                }}
+              />
+            </Right>
+          </ListItem>
+        </Card>
+      ) : (
+        <Card
+          style={{
+            backgroundColor: '#fff',
+            elevation: 5,
+            marginTop: 8,
+            maxHeight: 130,
+            minHeight: 130,
+            borderColor: '#000',
+            borderWidth: 2,
+          }}>
+          <ListItem>
+            <List>
+              <Text
+                style={{ marginLeft: -14, marginTop: -38, color: '#FF0000' }}>
+                Entregar em
+              </Text>
+            </List>
+            <Left>
+              <Text
+                note
+                style={{
+                  marginLeft: -95,
+                  marginTop: 30,
+                  color: '#000000',
+                }}>
+                Selecionar aqui um endereço para entrega
+              </Text>
+            </Left>
+            <Right>
+              <Icon
+                style={{ marginTop: 10, marginLeft: 20 }}
+                name="angle-down"
+                size={35}
+                color="#FF0000"
+                onPress={() => {
+                  setVisible(true);
+                }}
+              />
+            </Right>
+          </ListItem>
+        </Card>
+      )}
       <Modal isVisible={visible} style={styles.modal}>
         <View style={styles.title}>
           <Text
@@ -166,42 +224,68 @@ export default function EnderecoComfirmation({ navigation }) {
           </TouchableOpacity>
         </View>
         <Content>
-          <ScrollView>
-            {endereco.map(adresse => (
-              <TouchableOpacity
-                key={adresse.id}
+          {endereco.length > 0 ? (
+            <ScrollView>
+              {endereco.map(adresse => (
+                <TouchableOpacity
+                  key={adresse.id}
+                  onPress={() => {
+                    setVisible(false);
+                    gravarendereco(adresse);
+                    AtualizaEndereco();
+                  }}>
+                  <CardItem key={adresse.id}>
+                    <Left>
+                      <Icon name="home" size={18} color="#F4A460" />
+                      <Body>
+                        <Text style={{ fontSize: 14 }}>
+                          {`${adresse.street}, ${adresse.street_n} - ${
+                            adresse.city
+                          }`}
+                        </Text>
+                        <Text note>{adresse.neighborhood}</Text>
+                        <Text note>{adresse.complement}</Text>
+                      </Body>
+                    </Left>
+                    <TouchableOpacity
+                      style={{ backgroundColor: '#fff', marginLeft: 20 }}
+                      transparent
+                      onPress={() => {
+                        handleRemove(adresse.id);
+                        deleteidEstabelecimento();
+                      }}>
+                      {loading ? (
+                        <ActivityIndicator color="#F4A460" />
+                      ) : (
+                        <Icon name="trash" size={21} color="#FF0000" />
+                      )}
+                    </TouchableOpacity>
+                  </CardItem>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          ) : (
+            <View
+              style={{
+                marginTop: 200,
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Iconn name="emoticon-sad-outline" size={85} color="#CFCFCF" />
+              <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
+                Nenhum endereço para entrega cadastrado...
+              </Text>
+              <Text
                 onPress={() => {
                   setVisible(false);
-                  gravarendereco(adresse);
-                  AtualizaEndereco();
-                }}>
-                <CardItem key={adresse.id}>
-                  <Left>
-                    <Icon name="home" size={18} color="#F4A460" />
-                    <Body>
-                      <Text style={{ fontSize: 14 }}>
-                        {`${adresse.street}, ${adresse.street_n} - ${
-                          adresse.city
-                        }`}
-                      </Text>
-                      <Text note>{adresse.neighborhood}</Text>
-                      <Text note>{adresse.complement}</Text>
-                    </Body>
-                  </Left>
-                  <TouchableOpacity
-                    style={{ backgroundColor: '#fff', marginLeft: 20 }}
-                    transparent
-                    onPress={() => handleRemove(adresse.id)}>
-                    {loading ? (
-                      <ActivityIndicator color="#F4A460" />
-                    ) : (
-                      <Icon name="trash" size={21} color="#FF0000" />
-                    )}
-                  </TouchableOpacity>
-                </CardItem>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+                  navigation.navigate('NewAdress');
+                }}
+                style={{ color: '#F4A460', fontWeight: 'bold', fontSize: 16 }}>
+                Cadastar agora
+              </Text>
+            </View>
+          )}
         </Content>
 
         <TouchableOpacity style={styles.btn} onPress={() => setVisible(false)}>

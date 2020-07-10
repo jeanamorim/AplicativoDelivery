@@ -1,12 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+
 import {
   ScrollView,
   ActivityIndicator,
   Alert,
   TouchableOpacity,
   StyleSheet,
+  FlatList,
 } from 'react-native';
 import storage from '@react-native-community/async-storage';
 import Background from '../../components/Background';
@@ -29,13 +32,13 @@ import {
 } from 'native-base';
 import api from '../../services/api';
 import Modal from 'react-native-modal';
-
+import NewAddress from '../../pages/NewAdress';
 export default function OfertasPrincipal({ navigation }) {
   const [endereco, setEndereco] = useState([]);
   const [adresses, setAdresses] = useState([]);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [page, setPage] = useState(1);
   const userId = useSelector(state => state.user.profile.id);
 
   async function gravarendereco(adress) {
@@ -75,16 +78,32 @@ export default function OfertasPrincipal({ navigation }) {
     }
   }
 
-  useEffect(() => {
-    async function checkHaveAddress() {
-      setLoading(true);
-      const response = await api.get(`address_estab/${userId}`);
-      setLoading(false);
-      setEndereco(response.data);
+  async function loadEndereco() {
+    if (loading) {
+      return;
     }
+    setLoading(true);
+    const response = await api.get(`address_estab/${userId}?page=${page}`);
 
-    checkHaveAddress();
-  }, [userId]);
+    setEndereco([...endereco, ...response.data]);
+    setPage(page + 1);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    loadEndereco();
+  }, []);
+
+  function renderFooter() {
+    if (loading) {
+      return null;
+    }
+    return (
+      <View style={{ alignSelf: 'center', marginVertical: 20 }}>
+        <ActivityIndicator size={35} color="#F4A460" />
+      </View>
+    );
+  }
 
   async function handleRemove(id) {
     setLoading(true);
@@ -93,13 +112,77 @@ export default function OfertasPrincipal({ navigation }) {
     const response = await api.get(`address_estab/${userId}`);
     setEndereco(response.data);
   }
+  const toggleModal = () => {
+    setVisible(!visible);
+  };
+
+  function renderItem({ item }) {
+    return (
+      <Content>
+        {endereco.length > 0 ? (
+          <TouchableOpacity
+            key={item.id}
+            onPress={() => {
+              setVisible(false);
+              gravarendereco(item);
+              AtualizaEndereco();
+            }}>
+            <CardItem>
+              <Left>
+                <Icon name="home" size={18} color="#F4A460" />
+                <Body>
+                  <Text style={{ fontSize: 14 }}>
+                    {`${item.street}, ${item.street_n} - ${item.city}`}
+                  </Text>
+                  <Text note>{item.neighborhood}</Text>
+                  <Text note>{item.complement}</Text>
+                </Body>
+              </Left>
+              <TouchableOpacity
+                style={{ backgroundColor: '#fff', marginLeft: 20 }}
+                transparent
+                onPress={() => handleRemove(item.id)}>
+                {loading ? (
+                  <ActivityIndicator color="#F4A460" />
+                ) : (
+                  <Icon name="trash" size={21} color="#FF0000" />
+                )}
+              </TouchableOpacity>
+            </CardItem>
+          </TouchableOpacity>
+        ) : (
+          <View
+            style={{
+              marginTop: 200,
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Iconn name="emoticon-sad-outline" size={85} color="#CFCFCF" />
+            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
+              Nenhum endereço para entrega cadastrado...
+            </Text>
+            <Text
+              onPress={() => {
+                setVisible(false);
+                navigation.navigate('NewAdress');
+              }}
+              style={{ color: '#F4A460', fontWeight: 'bold', fontSize: 16 }}>
+              Cadastar agora
+            </Text>
+          </View>
+        )}
+      </Content>
+    );
+  }
 
   return (
     <Background>
       {adresses ? (
-        <List
+        <TouchableOpacity
+          onPress={toggleModal}
           style={{ backgroundColor: '#F4A460', elevation: 5, marginTop: 2 }}>
-          <ListItem avatar>
+          <ListItem>
             <Left>
               <Text
                 style={{ marginLeft: -10, marginTop: -30, color: '#FF0000' }}>
@@ -128,7 +211,7 @@ export default function OfertasPrincipal({ navigation }) {
               />
             </Right>
           </ListItem>
-        </List>
+        </TouchableOpacity>
       ) : (
         <List
           style={{ backgroundColor: '#F4A460', elevation: 5, marginTop: 2 }}>
@@ -193,67 +276,17 @@ export default function OfertasPrincipal({ navigation }) {
             <Text style={{ color: '#fff' }}>Adicionar novo</Text>
           </TouchableOpacity>
         </View>
-        <Content>
-          {endereco.length > 0 ? (
-            <ScrollView>
-              {endereco.map(adresse => (
-                <TouchableOpacity
-                  key={adresse.id}
-                  onPress={() => {
-                    setVisible(false);
-                    gravarendereco(adresse);
-                    AtualizaEndereco();
-                  }}>
-                  <CardItem key={adresse.id}>
-                    <Left>
-                      <Icon name="home" size={18} color="#F4A460" />
-                      <Body>
-                        <Text style={{ fontSize: 14 }}>
-                          {`${adresse.street}, ${adresse.street_n} - ${
-                            adresse.city
-                          }`}
-                        </Text>
-                        <Text note>{adresse.neighborhood}</Text>
-                        <Text note>{adresse.complement}</Text>
-                      </Body>
-                    </Left>
-                    <TouchableOpacity
-                      style={{ backgroundColor: '#fff', marginLeft: 20 }}
-                      transparent
-                      onPress={() => handleRemove(adresse.id)}>
-                      {loading ? (
-                        <ActivityIndicator color="#F4A460" />
-                      ) : (
-                        <Icon name="trash" size={21} color="#FF0000" />
-                      )}
-                    </TouchableOpacity>
-                  </CardItem>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          ) : (
-            <View
-              style={{
-                marginTop: 200,
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Iconn name="emoticon-sad-outline" size={85} color="#CFCFCF" />
-              <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
-                Nenhum endereço para entrega cadastrado...
-              </Text>
-              <Text
-                onPress={() => {
-                  setVisible(false);
-                  navigation.navigate('NewAdress');
-                }}
-                style={{ color: '#F4A460', fontWeight: 'bold', fontSize: 16 }}>
-                Cadastar agora
-              </Text>
-            </View>
-          )}
-        </Content>
+
+        <FlatList
+          style={{ marginTop: 30 }}
+          contentContainerStyle={{ paddingHorizontal: 20 }}
+          data={endereco}
+          renderItem={renderItem}
+          keyExtractor={item => String(item.id)}
+          onEndReached={loadEndereco}
+          onEndReachedThreshold={0.1}
+          ListFooterComponent={renderFooter}
+        />
 
         <TouchableOpacity style={styles.btn} onPress={() => setVisible(false)}>
           <Text style={{ color: '#fff' }}>Sair</Text>

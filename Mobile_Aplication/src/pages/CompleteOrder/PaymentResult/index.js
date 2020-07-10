@@ -19,9 +19,9 @@ import {
 import api from '../../../services/api';
 export default function PaymentResult({ navigation, route }) {
   const id = useSelector(state => state.user.profile.id);
-  const { status, orderId } = route.params;
-  const [order, setOrder] = useState([]);
+  const { status, orderId, idLoja } = route.params;
 
+  /*
   useEffect(() => {
     async function loadOrders() {
       const response = await api.get(`orders_user/${56}`);
@@ -30,24 +30,21 @@ export default function PaymentResult({ navigation, route }) {
         screen: 'OrdersDetails',
         order: response.data[0],
       });
+
     }
 
     loadOrders();
   }, [id, navigation]);
+ */
 
+  setTimeout(() => navigation.navigate('Home'), 2000);
   useEffect(() => {
     async function deleteCart() {
-      const response = await api.get(`orders_user/${56}`);
-
-      navigation.navigate('OrdersRoutes', {
-        screen: 'OrdersDetails',
-        order: response.data[0],
-      });
+      await api.delete(`cart/${idLoja}`);
     }
 
     deleteCart();
-  }, [id, navigation]);
-
+  }, [id, idLoja, navigation]);
 
   return (
     <Container status={status}>
