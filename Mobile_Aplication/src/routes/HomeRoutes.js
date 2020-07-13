@@ -16,7 +16,7 @@ import DetalhesItens from '../pages/DetalhesItens';
 import Search from '../pages/Search';
 import Variacao from '../pages/Variacao';
 import NewAdress from '../pages/NewAdress';
-import BuscarCep from '../pages/BuscarCep';
+import InfoLojas from '../pages/InfoLojas';
 
 const Stack = createStackNavigator();
 
@@ -212,10 +212,14 @@ export default function Delivery() {
           onPress: navigation.goBack(),
         })}
         options={{
-          title: 'Buscar CEP',
+          title: 'Informações da loja',
+          headerStyle: {
+          backgroundColor: '#f4a460',
+          },
+          headerTintColor: '#fff',
         }}
-        name="BuscarCep"
-        component={BuscarCep}
+        name="InfoLojas"
+        component={InfoLojas}
       />
           <Stack.Screen
         headerLeft={({navigation}) => ({

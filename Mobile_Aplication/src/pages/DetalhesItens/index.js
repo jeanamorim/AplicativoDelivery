@@ -322,7 +322,7 @@ export default function DetalhesItens({ navigation, route }) {
             <Button
               onPress={() => {
                 HandlersubmitCart(produtoDetails.id);
-                navigation.navigate('ProductsLojas');
+                navigation.goBack();
               }}>
               <Text style={{ fontSize: 15, color: '#fff' }}>
                 Adicionar ao carrinho

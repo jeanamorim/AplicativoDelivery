@@ -153,7 +153,7 @@ export default {
     marginTop: 30,
   },
   title: {
-    backgroundColor: '#fff',
+    backgroundColor: '#F4A460',
     height: 50,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,

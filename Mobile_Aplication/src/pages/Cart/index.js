@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
-import { Picker } from 'react-native';
+import { Picker, ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { TouchableOpacity, Image, Text, View, Alert } from 'react-native';
@@ -24,44 +25,14 @@ import {
   Value,
   CartItemSubTotal,
   CartItemCount,
-  Amount,
   CartItemTotalValue,
-  CheckoutButton,
   CartTotal,
-  EmptyCartContainer,
-  EmptyCart,
-  EmptyCartMessage,
-  BackHomeButton,
-  WatermelonAnimation,
-  EmptyCartTextContainer,
-  EmptyCartText,
-  EmptyCartSubText,
   ProductInfoValor,
   RemoveCart,
   ObservacaoProducto,
   TextoObs,
 } from './styles';
-import {
-  Button,
-  Header,
-  Input,
-  Item,
-  Content,
-  Left,
-  Right,
-  Body,
-  Thumbnail,
-  List,
-  ListItem,
-  Separator,
-  CardItem,
-  Card,
-  CheckBox,
-  Form,
-  Textarea,
-  Footer,
-  FooterTab,
-} from 'native-base';
+import { Button, Footer, FooterTab } from 'native-base';
 
 export default function Cart({ navigation, route }) {
   const { id } = route.params;
@@ -69,14 +40,22 @@ export default function Cart({ navigation, route }) {
   const [feeConfig, setFeeConfig] = useState([]);
   const [deliveryFee, setDeliveryFee] = useState(0);
   const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    async function getData() {
-      const response = await api.get(`cart/${id}`);
-      setProducts(response.data);
+  async function getData() {
+    if (loading) {
+      return;
     }
+    setLoading(true);
+    const response = await api.get(`cart/${id}?=page${page}`);
+    setProducts([...products, ...response.data]);
+    setPage(page + 1);
+    setLoading(false);
+  }
+  useEffect(() => {
     getData();
-  }, [id]);
+  }, []);
 
   async function HandleRemove(item) {
     await api.delete(`cart/${item}`);
@@ -136,17 +115,19 @@ export default function Cart({ navigation, route }) {
     }
 
     getDeliveryFee();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subtotal]);
 
   const dispatch = useDispatch();
 
-  function increment(product) {
-    dispatch(CartActions.updateAmountRequest(product.id, product.amount + 1));
-  }
-
-  function decrement(product) {
-    dispatch(CartActions.updateAmountRequest(product.id, product.amount - 1));
+  function renderFooter() {
+    if (loading) {
+      return null;
+    }
+    return (
+      <View style={{ alignSelf: 'center', marginVertical: 20 }}>
+        <ActivityIndicator size={35} color="#F4A460" />
+      </View>
+    );
   }
 
   return (
@@ -154,8 +135,13 @@ export default function Cart({ navigation, route }) {
       {cart.length > 0 ? (
         <Container>
           <ProductList
-            data={cart}
-            keyExtractor={product => String(product.id)}
+            style={{ marginTop: 10 }}
+            contentContainerStyle={{ paddingHorizontal: 2 }}
+            data={products}
+            keyExtractor={item => String(item.id)}
+            onEndReached={getData}
+            onEndReachedThreshold={0.1}
+            ListFooterComponent={renderFooter}
             renderItem={({ item }) => (
               <ProductContainer>
                 <Product>

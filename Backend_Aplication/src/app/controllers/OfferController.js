@@ -6,8 +6,6 @@ import File from '../models/File';
 import Category from '../models/Category';
 import Estabelecimento from '../models/Estabelecimento';
 
-import Cache from '../../lib/Cache';
-
 // mport AdminCheckService from '../../services/AdminCheckService';
 
 class OfferController {
@@ -28,23 +26,10 @@ class OfferController {
       expiration_date,
     });
 
-    await Cache.invalidate('offers');
-
-    await Cache.invalidate('products');
-
     return res.json(id);
   }
 
   async index(req, res) {
-    const cached = await Cache.get('offers');
-
-    if (cached) {
-      const expiredCheck = cached.filter(
-        offer => !isBefore(parseISO(offer.expiration_date), new Date()),
-      );
-      return res.json(expiredCheck);
-    }
-
     const offers = await Offer.findAll({
       where: {
         estabelecimento_id: req.estabelecimentoId,
@@ -95,8 +80,6 @@ class OfferController {
       offer => !isBefore(parseISO(offer.expiration_date), new Date()),
     );
 
-    await Cache.set('offers', expiredCheck);
-
     return res.json(expiredCheck);
   }
 
@@ -113,10 +96,6 @@ class OfferController {
       from,
       to,
     } = await offer.update(req.body);
-
-    await Cache.invalidate('offers');
-
-    await Cache.invalidate('products');
 
     return res.json({
       id,
@@ -136,8 +115,6 @@ class OfferController {
         id: req.params.id,
       },
     });
-
-    await Cache.invalidate('offers');
 
     return res.json();
   }

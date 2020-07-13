@@ -2,6 +2,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 import {
   StatusBar,
   TouchableOpacity,
@@ -35,6 +36,7 @@ import {
   SubTitle,
   Button,
   ButtonText,
+  ProductList,
 } from './styles';
 import {
   Container,
@@ -63,6 +65,7 @@ export default function Orders({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [date] = useState(new Date());
   const [total, setTotal] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
   const id = useSelector(state => state.user.profile.id);
 
   async function loadOrders() {
@@ -72,7 +75,7 @@ export default function Orders({ navigation }) {
     if (total > 0 && orders.length === total) {
       return;
     }
-    setLoading(true);
+
     const response = await api.get(`orders_user/${id}?page=${page}`);
 
     setOrders([
@@ -90,11 +93,14 @@ export default function Orders({ navigation }) {
     ]);
     setTotal(response.headers['X-Total-Count']);
     setPage(page + 1);
-    setLoading(false);
   }
 
   useEffect(() => {
     loadOrders();
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => setIsVisible(true), 500);
   }, []);
 
   function renderFooter() {
@@ -109,38 +115,77 @@ export default function Orders({ navigation }) {
   }
   function renderItem({ item }) {
     return (
-      <Containerr
-        key={item.id}
-        style={{
-          elevation: 4,
-        }}>
-        <Content>
+      <Containerr>
+        <Content
+          key={item.id}
+          style={{
+            elevation: 4,
+          }}>
           <Headerr>
-            <Thumbnail
-              source={{
-                uri: item.estabelecimento.image.url.replace(
-                  'localhost',
-                  '10.0.0.104',
-                ),
-              }}
-            />
-
-            <Title>{item.estabelecimento.name_loja}</Title>
+            <ShimmerPlaceHolder
+              autoRun={true}
+              visible={isVisible}
+              style={{ height: 64, width: 64, borderRadius: 50 }}>
+              <Thumbnail
+                source={{
+                  uri: item.estabelecimento.image.url.replace(
+                    'localhost',
+                    '10.0.0.104',
+                  ),
+                }}
+              />
+            </ShimmerPlaceHolder>
+            <ShimmerPlaceHolder
+              autoRun={true}
+              visible={isVisible}
+              style={{ marginLeft: 17 }}>
+              <Title>{item.estabelecimento.name_loja}</Title>
+            </ShimmerPlaceHolder>
             <Right>
-              <Title>Valor</Title>
-              <Text>{formatPrice(item.total)}</Text>
+              <ShimmerPlaceHolder
+                autoRun={true}
+                visible={isVisible}
+                style={{ width: 50 }}>
+                <Title>Valor</Title>
+              </ShimmerPlaceHolder>
+              <ShimmerPlaceHolder
+                autoRun={true}
+                visible={isVisible}
+                style={{ width: 80, marginTop: 5 }}>
+                <Text>{formatPrice(item.total)}</Text>
+              </ShimmerPlaceHolder>
             </Right>
           </Headerr>
         </Content>
         <Footer>
           <FooterItem>
-            <Small>Tempo</Small>
-            <SubTitle>{item.timeDistance}</SubTitle>
+            <ShimmerPlaceHolder
+              autoRun={true}
+              visible={isVisible}
+              style={{ width: 100 }}>
+              <Small>Tempo</Small>
+            </ShimmerPlaceHolder>
+            <ShimmerPlaceHolder
+              autoRun={true}
+              visible={isVisible}
+              style={{ width: 70, marginTop: 2 }}>
+              <SubTitle>{item.timeDistance}</SubTitle>
+            </ShimmerPlaceHolder>
           </FooterItem>
 
           <FooterItem>
-            <Small>Status</Small>
-            <SubTitle>{item.status}</SubTitle>
+            <ShimmerPlaceHolder
+              autoRun={true}
+              visible={isVisible}
+              style={{ width: 100 }}>
+              <Small>Status</Small>
+            </ShimmerPlaceHolder>
+            <ShimmerPlaceHolder
+              autoRun={true}
+              visible={isVisible}
+              style={{ width: 70, marginTop: 2 }}>
+              <SubTitle>{item.status}</SubTitle>
+            </ShimmerPlaceHolder>
           </FooterItem>
 
           <FooterItem>
@@ -149,7 +194,12 @@ export default function Orders({ navigation }) {
                 navigation.navigate('OrdersDetails', { order: item })
               }>
               <Small />
-              <ButtonText>Ver detalhes</ButtonText>
+              <ShimmerPlaceHolder
+                autoRun={true}
+                visible={isVisible}
+                style={{ width: 80 }}>
+                <ButtonText>Ver detalhes</ButtonText>
+              </ShimmerPlaceHolder>
             </Button>
           </FooterItem>
         </Footer>
@@ -158,9 +208,9 @@ export default function Orders({ navigation }) {
   }
   return (
     <Background>
-      <FlatList
-        style={{ marginTop: 2 }}
-        contentContainerStyle={{ paddingHorizontal: 10 }}
+      <ProductList
+        style={{ marginTop: 10 }}
+        contentContainerStyle={{ paddingHorizontal: 2 }}
         data={orders}
         renderItem={renderItem}
         keyExtractor={item => String(item.id)}

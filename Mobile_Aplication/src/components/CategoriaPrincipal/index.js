@@ -1,12 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, YellowBox } from 'react-native';
 import Background from '../../components/Background';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button, Text, Body } from 'native-base';
-
+YellowBox.ignoreWarnings(['VirtualizedLists']);
 export default function CategoriaPrincipal({ navigation }) {
   return (
     <Background>

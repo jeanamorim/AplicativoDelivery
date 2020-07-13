@@ -1,8 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
-import { ScrollView, TouchableOpacity } from 'react-native';
+import {
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+  StyleSheet,
+} from 'react-native';
 import Background from '../../components/Background';
-import styles from './styles';
+import { ProductList } from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button, Text, Body, CardItem, Thumbnail, View } from 'native-base';
@@ -12,27 +18,47 @@ import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 export default function OfertasEstabelecimentos({ navigation, id }) {
   const [offers, setOffers] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
-  useEffect(() => {
-    async function loadOffers() {
-      const response = await api.get(`offer_estab/${id}`);
-      console.tron.log(response.data);
-      const data = response.data.map(offer => ({
-        ...offer,
-        fromFormatted: formatPrice(offer.from),
-        toFormatted: formatPrice(offer.to),
-        product: {
-          ...offer.product,
-          priceFormatted: formatPrice(offer.product.price),
-        },
-      }));
-      setOffers(data);
-    }
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
+  async function loadOffers() {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
+    const response = await api.get(`offer_estab/${id}?=page${page}`);
+
+    const data = response.data.map(offer => ({
+      ...offer,
+      fromFormatted: formatPrice(offer.from),
+      toFormatted: formatPrice(offer.to),
+      product: {
+        ...offer.product,
+        priceFormatted: formatPrice(offer.product.price),
+      },
+    }));
+    setOffers([...offers, ...data]);
+    setPage(page + 1);
+    setLoading(false);
+  }
+  useEffect(() => {
     loadOffers();
-  }, [id]);
+  }, []);
+
   useEffect(() => {
     setTimeout(() => setIsVisible(true), 500);
   }, []);
+
+  function renderFooter() {
+    if (loading) {
+      return null;
+    }
+    return (
+      <View style={{ alignSelf: 'center', marginVertical: 20 }}>
+        <ActivityIndicator size={35} color="#F4A460" />
+      </View>
+    );
+  }
 
   function RenderOfertas() {
     return (
@@ -134,3 +160,21 @@ export default function OfertasEstabelecimentos({ navigation, id }) {
     </Background>
   );
 }
+const styles = StyleSheet.create({
+  ofertas: {
+    padding: 10,
+    borderColor: '#000',
+  },
+
+  off: {
+    maxWidth: 110,
+    height: 110,
+    width: 110,
+    flex: 1,
+    marginRight: 5,
+    borderColor: '#E25B08',
+    borderWidth: 3,
+    marginLeft: 2,
+    borderRadius: 6,
+  },
+});

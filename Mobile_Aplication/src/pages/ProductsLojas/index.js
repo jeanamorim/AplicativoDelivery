@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
@@ -10,11 +11,11 @@ YellowBox.ignoreWarnings(['VirtualizedLists']);
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import storage from '@react-native-community/async-storage';
 import Background from '../../components/Background';
-import * as CartActions from '../../store/modules/cart/actions';
+import { withNavigationFocus } from 'react-navigation';
 import { ItemCount } from './styles';
 
 import styles from './style';
-import { StatusBar, Alert, BackHandler } from 'react-native';
+import { StatusBar, Alert, BackHandler, ActivityIndicator } from 'react-native';
 import colors from '../../styles/colors';
 
 import {
@@ -38,25 +39,22 @@ import OfertasEstabelecimento from '../../components/OfertasEstabelecimentos';
 import CategoriaEstabelecimento from '../../components/CategoriasEstabelecimentos';
 export default function ProductsLojas({ navigation, route }) {
   StatusBar.setBackgroundColor(colors.finalisar);
-  const [quantItensCart, setQuantCart] = useState([]);
-  const { product } = route.params;
+  const [total, setTotal] = useState(0);
 
-  const dispatch = useDispatch();
+  const { product } = route.params;
+  const [loading, setLoading] = useState(false);
+
   const id = product.id;
 
+  async function getData() {
+    const response = await api.get(`cart/${id}`);
+    setTotal(response.headers['x-total-count']);
+  }
+  console.log(total);
   useFocusEffect(() => {
-    async function getData() {
-      const response = await api.get(`cart/${id}`);
-      setQuantCart(response.data.length);
-    }
     getData();
-  }, [id, product.id]);
+  }, []);
 
-  //---------------------------------------------------------------------------
-
-  //---------------------------------------------------------------------------
-
-  //------------------------------------------------------------------------------
   return (
     <Background>
       <Container style={styles.container}>
@@ -87,7 +85,11 @@ export default function ProductsLojas({ navigation, route }) {
             })
           }>
           <Iconn style={styles.iconCart} name="basket" color="#FFF" size={33} />
-          <ItemCount>{quantItensCart || 0}</ItemCount>
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <ItemCount>{total || 0}</ItemCount>
+          )}
         </Button>
 
         <Content style={{ flex: 1 }}>
@@ -104,8 +106,13 @@ export default function ProductsLojas({ navigation, route }) {
                   }}
                 />
                 <Body>
-                  <Text>{product.name_loja} sera que fica bom ate</Text>
-                  <Button transparent textStyle={{ color: '#87838B' }}>
+                  <Text>{product.name_loja}</Text>
+                  <Button
+                    transparent
+                    textStyle={{ color: '#87838B' }}
+                    onPress={() =>
+                      navigation.navigate('InfoLojas', { product: product })
+                    }>
                     <Icons
                       color="#F4A460"
                       name="angle-double-right"
@@ -184,7 +191,3 @@ export default function ProductsLojas({ navigation, route }) {
     </Background>
   );
 }
-
-ProductsLojas.navigationOptions = ({ navigation }) => ({
-  headerTitle: () => <View />,
-});

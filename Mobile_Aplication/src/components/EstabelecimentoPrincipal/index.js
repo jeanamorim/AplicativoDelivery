@@ -1,14 +1,18 @@
+/* eslint-disable no-shadow */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
 import {
-  FlatList,
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  YellowBox,
+  TouchableHighlight,
+  TouchableNativeFeedback,
+  StyleSheet,
 } from 'react-native';
 import Background from '../../components/Background';
-import styles from './styles';
+import { ProductList } from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
@@ -21,6 +25,7 @@ import {
   Right,
   Card,
   View,
+  Container,
 } from 'native-base';
 import api from '../../services/api';
 
@@ -33,16 +38,16 @@ export default function EstabelecimentoPrincipal({ navigation }) {
     if (loading) {
       return;
     }
-    setLoading(true);
+
     const response = await api.get(`estabelecimento?page=${page}`);
 
     setEstabelecimento([...estabelecimento, ...response.data]);
     setPage(page + 1);
-    setLoading(false);
   }
+
   useEffect(() => {
     loadEstabelecimentos();
-  }, [loadEstabelecimentos]);
+  }, []);
 
   function renderFooter() {
     if (loading) {
@@ -58,7 +63,6 @@ export default function EstabelecimentoPrincipal({ navigation }) {
   function renderItem({ item }) {
     return (
       <TouchableOpacity
-        key={item.id}
         onPress={() => navigation.navigate('ProductsLojas', { product: item })}>
         <Card
           style={{
@@ -116,8 +120,8 @@ export default function EstabelecimentoPrincipal({ navigation }) {
 
   return (
     <Background>
-      <FlatList
-        contentContainerStyle={{ paddingHorizontal: 5 }}
+      <ProductList
+        contentContainerStyle={{ paddingHorizontal: 2 }}
         data={estabelecimento}
         renderItem={renderItem}
         keyExtractor={item => String(item.id)}
@@ -128,3 +132,33 @@ export default function EstabelecimentoPrincipal({ navigation }) {
     </Background>
   );
 }
+const styles = StyleSheet.create({
+  statusAberto: {
+    flex: 1,
+    color: '#20B402',
+    fontFamily: 'CerebriSans-Regular',
+  },
+  statusFechado: {
+    flex: 1,
+    color: '#B22222',
+    fontFamily: 'CerebriSans-Regular',
+  },
+
+  avatar: {
+    position: 'absolute',
+    borderWidth: 2,
+    height: 90,
+    width: 90,
+    borderRadius: 50,
+    borderColor: '#fff',
+  },
+  nameestabelecimento: {
+    marginTop: 87,
+    position: 'absolute',
+
+    color: '#fff',
+
+    textTransform: 'uppercase',
+    fontFamily: 'CerebriSans-ExtraBold',
+  },
+});

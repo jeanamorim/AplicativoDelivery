@@ -78,7 +78,7 @@ export default function Search({ navigation, route }) {
               <Thumbnail
                 square
                 source={{
-                  uri: item.image.url.replace('localhost', '10.0.0.106'),
+                  uri: item.image.url.replace('localhost', '10.0.0.104'),
                 }}
                 style={{
                   height: 64,

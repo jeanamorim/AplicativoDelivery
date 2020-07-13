@@ -54,8 +54,6 @@ class ProductEstabelecimentoController {
       offer => !isBefore(parseISO(offer.expiration_date), new Date()),
     );
 
-    // await Cache.set('offers', expiredCheck);
-
     return res.json(expiredCheck);
   }
 }

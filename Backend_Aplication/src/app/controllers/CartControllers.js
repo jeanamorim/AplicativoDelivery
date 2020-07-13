@@ -2,8 +2,6 @@ import Cart from '../models/Cart';
 import Product from '../models/Product';
 import File from '../models/File';
 
-import Cache from '../../lib/Cache';
-
 // mport AdminCheckService from '../../services/AdminCheckService';
 
 class Carrinho {
@@ -25,19 +23,19 @@ class Carrinho {
       observacao,
       quantidade,
     });
-    await Cache.invalidate('cart');
+
     return res.json(id);
   }
 
   async index(req, res) {
-    const cached = await Cache.get('cart');
-
-    if (cached) return res.json(cached);
-
+    const count = await Cart.findAndCountAll();
+    const { page = 1 } = req.query;
     const cart = await Cart.findAll({
       where: {
         estabelecimento_id: req.params.id,
       },
+      limit: 10,
+      offset: (page - 1) * 10,
       atributes: ['observacao', 'quantidade'],
       include: [
         {
@@ -61,9 +59,7 @@ class Carrinho {
         },
       ],
     });
-
-    await Cache.set('cart', cart);
-
+    res.header('X-Total-Count', count.count);
     return res.json(cart);
   }
 
@@ -80,8 +76,6 @@ class Carrinho {
 
       quantidade,
     } = await cart.update(req.body);
-
-    await Cache.invalidate('cart');
 
     return res.json({
       product_id,
@@ -101,8 +95,6 @@ class Carrinho {
         estabelecimento_id: req.params.id,
       },
     });
-
-    await Cache.invalidate('cart');
 
     return res.json();
   }
