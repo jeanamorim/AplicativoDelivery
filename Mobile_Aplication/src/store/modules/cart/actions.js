@@ -1,24 +1,14 @@
-export function addToCartRequest(
-  product,
-  quantidade,
-  valorTotalPedido,
-  observacao,
-) {
+export function addToCartRequest(product, observacao, quantidade, valor) {
   return {
     type: '@cart/ADD_REQUEST',
-    payload: { product, quantidade, valorTotalPedido, observacao },
+    payload: { product, observacao, quantidade, valor },
   };
 }
 
-export function addToCartSuccess(
-  product,
-  quantidade,
-  valorTotalPedido,
-  observacao,
-) {
+export function addToCartSuccess(product) {
   return {
     type: '@cart/ADD_SUCCESS',
-    payload: { product, quantidade, valorTotalPedido, observacao },
+    payload: { product },
   };
 }
 
@@ -32,11 +22,6 @@ export function removeFromCart(id) {
 export function EmptyCart() {
   return {
     type: '@cart/EMPTY',
-  };
-}
-export function EsvaziarCart() {
-  return {
-    type: '@cart/ESVAZIAR',
   };
 }
 

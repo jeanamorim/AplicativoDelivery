@@ -19,7 +19,7 @@ class Opcao extends Model {
   static associate(models) {
     this.belongsToMany(models.Variacao, {
       through: 'OpcaoVariacao',
-      as: 'opcao',
+      as: 'variacao',
       foreignKey: 'opcao_id',
     });
   }

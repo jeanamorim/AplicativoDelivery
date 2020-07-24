@@ -2,6 +2,8 @@ import File from '../../models/File';
 
 import Product from '../../models/Product';
 import Categoria from '../../models/Category';
+import Variacao from '../../models/Variacao';
+import Opcao from '../../models/Opcao';
 
 class ListProductIds {
   async index(req, res) {
@@ -20,6 +22,20 @@ class ListProductIds {
           model: Categoria,
           as: 'category',
           attributes: ['name'],
+        },
+        {
+          model: Variacao,
+          as: 'variacao',
+          attributes: ['id', 'name', 'minimo', 'maximo'],
+          through: { attributes: [] },
+          include: [
+            {
+              model: Opcao,
+              as: 'opcao',
+              attributes: ['id', 'name', 'price', 'status'],
+              through: { attributes: [] },
+            },
+          ],
         },
       ],
     });

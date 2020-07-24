@@ -7,6 +7,7 @@ export const Wrapper = styled.View`
 
 export const Container = styled.View`
   padding: 0 15px;
+
   height: 46px;
   background: ${props => (props.editable ? colors.white : colors.disabled)};
   border: 1px solid

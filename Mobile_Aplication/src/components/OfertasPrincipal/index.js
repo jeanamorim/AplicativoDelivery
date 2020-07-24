@@ -1,8 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
-import { ScrollView, TouchableOpacity } from 'react-native';
+import { ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import Background from '../../components/Background';
-import styles from './styles';
+import {
+  ProductList,
+  Container,
+  Left,
+  Avatar,
+  Info,
+  Name,
+  Time,
+  Canceled,
+  Avaliacao,
+} from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button, Text, Body, CardItem, Thumbnail } from 'native-base';
@@ -29,59 +39,53 @@ export default function OfertasPrincipal({ navigation }) {
 
     loadOffers();
   }, []);
+
   return (
     <Background>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.ofertas}>
-        {offers.map(oferta => (
-          <Body key={oferta.id}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('ProductsLojas')}>
-              <CardItem cardBody>
-                <Thumbnail
-                  square
-                  large
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {offers.map(item => (
+          <TouchableOpacity
+            key={item.id}
+            onPress={() =>
+              navigation.navigate('ProductsLojas', {
+                product: item.estabelecimento,
+              })
+            }>
+            <Container>
+              <Left>
+                <Avatar
                   source={{
-                    uri: oferta.product.image.url.replace(
+                    uri: item.product.image.url.replace(
                       'localhost',
-                      '10.0.0.104',
+                      '10.0.0.106',
                     ),
                   }}
-                  style={styles.off}
                 />
-              </CardItem>
-            </TouchableOpacity>
+              </Left>
 
-            <Text>
-              <Text
-                note
-                style={{
-                  textDecorationLine: 'line-through',
-                  textDecorationStyle: 'solid',
-                  fontFamily: 'CerebriSans-Regular',
-                }}>
-                {formatPrice(oferta.from)}
-              </Text>
-              <Text
-                note
-                style={{
-                  color: '#FF0000',
-                  fontFamily: 'CerebriSans-Regular',
-                }}>
-                {formatPrice(oferta.to)}
-              </Text>
-            </Text>
-            <Text
-              note
-              style={{
-                color: '#F4A460',
-                fontFamily: 'CerebriSans-Regular',
-              }}>
-              {oferta.product.name}
-            </Text>
-          </Body>
+              <Info>
+                <Name> {item.product.name}</Name>
+
+                <Avaliacao>
+                  <Text
+                    note
+                    style={{
+                      textDecorationLine: 'line-through',
+                      textDecorationStyle: 'solid',
+                    }}>
+                    {formatPrice(item.from)}
+                  </Text>
+                  <Text
+                    note
+                    style={{
+                      color: '#FF0000',
+                    }}>
+                    {formatPrice(item.to)}
+                  </Text>
+                </Avaliacao>
+              </Info>
+            </Container>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </Background>

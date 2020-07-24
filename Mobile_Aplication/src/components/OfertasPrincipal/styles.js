@@ -1,166 +1,65 @@
-export default {
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-  },
-  header: {
-    backgroundColor: '#F4A460',
-    height: 44,
-  },
+import styled from 'styled-components/native';
 
-  categories: {
-    padding: 10,
-    borderColor: '#000',
-  },
-  categoryButton: {
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    padding: 0,
-    height: 64,
-    width: 64,
-    marginRight: 10,
-    borderColor: '#E25B08',
-    borderWidth: 1,
-    borderStyle: 'solid',
-  },
+export const ProductList = styled.FlatList.attrs({
+  showsVerticalScrollIndicator: false,
+})``;
+export const Container = styled.View`
+  margin-left: 5px;
+  display: flex;
+  border-color: #9999;
+  border-width: 1;
+  max-width: 135px;
+  max-height: 180px;
+  border-top-right-radius: 40px;
+`;
 
-  titulo: {
-    alignItems: 'center',
-    padding: 107,
-  },
-  thumbnail: {
-    marginTop: 7,
-    padding: 20,
-  },
-  lupa: {
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 5,
-    height: 39,
-    width: 47,
-    borderColor: '#F7F6F6',
-    borderWidth: 1,
-    borderStyle: 'solid',
-  },
-  input: {
-    borderRadius: 6,
-    borderColor: '#F7F6F6',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    height: 39,
-    width: 47,
-    fontFamily: 'CerebriSans-Regular',
-  },
-  pesquisar: {
-    backgroundColor: ['#F0F8FF', '#D3D3D3'],
-  },
+export const Left = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
 
-  listitens: {
-    height: 60,
-    width: null,
-    flex: 1,
-  },
-  listiIcones: {
-    borderColor: '#E25B08',
-    borderWidth: 2,
-  },
-  banner: {
-    height: 60,
-    width: 20,
-    flex: 1,
-  },
-  status: {
-    flex: 1,
+export const Avatar = styled.Image`
+  background: #fff;
+  border-color: #9999;
+  flex: 1;
+  display: flex;
 
-    color: '#20B402',
-    fontFamily: 'CerebriSans-Regular',
-  },
-  ofertas: {
-    padding: 10,
-    borderColor: '#000',
-  },
+  max-width: 130px;
+  height: 110px;
+  border-top-right-radius: 40px;
 
-  off: {
-    maxWidth: 110,
-    height: 110,
-    width: 110,
-    flex: 1,
-    marginRight: 5,
-    borderColor: '#E25B08',
-    borderWidth: 1,
+  border-color: #fff;
+  border-width: 1;
+  align-items: center;
+`;
 
-    borderRadius: 6,
-  },
-  nameProducts: {
-    marginTop: -50,
-  },
-  priceAtual: {
-    marginTop: -10,
-  },
-  avatar: {
-    position: 'absolute',
-    borderWidth: 2,
-    height: 90,
-    width: 90,
-    borderRadius: 50,
-    borderColor: '#fff',
-  },
-  nameestabelecimento: {
-    marginTop: 90,
-    position: 'absolute',
+export const Info = styled.View`
+  display: flex;
+  align-items: center;
+`;
+export const Avaliacao = styled.View`
+  display: flex;
+  flex-direction: row;
+  margin-left: 5px;
+  margin-top: 5px;
+`;
+export const Name = styled.Text`
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
 
-    color: '#fff',
+  align-self: center;
+`;
 
-    textTransform: 'uppercase',
-    fontFamily: 'CerebriSans-ExtraBold',
-  },
+export const Time = styled.Text`
+  margin-top: 4px;
+  font-size: 13px;
+  color: #999;
+`;
 
-  statu: {
-    marginTop: 80,
-    position: 'absolute',
-
-    fontFamily: 'CerebriSans-Regular',
-    flex: 1,
-    paddingLeft: 290,
-    flexDirection: 'row',
-  },
-  tempo: {
-    position: 'absolute',
-    marginLeft: 130,
-    color: '#fff',
-    flex: 1,
-    fontFamily: 'CerebriSans-Regular',
-  },
-  modal: {
-    bottom: -20,
-    position: 'absolute',
-    height: '90%',
-    marginLeft: 0,
-    marginRight: 0,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    width: '100%',
-  },
-
-  btn: {
-    width: '100%',
-    height: 50,
-
-    backgroundColor: '#F4A460',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 30,
-  },
-  title: {
-    backgroundColor: '#F4A460',
-    height: 50,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
-  lista: {
-    textAlign: 'center',
-    marginLeft: 15,
-    marginRight: 15,
-  },
-};
+export const Canceled = styled.Text`
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #f64c75;
+`;

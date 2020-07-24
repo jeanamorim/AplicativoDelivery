@@ -8,6 +8,6 @@ export const Input = styled(TextInput)`
 `;
 
 export const SubmitButton = styled(Button)`
-  width: 100%;
+  flex: 1;
   align-self: stretch;
 `;

@@ -1,245 +1,228 @@
-/* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useState } from 'react';
-import { format, parseISO } from 'date-fns';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-
-import Iconn from 'react-native-vector-icons/MaterialCommunityIcons';
-import translate, { dateLanguage } from '../../../locales';
-import { TouchableOpacity, ScrollView } from 'react-native';
-import { formatPrice } from '../../../util/format';
-import DetailsCard from '../../../components/DetailsCard';
-import Table from '../../../components/Table';
-import Background from '../../../components/Background';
-
+import React, { Component } from 'react';
 import {
-  Container,
-  Card,
-  CardHeader,
-  CardTitle,
-  Title,
-  Subtitle,
-  DateRow,
-  DateContainer,
-  Line,
-  StatusContainer,
-  LabelContainer,
-  DotPendente,
-  DotProducao,
-  DotEnviado,
-  DotCancelado,
-  DotEntregue,
-  LabelPendente,
-  LabelProducao,
-  LabelEnviado,
-  LabelEntregue,
-  LabelCancelado,
-  HeaderBackground,
-} from './styles';
-import {
-  Header,
+  AppRegistry,
+  StyleSheet,
   Text,
-  Left,
-  Body,
-  Thumbnail,
-  List,
-  ListItem,
+  View,
+  TouchableOpacity,
+  Image,
+  Dimensions,
   Button,
-  Footer,
-  FooterTab,
-  Right,
-} from 'native-base';
+  TouchableWithoutFeedback,
+  FlatList,
+  TextInput,
+  Alert,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function OrderDetails({ navigation, route }) {
-  const { order } = route.params;
-  const [orderDetails, setOrderDetails] = useState({});
-  const pendente = orderDetails.status === 'PENDENTE' ? 'PENDENTE' : null;
-  const producao = orderDetails.status === 'PRODUCAO' ? 'PRODUCAO' : null;
-  const enviado = orderDetails.status === 'ENVIADO' ? 'ENVIADO' : null;
-  const entregue = orderDetails.status === 'ENTREGUE' ? 'ENTREGUE' : null;
-  const cancelado = orderDetails.status === 'CANCELADO' ? 'CANCELADO' : null;
+import Contacts from 'react-native-contacts';
+import { List, ListItem } from 'react-native-elements';
 
-  console.tron.log(order);
-  useEffect(() => {
-    const orderDetailsFormatted = {
-      ...order,
-      dateFormatted: format(parseISO(order.date), 'PPPpp', {
-        locale: dateLanguage,
-      }),
+export default class ContactList extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      fakeContact: [],
+      SelectedFakeContactList: [],
     };
-    setOrderDetails(orderDetailsFormatted);
-  }, [navigation, order]);
+  }
 
-  return (
-    <Background>
-      <Container>
-        <StatusContainer>
-          <LabelContainer>
-            <DotPendente filled={pendente}>
-              <Icon
-                size={40}
-                name="clipboard-list"
-                color="#000"
-                style={{ alignSelf: 'center', marginTop: 6 }}
-              />
-            </DotPendente>
-            {pendente === null ? (
-              <LabelPendente />
-            ) : (
-              <LabelPendente>Pendente</LabelPendente>
-            )}
-          </LabelContainer>
+  press = hey => {
+    this.state.fakeContact.map(item => {
+      if (item.recordID === hey.recordID) {
+        item.check = !item.check;
+        if (item.check === true) {
+          this.state.SelectedFakeContactList.push(item);
+          console.log('selected:' + item.givenName);
+        } else if (item.check === false) {
+          const i = this.state.SelectedFakeContactList.indexOf(item);
+          if (1 != -1) {
+            this.state.SelectedFakeContactList.splice(i, 1);
+            console.log('unselect:' + item.givenName);
+            return this.state.SelectedFakeContactList;
+          }
+        }
+      }
+    });
+    this.setState({ fakeContact: this.state.fakeContact });
+  };
 
-          <LabelContainer>
-            <DotProducao filled={producao}>
-              <Icon
-                size={40}
-                name="house-damage"
-                color="#000"
-                style={{ alignSelf: 'center', marginTop: 6 }}
-              />
-            </DotProducao>
-            {producao === null ? (
-              <LabelProducao />
-            ) : (
-              <LabelProducao>Produção</LabelProducao>
-            )}
-          </LabelContainer>
+  _showSelectedContact() {
+    return this.state.SelectedFakeContactList.length;
+  }
 
-          <LabelContainer>
-            <DotEnviado filled={enviado}>
-              <Icon
-                size={40}
-                name="motorcycle"
-                color="#000"
-                style={{ alignSelf: 'center', marginTop: 6 }}
-              />
-            </DotEnviado>
-            {enviado === null ? (
-              <LabelEnviado />
-            ) : (
-              <LabelEnviado>Enviado</LabelEnviado>
-            )}
-          </LabelContainer>
+  _showContactList = () => {
+    const url = 'https://jsonplaceholder.typicode.com/users';
+    fetch(url)
+      .then(res => {
+        return res.json();
+      })
+      .then(data => {
+        console.log(data);
+        return this.setState({ fakeContact: data });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
-          <LabelContainer>
-            <DotEntregue filled={entregue}>
-              <Icon
-                size={40}
-                name="check"
-                color="#000"
-                style={{ alignSelf: 'center', marginTop: 6 }}
-              />
-            </DotEntregue>
+  renderHeader = () => {
+    return <Header />;
+  };
 
-            {entregue === null ? (
-              <LabelEntregue />
-            ) : (
-              <LabelEntregue>Entregue</LabelEntregue>
-            )}
-          </LabelContainer>
-          <LabelContainer>
-            <DotCancelado filled={cancelado}>
-              <Icon
-                size={40}
-                name="times"
-                color="#000"
-                style={{ alignSelf: 'center', marginTop: 6 }}
-              />
-            </DotCancelado>
-            {cancelado === null ? (
-              <LabelCancelado />
-            ) : (
-              <LabelCancelado>Cancelado</LabelCancelado>
-            )}
-          </LabelContainer>
-        </StatusContainer>
-        <ScrollView>
-          <ListItem>
-            <Icon
-              size={40}
-              name="phone"
-              color="#00ff00"
-              style={{ alignSelf: 'center', marginTop: 6 }}
-            />
-
-            <Text style={{ marginLeft: 10 }}>Ligar para o estabelecimento</Text>
-          </ListItem>
-          <ListItem>
-            <Thumbnail
-              source={{
-                uri: order.estabelecimento.image.url.replace(
-                  'localhost',
-                  '10.0.0.104',
-                ),
-              }}
-            />
-            <Body>
-              <Text style={{ marginLeft: 10 }}>
-                {order.estabelecimento.name_loja}
-              </Text>
-            </Body>
-          </ListItem>
-          <Left>
-            <Text>Pedido N° {order.id}</Text>
-          </Left>
-          <Text style={{ marginLeft: 5 }}>PRODUTOS</Text>
-          {order.order_details.map(item => (
-            <ListItem key={item.id}>
-              <Text>{item.quantity}x</Text>
-              <Thumbnail
-                small
-                source={{
-                  uri: order.estabelecimento.image.url.replace(
-                    'localhost',
-                    '10.0.0.104',
-                  ),
-                }}
-              />
-              <Body>
-                <Text style={{ marginLeft: 10 }}>{item.product.name}</Text>
-              </Body>
-              <Right>
-                <Text>{formatPrice(item.product.price)}</Text>
-              </Right>
-            </ListItem>
-          ))}
-          <Text style={{ marginLeft: 5 }}>ENTREGA</Text>
-          <ListItem>
-            <Body>
-              <Text note style={{ fontSize: 14 }}>
-                {`${order.ship_neighborhood}, ${order.ship_city} - ${
-                  order.ship_street_n
-                }`}
-              </Text>
-              <Text note>{order.ship_complement}</Text>
-              <Text note>{order.ship_reference}</Text>
-            </Body>
-          </ListItem>
-          <Text style={{ marginLeft: 5 }}>TOTAIS E PAGAMENTOS</Text>
-          <ListItem>
-            <Body>
-              <Text note>Produtos</Text>
-              <Text note>Entrega</Text>
-              <Text>Total</Text>
-              <Text>Pagamento</Text>
-            </Body>
-            <Right>
-              <Text note>{formatPrice(order.subtotal)}</Text>
-              <Text note>{formatPrice(order.delivery_fee)}</Text>
-              <Text>{formatPrice(order.total)}</Text>
-              <Text>{order.payment_method}</Text>
-            </Right>
-          </ListItem>
-          <Text note style={{ marginLeft: 10 }}>
-            Pedido realizado em {orderDetails.dateFormatted}
-          </Text>
-        </ScrollView>
-      </Container>
-    </Background>
-  );
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={styles.storyContainer}>
+          <FlatList
+            data={this.state.fakeContact}
+            keyExtractor={item => item.recordID}
+            extraData={this.state}
+            ListHeaderComponent={this.renderHeader}
+            renderItem={({ item }) => {
+              return (
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    padding: 10,
+                    borderBottomWidth: 1,
+                    borderStyle: 'solid',
+                    borderColor: '#ecf0f1',
+                  }}
+                  onPress={() => {
+                    this.press(item);
+                  }}>
+                  <View
+                    style={{
+                      flex: 3,
+                      alignItems: 'flex-start',
+                      justifyContent: 'center',
+                    }}>
+                    {item.check ? (
+                      <Text
+                        style={{
+                          fontWeight: 'bold',
+                        }}>{`${item.familyName} ${item.givenName}`}</Text>
+                    ) : (
+                      <Text>{`${item.familyName} ${item.givenName}`}</Text>
+                    )}
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      alignItems: 'flex-end',
+                      justifyContent: 'center',
+                    }}>
+                    {item.check ? (
+                      <Icon
+                        name="ios-checkbox"
+                        size={30}
+                        color={primaryColor}
+                      />
+                    ) : (
+                      <Icon
+                        name="ios-square-outline"
+                        size={30}
+                        color={darkGrey}
+                      />
+                    )}
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+        <View>
+          {this.state.SelectedFakeContactList.length > 0 ? (
+            <View style={styles.containerFooter}>
+              <View
+                style={{
+                  flex: 3,
+                  alignItems: 'flex-start',
+                  justifyContent: 'center',
+                  alignContent: 'center',
+                }}>
+                <FlatList
+                  data={this.state.SelectedFakeContactList}
+                  horizontal={true}
+                  extraData={this.state}
+                  keyExtractor={(item, index) => item.recordID}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <View
+                        style={{
+                          paddingTop: 10,
+                        }}>
+                        <Text
+                          style={{
+                            color: 'white',
+                            fontWeight: 'bold',
+                            padding: 2,
+                          }}>
+                          {`${item.givenName},`}
+                        </Text>
+                      </View>
+                    );
+                  }}
+                />
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'flex-end',
+                  justifyContent: 'center',
+                }}>
+                <TouchableOpacity
+                  style={{
+                    padding: 10,
+                  }}
+                  onPress={() => Alert.alert('Message sent :)')}>
+                  <Icon name="ios-paper-plane" size={30} color="white" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : null}
+        </View>
+      </View>
+    );
+  }
 }
 
-OrderDetails.navigationOptions = ({ navigation }) => ({
-  title: 'Detalhes do pedido',
+const primaryColor = '#1abc9c';
+const lightGrey = '#ecf0f1';
+const darkGrey = '#bdc3c7';
+
+const Header = props => (
+  <View style={styles.searchContainer}>
+    <TextInput
+      style={styles.input}
+      placeholder="Search..."
+      onChangeText={text => console.log('searching for ', text)}
+    />
+  </View>
+);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    paddingTop: 20,
+    paddingBottom: 0,
+  },
+  containerFooter: {
+    height: 50,
+    backgroundColor: '#1abc9c',
+    padding: 5,
+    flexDirection: 'row',
+  },
+  searchContainer: {
+    flex: 1,
+    padding: 5,
+
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ecf0f1',
+  },
 });

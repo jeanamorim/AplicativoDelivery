@@ -1,7 +1,5 @@
 import Address from '../models/Address';
 
-import Cache from '../../lib/Cache';
-
 class AddressController {
   async store(req, res) {
     const {
@@ -27,8 +25,6 @@ class AddressController {
       reference,
     });
 
-    await Cache.invalidate(`adresses:users:${req.userId}`);
-
     return res.json({
       id,
       postal_code,
@@ -43,10 +39,6 @@ class AddressController {
   }
 
   async index(req, res) {
-    const cached = await Cache.get(`adresses:users:${req.userId}`);
-
-    if (cached) return res.json(cached);
-
     const address = await Address.findOne({
       where: {
         user_id: req.userId,
@@ -64,8 +56,6 @@ class AddressController {
         'reference',
       ],
     });
-
-    await Cache.set(`adresses:users:${req.userId}`, address);
 
     return res.json(address);
   }
@@ -88,8 +78,6 @@ class AddressController {
       complement,
       reference,
     } = await address.update(req.body);
-
-    await Cache.invalidate(`adresses:users:${req.userId}`);
 
     return res.json({
       id,

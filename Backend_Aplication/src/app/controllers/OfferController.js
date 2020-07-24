@@ -30,6 +30,7 @@ class OfferController {
   }
 
   async index(req, res) {
+    const count = await Offer.findAndCountAll();
     const offers = await Offer.findAll({
       where: {
         estabelecimento_id: req.estabelecimentoId,
@@ -79,7 +80,7 @@ class OfferController {
     const expiredCheck = JSON.parse(JSON.stringify(offers)).filter(
       offer => !isBefore(parseISO(offer.expiration_date), new Date()),
     );
-
+    res.header('X-Total-Count', count.count);
     return res.json(expiredCheck);
   }
 

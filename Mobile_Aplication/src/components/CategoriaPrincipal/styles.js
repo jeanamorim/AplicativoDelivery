@@ -11,17 +11,18 @@ export default {
   categories: {
     padding: 10,
     borderColor: '#000',
+    marginTop: -10,
+    marginLeft: -2,
   },
   categoryButton: {
-    backgroundColor: '#fff',
+    backgroundColor: '#F4A460',
     justifyContent: 'center',
     padding: 0,
     height: 64,
     width: 64,
-    marginRight: 10,
-    borderColor: '#E25B08',
+    marginRight: 3,
     borderWidth: 1,
-    borderStyle: 'solid',
+    borderColor: '#D2691E',
   },
 
   titulo: {

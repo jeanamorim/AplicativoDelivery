@@ -2,11 +2,17 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Orders from '../pages/Pedidos/Orders';
-import OrdersDetails from '../pages/Pedidos/OrderDetails';
+import OrderDetails from '../pages/Pedidos/OrderDetails';
 
 const Stack = createStackNavigator();
 
-export default function Delivery() {
+export default function OrdersRoutes({navigation, route}) {
+  if (route.state && route.state.index > 0){
+    navigation.setOptions({tabBarVisible: false});
+  } else {
+    navigation.setOptions({tabBarVisible: true});
+  }
+
   return (
     <Stack.Navigator
       headerMode="screen"
@@ -16,7 +22,7 @@ export default function Delivery() {
         headerTintColor: '#FFF',
         headerTitleStyle: {fontSize: 18},
         headerTransparent: false,
-        tabBarVisible: false,
+
 
 
       }}
@@ -51,8 +57,8 @@ export default function Delivery() {
           headerTintColor: '#fff',
 
  }}
- name="OrdersDetails"
- component={OrdersDetails}
+ name="OrderDetails"
+ component={OrderDetails}
 
       />
 

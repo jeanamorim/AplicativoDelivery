@@ -1,25 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+
 import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
   YellowBox,
 } from 'react-native';
+import {
+  ProductList,
+  ContainerCard,
+  Left,
+  Avatar,
+  Info,
+  Name,
+  Time,
+  TextBadge,
+  Avaliacao,
+  TextInfo,
+} from './styles';
+import { Card } from 'native-base';
 import Background from '../../components/Background';
-import { ProductList, Product, ImageContainer, ProductTitle } from './styles';
+
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button, Text, Body, CardItem, Thumbnail, View } from 'native-base';
 import api from '../../services/api';
 import { formatPrice } from '../../util/format';
 import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
-
-YellowBox.ignoreWarnings([
-  'VirtualizedLists should never be nested', // TODO: Remove when fixed
-]);
 
 export default function OfertasPrincipal({ navigation, id, loja }) {
   const [categorias, setCategorias] = useState([]);
@@ -28,26 +37,22 @@ export default function OfertasPrincipal({ navigation, id, loja }) {
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
 
-  async function getData() {
+  async function loadCategorias() {
     if (loading) {
       return;
     }
-
-    setLoading(true);
-    const response = await api.get(`categories_estab/${id}?=page${page}`);
+    const response = await api.get(`categories_estab/${id}?page=${page}`);
 
     setCategorias([...categorias, ...response.data]);
 
     setPage(page + 1);
-
-    setLoading(false);
   }
-  console.tron.log(total);
+
   useEffect(() => {
-    getData();
+    loadCategorias();
   }, []);
   useEffect(() => {
-    setTimeout(() => setIsVisible(true), 500);
+    setTimeout(() => setIsVisible(true), 20);
   }, []);
 
   function renderFooter() {
@@ -63,36 +68,37 @@ export default function OfertasPrincipal({ navigation, id, loja }) {
 
   function renderCategoria({ item }) {
     return (
-      <Product key={item.id}>
-        <ImageContainer
+      <Card style={{ borderRadius: 5 }}>
+        <ContainerCard
           onPress={() =>
             navigation.navigate('ProductDetails', {
               categoria: item,
               estabelecimento: loja,
             })
           }>
-          <Thumbnail
-            large
-            source={{
-              uri: item.image.url.replace('localhost', '10.0.0.104'),
-            }}
-            style={{ borderColor: '#E25B08', borderWidth: 2 }}
-          />
-        </ImageContainer>
-
-        <ProductTitle>{item.name}</ProductTitle>
-      </Product>
+          <Left>
+            <Avatar
+              source={{
+                uri: item.image.url.replace('localhost', '10.0.0.106'),
+              }}
+            />
+            <Info>
+              <Name>{item.name}</Name>
+            </Info>
+          </Left>
+        </ContainerCard>
+      </Card>
     );
   }
 
   return (
     <Background>
       <ProductList
-        contentContainerStyle={{ paddingHorizontal: 2 }}
+        contentContainerStyle={{ paddingHorizontal: 5 }}
         data={categorias}
         renderItem={renderCategoria}
         keyExtractor={item => String(item.id)}
-        onEndReached={getData}
+        onEndReached={loadCategorias}
         onEndReachedThreshold={0.1}
         ListFooterComponent={renderFooter}
       />

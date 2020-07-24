@@ -34,10 +34,13 @@ class BuscarEstabelecimentoCategoriaControllers {
 
     if (req.query) {
       if (req.query.category) {
+        const { page = 1 } = req.query;
         const products = await Estabelecimento.findAll({
           where: {
             categoria: req.query.category,
           },
+          limit: 8,
+          offset: (page - 1) * 8,
           attributes: [
             'id',
             'name',

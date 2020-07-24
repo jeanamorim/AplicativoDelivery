@@ -1,158 +1,215 @@
 import styled from 'styled-components/native';
-import { RectButton } from 'react-native-gesture-handler';
 import LottieView from 'lottie-react-native';
-
+import { RectButton } from 'react-native-gesture-handler';
 import watermelon from '../../assets/animations/watermelon.json';
+import colors from '../../styles/colors.js';
 
-export const Container = styled.View`
+export const CartContainer = styled.SafeAreaView`
   flex: 1;
-  border-radius: 2px;
 `;
 
-export const ProductList = styled.FlatList.attrs({
-  showsVerticalScrollIndicator: false,
-})`
-  background: #fff;
-  border-radius: 2px;
-  padding: 5px;
-`;
+export const MainContainer = styled.ScrollView.attrs({
+  contentContainerStyle: { padding: 6 },
+})``;
 
-export const ProductContainer = styled.View`
-  flex-direction: column;
-  background: #e8e8e8;
-`;
+export const Products = styled.View``;
 
 export const Product = styled.View`
+  background: ${colors.white};
+  border: 1px solid ${colors.border};
+  border-radius: 4px;
+  margin-bottom: 5px;
+`;
+
+export const ProductDetails = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  padding: 10px 27px;
+`;
+
+export const ProductImage = styled.Image`
+  width: 80px;
+  height: 80px;
+  border-color: #999;
+  border-width: 1;
+  border-radius: 10px;
+  margin-left: -7%;
+`;
+
+export const ProductOpcao = styled.View`
+  display: flex;
 `;
 
 export const ProductInfo = styled.View`
-  flex-direction: column;
-  flex: 1;
-  justify-content: space-between;
-  margin-left: 1px;
-  margin: auto;
+  margin-left: 5px;
 `;
-export const ProductInfoValor = styled.View`
-  flex-direction: column;
-  flex: 1;
-  justify-content: space-between;
-  margin-left: 130px;
+export const TextOpcao = styled.Text`
+  margin-left: 10px;
 `;
-export const Title = styled.Text`
-  height: 20px;
-  width: 520px;
+export const CampoObservacao = styled.View`
+  margin-left: 5px;
+  background: #eecbad;
 `;
 
-export const Value = styled.Text`
-  font-size: 15px;
-  color: #222;
-`;
-
-export const CartItemSubTotal = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  background: #fff;
-  padding: 10px 5px;
-`;
-
-export const CartItemCount = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-export const RemoveCart = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-export const Amount = styled.Text`
-  margin: 0 10px;
-`;
-
-export const CartItemTotalValue = styled.Text`
-  color: #f4a460;
-  font-size: 18px;
+export const ProductTitle = styled.Text`
   font-weight: bold;
 `;
-
-export const CartTotal = styled.View`
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  height: 55px;
-  width: 290px;
-  margin: -3px 25px;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-export const CartTotalLabel = styled.Text`
-  font-size: 20px;
-  color: #f4a460;
-`;
-
-export const CartTotalValue = styled.Text`
-  font-size: 20px;
-  color: #222;
-  font-weight: bold;
-`;
-export const CheckoutButton = styled(RectButton)`
-  background: #f4a460;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
+export const TextObservacao = styled.Text`
   color: #fff;
-  border-radius: 4px;
-  margin: 2px;
 `;
 
-export const EmptyCartContainer = styled.View`
-  flex: 1;
+export const ProductWeight = styled.Text`
+  font-weight: bold;
+`;
+
+export const ProductRemoveButton = styled.TouchableOpacity``;
+
+export const ProductControls = styled.View`
+  background: #fff5ee;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  padding: 8px;
+`;
+
+export const ProductControlButton = styled.TouchableOpacity``;
+
+export const ProductAmount = styled.TextInput.attrs({ editable: false })`
+  min-width: 52px;
+  background: ${colors.white};
+  border-radius: 4px;
+  padding: 5px;
+  border: 1px solid ${colors.border};
+  margin: 0 5px;
+`;
+
+export const ProductSubTotal = styled.Text`
+  font-weight: bold;
+  font-size: 16px;
+  flex: 1;
+  text-align: right;
+  padding: 0px;
+`;
+export const ProductPrice = styled.Text`
+  font-size: 14px;
+  flex: 1;
+  text-align: right;
+  padding: 0px;
+`;
+
+export const DetailsContainer = styled.View`
+  padding: 2px;
+  background: #fff;
+`;
+export const DetailsContainerSub = styled.View`
+  padding: 2px;
+  background: #eecbad;
+`;
+
+export const SubtotalOpcao = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+`;
+export const Subtotal = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+`;
+export const SubtotalLabel = styled.Text`
+  font-size: 15px;
+  font-weight: bold;
+  color: #000;
+`;
+
+export const SubTotalValue = styled.Text`
+  font-size: 15px;
+
+  color: #000;
+`;
+
+export const DeliveryCharges = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+export const DeliveryChargesLabel = styled.Text`
+  font-size: 15px;
+  font-weight: bold;
+  color: ${colors.red};
+`;
+
+export const DeliveryChargesValue = styled.Text`
+  font-size: 15px;
+  font-weight: bold;
+  color: ${colors.red};
+`;
+
+export const GrandTotal = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+export const GrandTotalLabel = styled.Text`
+  font-size: 15px;
+  font-weight: bold;
+  color: ${colors.white};
+`;
+
+export const GrandTotalValue = styled.Text`
+  font-size: 15px;
+  font-weight: bold;
+  color: ${colors.white};
+`;
+
+export const CartFooter = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  height: 55px;
+  background: ${colors.primary};
+  padding: 10px;
+`;
+
+export const ConfirmOrderText = styled.Text`
+  font-size: 15px;
+  font-weight: bold;
+  color: ${colors.white};
+`;
+
+export const ViewDetailsButton = styled.TouchableOpacity`
+  position: absolute;
+  left: 50%;
+`;
+
+export const TotalContainer = styled.View`
+  flex-direction: row;
+`;
+
+export const Total = styled.Text`
+  font-size: 15px;
+  margin-right: 5px;
+  font-weight: bold;
+  color: ${colors.white};
 `;
 
 export const EmptyCart = styled.View`
-  background: #fff;
-  flex-direction: column;
-  align-items: center;
-`;
-
-export const EmptyCartMessage = styled.Text`
-  margin: 15px 0;
-  color: #222;
-  font-size: 16px;
-  font-weight: bold;
-`;
-
-export const BackHomeButton = styled(RectButton)`
-  background: #f4a460;
-  flex-direction: row;
+  height: 70%;
   align-items: center;
   justify-content: center;
-  padding: 12px;
-  color: #fff;
-  border-radius: 4px;
-  margin: 2px;
 `;
+
 export const WatermelonAnimation = styled(LottieView).attrs({
   resizeMode: 'cover',
   source: watermelon,
   autoPlay: true,
   loop: false,
 })``;
+
 export const EmptyCartTextContainer = styled.View`
   align-items: center;
   margin-top: 200px;
 `;
+
 export const EmptyCartText = styled.Text`
   font-size: 20px;
   font-family: 'CerebriSans-ExtraBold';
@@ -162,25 +219,37 @@ export const EmptyCartSubText = styled.Text`
   font-size: 14px;
   font-family: 'CerebriSans-Regular';
 `;
-export const EsvaziarCart = styled.View`
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+export const ButtonAdd = styled(RectButton)`
+  elevation: 8;
 
-  height: 260px;
-  width: 290px;
-  margin: -3px 25px;
+  padding: 6px;
+
+  width: 100%;
+  background: #f4a460;
+  border-color: #000;
+  border-width: 2;
   flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
 `;
-export const ObservacaoProducto = styled.View`
+export const TextInfo = styled.Text`
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+`;
+export const CartTotal = styled.View`
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  background: #f7d3b0;
 `;
-export const TextoObs = styled.Text`
-  font-size: 14px;
-  font-family: 'CerebriSans-Regular';
+export const CartTotalLabel = styled.Text`
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 7px;
+`;
+
+export const CartTotalValue = styled.Text`
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 7px;
+  margin-left: 50%;
 `;

@@ -52,7 +52,7 @@ class StatusPedidoControllers {
                 {
                   model: File,
                   as: 'image',
-                  attributes: ['path', 'url'],
+                  attributes: ['id', 'name', 'url'],
                 },
               ],
             },

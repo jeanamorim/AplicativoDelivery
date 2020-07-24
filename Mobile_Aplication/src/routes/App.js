@@ -3,9 +3,10 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import Profile from '../pages/Profile';
+
 import HomeRoutes from './HomeRoutes';
 import OrdersRoutes from './OrdersRoutes';
+import ProfileRoute from './ProfileRouter';
 import SearchEstabelecimento from '../pages/SearchEstabelecimento';
 
 
@@ -16,7 +17,7 @@ export default function App() {
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      unmountOnBlur
+
       tabBarOptions={{
         keyboardHidesTabBar: true,
         activeTintColor: '#F4A460',
@@ -64,8 +65,8 @@ export default function App() {
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={Profile}
+        name="ProfileRoute"
+        component={ProfileRoute}
         options={{
           tabBarLabel: 'Meu Perfil',
           tabBarIcon: ({color}) => (

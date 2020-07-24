@@ -7,11 +7,9 @@ export default function cart(state = INITIAL_STATE, action) {
     switch (action.type) {
       case '@cart/ADD_SUCCESS': {
         draft.push(action.payload.product);
-
         break;
       }
 
-      //remove do carrinho
       case '@cart/REMOVE': {
         const productIndex = draft.findIndex(p => p.id === action.payload.id);
 
@@ -20,13 +18,7 @@ export default function cart(state = INITIAL_STATE, action) {
         }
         break;
       }
-      //zera o carrinho
       case '@cart/EMPTY': {
-        draft.length = 0;
-        break;
-      }
-      //zera o carrinho
-      case '@cart/ESVAZIAR': {
         draft.length = 0;
         break;
       }

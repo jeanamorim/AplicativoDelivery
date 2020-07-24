@@ -69,12 +69,16 @@ export default function Orders({ navigation }) {
   const id = useSelector(state => state.user.profile.id);
 
   async function loadOrders() {
+    setIsVisible(true);
     if (loading) {
       return;
     }
-    if (total > 0 && orders.length === total) {
-      return;
-    }
+
+    //if (total > 0 && orders.length === total) {
+    // return;
+    //}
+
+    // setLoading(true);
 
     const response = await api.get(`orders_user/${id}?page=${page}`);
 
@@ -91,16 +95,12 @@ export default function Orders({ navigation }) {
         }),
       })),
     ]);
-    setTotal(response.headers['X-Total-Count']);
+    setTotal(response.headers['x-total-count']);
     setPage(page + 1);
   }
 
   useEffect(() => {
     loadOrders();
-  }, []);
-
-  useEffect(() => {
-    setTimeout(() => setIsVisible(true), 500);
   }, []);
 
   function renderFooter() {
@@ -191,7 +191,7 @@ export default function Orders({ navigation }) {
           <FooterItem>
             <Button
               onPress={() =>
-                navigation.navigate('OrdersDetails', { order: item })
+                navigation.navigate('OrderDetails', { order: item })
               }>
               <Small />
               <ShimmerPlaceHolder

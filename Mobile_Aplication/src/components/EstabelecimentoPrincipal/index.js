@@ -12,20 +12,29 @@ import {
   StyleSheet,
 } from 'react-native';
 import Background from '../../components/Background';
-import { ProductList } from './styles';
+import {
+  ProductList,
+  Container,
+  Left,
+  Avatar,
+  Info,
+  Name,
+  Time,
+  Canceled,
+  Avaliacao,
+  Text,
+} from './styles';
+import Iconn from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Button,
-  Text,
   Body,
   CardItem,
   Thumbnail,
-  Left,
   Right,
   Card,
   View,
-  Container,
 } from 'native-base';
 import api from '../../services/api';
 
@@ -33,9 +42,14 @@ export default function EstabelecimentoPrincipal({ navigation }) {
   const [estabelecimento, setEstabelecimento] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   async function loadEstabelecimentos() {
     if (loading) {
+      return;
+    }
+
+    if (total > 0 && estabelecimento.length === total) {
       return;
     }
 
@@ -43,6 +57,7 @@ export default function EstabelecimentoPrincipal({ navigation }) {
 
     setEstabelecimento([...estabelecimento, ...response.data]);
     setPage(page + 1);
+    setTotal(response.headers['x-total-count']);
   }
 
   useEffect(() => {
@@ -64,56 +79,34 @@ export default function EstabelecimentoPrincipal({ navigation }) {
     return (
       <TouchableOpacity
         onPress={() => navigation.navigate('ProductsLojas', { product: item })}>
-        <Card
-          style={{
-            flex: 1,
-            alignItems: 'center',
-          }}>
-          <Image
-            source={{
-              uri:
-                'https://www.popeyesbrasil.com.br/assets/products/hero/hero_combo_lanches.jpg',
-            }}
-            style={{
-              height: 110,
-              flex: 1,
-              width: '100%',
-            }}
-          />
-
-          <Thumbnail
-            large
-            source={{
-              uri: item.image.url.replace('localhost', '10.0.0.104'),
-            }}
-            style={styles.avatar}
-          />
-          <Text style={styles.nameestabelecimento}>{item.name_loja}</Text>
-
-          <CardItem>
-            <Left>
-              <Icon name="star-half-alt" size={15} color="#F4A460" />
-              <Text note style={{ fontFamily: 'CerebriSans-Regular' }}>
-                {item.avaliacao}
-              </Text>
-            </Left>
-            <Body>
-              <Text>
-                <Icon name="clock" size={15} color="#999" />
-                <Text note style={{ fontFamily: 'CerebriSans-Regular' }}>
-                  {item.tempo_entrega} min
-                </Text>
-              </Text>
-            </Body>
-            <Right>
-              {item.status === 'ABERTO' ? (
-                <Text style={styles.statusAberto}>{item.status}</Text>
-              ) : (
-                <Text style={styles.statusFechado}>{item.status}</Text>
-              )}
-            </Right>
-          </CardItem>
-        </Card>
+        <Container>
+          <Left>
+            <Avatar
+              past={item.status === 'FECHADO' ? true : false}
+              source={{
+                uri: item.image.url.replace('localhost', '10.0.0.104'),
+              }}
+            />
+            <Info>
+              <Name>{item.name_loja}</Name>
+              <Time> {item.tempo_entrega} min</Time>
+              <Avaliacao>
+                <Text note>{item.avaliacao}</Text>
+                <Icon
+                  name="star-half-alt"
+                  size={15}
+                  color="#F4A460"
+                  style={{ marginLeft: 10, marginTop: 2 }}
+                />
+              </Avaliacao>
+            </Info>
+          </Left>
+          {item.status === 'ABERTO' ? (
+            <Text style={styles.statusAberto}>{item.status}</Text>
+          ) : (
+            <Text style={styles.statusFechado}>{item.status}</Text>
+          )}
+        </Container>
       </TouchableOpacity>
     );
   }
@@ -134,14 +127,10 @@ export default function EstabelecimentoPrincipal({ navigation }) {
 }
 const styles = StyleSheet.create({
   statusAberto: {
-    flex: 1,
     color: '#20B402',
-    fontFamily: 'CerebriSans-Regular',
   },
   statusFechado: {
-    flex: 1,
     color: '#B22222',
-    fontFamily: 'CerebriSans-Regular',
   },
 
   avatar: {

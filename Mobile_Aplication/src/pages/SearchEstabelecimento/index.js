@@ -7,22 +7,30 @@ import {
   View,
   Image,
   TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Iconn from 'react-native-vector-icons/MaterialCommunityIcons';
 import Background from '../../components/Background';
-
+import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 import { formatPrice } from '../../util/format';
-
-import styles from './styles';
+import {
+  ProductList,
+  Containerr,
+  Left,
+  Avatar,
+  Info,
+  Time,
+  Canceled,
+  Avaliacao,
+  Text,
+} from './styles';
 import {
   Container,
   Button,
-  Text,
   Header,
   Input,
   Item,
-  Left,
   Body,
   Thumbnail,
   List,
@@ -38,6 +46,7 @@ export default function SearchEstabelecimento({ navigation }) {
   const [searchText, setSearchText] = useState('');
   const [searching, setSearching] = useState(false);
   const [focused, setFocused] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const timerRef = useRef();
 
@@ -51,6 +60,9 @@ export default function SearchEstabelecimento({ navigation }) {
       timerRef.current = setTimeout(() => setSearching(true), 500);
     }
   }
+  useEffect(() => {
+    setTimeout(() => setIsVisible(true), 500);
+  }, []);
 
   useEffect(() => {
     async function search() {
@@ -70,59 +82,64 @@ export default function SearchEstabelecimento({ navigation }) {
   function renderData({ item }) {
     return (
       <TouchableOpacity
-        key={item.id}
         onPress={() => navigation.navigate('ProductsLojas', { product: item })}>
-        <Card
-          key={item.id}
-          style={{
-            flex: 1,
-            alignItems: 'center',
-          }}>
-          <Image
-            source={{
-              uri:
-                'https://www.popeyesbrasil.com.br/assets/products/hero/hero_combo_lanches.jpg',
-            }}
-            style={{
-              height: 110,
-              flex: 1,
-              width: '100%',
-            }}
-          />
+        <Containerr>
+          <Left>
+            <ShimmerPlaceHolder
+              autoRun={true}
+              visible={isVisible}
+              style={{ width: 80, height: 80, borderRadius: 50 }}>
+              <Avatar
+                past={item.status === 'FECHADO' ? true : false}
+                source={{
+                  uri: item.image.url.replace('localhost', '10.0.0.104'),
+                }}
+              />
+            </ShimmerPlaceHolder>
 
-          <Thumbnail
-            large
-            source={{
-              uri: item.image.url.replace('localhost', '10.0.0.104'),
-            }}
-            style={styles.avatar}
-          />
-          <Text style={styles.nameestabelecimento}>{item.name_loja}</Text>
-
-          <CardItem>
-            <Left>
-              <Icon name="star-half-alt" size={15} color="#F4A460" />
-              <Text note style={{ fontFamily: 'CerebriSans-Regular' }}>
-                {item.avaliacao}
-              </Text>
-            </Left>
-            <Body>
-              <Text>
-                <Icon name="clock" size={15} color="#999" />
-                <Text note style={{ fontFamily: 'CerebriSans-Regular' }}>
-                  {item.tempo_entrega} min
-                </Text>
-              </Text>
-            </Body>
-            <Right>
-              <Text style={styles.status}>{item.status}</Text>
-            </Right>
-          </CardItem>
-        </Card>
+            <Info>
+              <ShimmerPlaceHolder
+                autoRun={true}
+                visible={isVisible}
+                style={{ width: 180 }}>
+                <Text>{item.name_loja}</Text>
+              </ShimmerPlaceHolder>
+              <ShimmerPlaceHolder
+                autoRun={true}
+                visible={isVisible}
+                style={{ width: 90, margin: 1 }}>
+                <Time> {item.tempo_entrega} min</Time>
+              </ShimmerPlaceHolder>
+              <ShimmerPlaceHolder
+                autoRun={true}
+                visible={isVisible}
+                style={{ width: 60, margin: 1 }}>
+                <Avaliacao>
+                  <Text note>{item.avaliacao}</Text>
+                  <Icon
+                    name="star-half-alt"
+                    size={15}
+                    color="#F4A460"
+                    style={{ marginLeft: 10, marginTop: 2 }}
+                  />
+                </Avaliacao>
+              </ShimmerPlaceHolder>
+            </Info>
+          </Left>
+          <ShimmerPlaceHolder
+            autoRun={true}
+            visible={isVisible}
+            style={{ width: 80 }}>
+            {item.status === 'ABERTO' ? (
+              <Text style={styles.statusAberto}>{item.status}</Text>
+            ) : (
+              <Text style={styles.statusFechado}>{item.status}</Text>
+            )}
+          </ShimmerPlaceHolder>
+        </Containerr>
       </TouchableOpacity>
     );
   }
-
   function RenderList() {
     if (searchResult) {
       if (searchResult.length) {
@@ -212,9 +229,29 @@ export default function SearchEstabelecimento({ navigation }) {
     </Background>
   );
 }
-//SearchEstabelecimento.navigationOptions = {
-//tabBarLabel: 'Buscar',
-// tabBarIcon: ({ tintColor }) => (
-// <Icon name="search" size={20} color={tintColor} />
-//),
-//};
+const styles = StyleSheet.create({
+  statusAberto: {
+    color: '#20B402',
+  },
+  statusFechado: {
+    color: '#B22222',
+  },
+
+  avatar: {
+    position: 'absolute',
+    borderWidth: 2,
+    height: 90,
+    width: 90,
+    borderRadius: 50,
+    borderColor: '#fff',
+  },
+  nameestabelecimento: {
+    marginTop: 87,
+    position: 'absolute',
+
+    color: '#fff',
+
+    textTransform: 'uppercase',
+    fontFamily: 'CerebriSans-ExtraBold',
+  },
+});

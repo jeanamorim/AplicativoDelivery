@@ -4,7 +4,8 @@ import Product from '../models/Product';
 import File from '../models/File';
 import Category from '../models/Category';
 import Estabelecimento from '../models/Estabelecimento';
-import Cache from '../../lib/Cache';
+import Variacao from '../models/Variacao';
+import Opcao from '../models/Opcao';
 
 // import AdminCheckService from '../../services/AdminCheckService';
 import FormatProductService from '../../services/FormatProductService';
@@ -21,7 +22,7 @@ class ProductController {
       image_id,
       category_id,
       price,
-      observacao,
+      variacao,
     } = req.body;
 
     const products = await Product.create({
@@ -33,24 +34,19 @@ class ProductController {
       image_id,
       category_id,
       price,
-      observacao,
+      variacao,
     });
-    await Cache.invalidate('products');
+    if (variacao && variacao.length > 0) {
+      products.setVariacao(variacao);
+    }
+
     return res.json(products);
   }
 
   async index(req, res) {
     if (req.params.id) {
       const product = await Product.findByPk(req.params.id, {
-        attributes: [
-          'id',
-          'name',
-          'description',
-          'quantity',
-          'unit',
-          'price',
-          'observacao',
-        ],
+        attributes: ['id', 'name', 'description', 'quantity', 'unit', 'price'],
         include: [
           {
             model: File,
@@ -66,6 +62,20 @@ class ProductController {
             model: Estabelecimento,
             as: 'estabelecimento',
             attributes: ['id', 'name_loja'],
+          },
+          {
+            model: Variacao,
+            as: 'variacao',
+            attributes: ['name', 'minimo', 'maximo'],
+            through: { attributes: [] },
+            include: [
+              {
+                model: Opcao,
+                as: 'opcao',
+                attributes: ['id','name', 'price', 'status'],
+                through: { attributes: [] },
+              },
+            ],
           },
         ],
       });
@@ -88,7 +98,6 @@ class ProductController {
             'quantity',
             'unit',
             'price',
-            'observacao',
           ],
           include: [
             {
@@ -105,6 +114,20 @@ class ProductController {
               model: Estabelecimento,
               as: 'estabelecimento',
               attributes: ['id', 'name_loja'],
+            },
+            {
+              model: Variacao,
+              as: 'variacao',
+              attributes: ['name', 'minimo', 'maximo'],
+              through: { attributes: [] },
+              include: [
+                {
+                  model: Opcao,
+                  as: 'opcao',
+                  attributes: ['id','name', 'price', 'status'],
+                  through: { attributes: [] },
+                },
+              ],
             },
           ],
         });
@@ -127,7 +150,6 @@ class ProductController {
             'quantity',
             'unit',
             'price',
-            'observacao',
           ],
           include: [
             {
@@ -145,6 +167,20 @@ class ProductController {
               as: 'estabelecimento',
               attributes: ['id', 'name_loja'],
             },
+            {
+              model: Variacao,
+              as: 'variacao',
+              attributes: ['name', 'minimo', 'maximo'],
+              through: { attributes: [] },
+              include: [
+                {
+                  model: Opcao,
+                  as: 'opcao',
+                  attributes: ['id','name', 'price', 'status'],
+                  through: { attributes: [] },
+                },
+              ],
+            },
           ],
         });
 
@@ -156,53 +192,23 @@ class ProductController {
       }
     }
 
-    const cached = await Cache.get('products');
-
-    if (cached) {
-      const productsFormatted = await FormatProductService.run(cached);
-
-      return res.json(productsFormatted);
-    }
-
-    const productsFormatted = await FormatProductService.run();
-
-    await Cache.set('products', productsFormatted);
-
-    return res.json(productsFormatted);
+    return res.json();
   }
 
   async update(req, res) {
     // await AdminCheckService.run({ user_id: req.userId });
 
-    const product = await Product.findByPk(req.params.id);
+    const { id } = req.params;
+    const post = await Product.findByPk(id);
 
-    await Cache.invalidate('products');
+    const { variacao, ...data } = req.body;
+    post.update(data);
 
-    const {
-      id,
-      name,
-      description,
-      image_id,
-      category_id,
-      estabelecimento_id,
-      quantity,
-      unit,
-      price,
-      observacao,
-    } = await product.update(req.body);
+    if (variacao && variacao.length > 0) {
+      post.setVariacao(variacao);
+    }
 
-    return res.json({
-      id,
-      name,
-      description,
-      image_id,
-      category_id,
-      estabelecimento_id,
-      quantity,
-      unit,
-      price,
-      observacao,
-    });
+    return res.json(post);
   }
 
   async delete(req, res) {
@@ -213,8 +219,6 @@ class ProductController {
         id: req.params.id,
       },
     });
-
-    await Cache.invalidate('products');
 
     return res.json();
   }

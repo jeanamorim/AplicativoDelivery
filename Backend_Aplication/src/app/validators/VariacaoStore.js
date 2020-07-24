@@ -6,7 +6,6 @@ export default async (req, res, next) => {
       name: Yup.string().required(),
       minimo: Yup.number().required(),
       maximo: Yup.number().required(),
-      product_id: Yup.number().required(),
     });
 
     await schema.validate(req.body, { abortEarly: false });

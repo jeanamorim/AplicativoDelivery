@@ -23,6 +23,7 @@ export const Title = styled.Text`
   font-size: 14px;
   font-weight: bold;
   margin-left: 10px;
+  font-weight: bold;
 `;
 
 export const Footer = styled.View`

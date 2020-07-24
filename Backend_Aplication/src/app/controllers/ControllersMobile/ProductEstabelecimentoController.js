@@ -1,6 +1,9 @@
 import File from '../../models/File';
 
 import Product from '../../models/Product';
+import Estabelecimento from '../../models/Estabelecimento';
+import Variacao from '../../models/Variacao';
+import Opcao from '../../models/Opcao';
 
 class ProductEstabelecimentoController {
   async index(req, res) {
@@ -10,14 +13,53 @@ class ProductEstabelecimentoController {
       where: {
         category_id: req.params.id,
       },
-      limit: 8,
-      offset: (page - 1) * 8,
+      limit: 5,
+      offset: (page - 1) * 5,
       attributes: ['id', 'name', 'description', 'quantity', 'unit', 'price'],
       include: [
         {
           model: File,
           as: 'image',
           attributes: ['path', 'url'],
+        },
+        {
+          model: Estabelecimento,
+          as: 'estabelecimento',
+          attributes: [
+            'id',
+            'name',
+            'name_loja',
+            'status',
+            'avaliacao',
+            'categoria',
+            'tempo_entrega',
+            'email',
+            'phone',
+            'birthday',
+            'gender',
+            'cpf',
+          ],
+          include: [
+            {
+              model: File,
+              as: 'image',
+              attributes: ['name', 'path', 'url'],
+            },
+          ],
+        },
+        {
+          model: Variacao,
+          as: 'variacao',
+          attributes: ['name', 'minimo', 'maximo'],
+          through: { attributes: [] },
+          include: [
+            {
+              model: Opcao,
+              as: 'opcao',
+              attributes: ['id', 'name', 'price', 'status'],
+              through: { attributes: [] },
+            },
+          ],
         },
       ],
     });

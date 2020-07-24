@@ -14,23 +14,41 @@ import {
   handleSubmit,
 } from '../validation/validations/deliveryAddressValidation';
 
-import { Label, Picker, Item } from 'native-base';
+import {
+  Label,
+  Picker,
+  Item,
+  Footer,
+  FooterTab,
+  Button,
+  Text,
+} from 'native-base';
 
-export default function DeliveryAddressForm({ navigation }) {
+export default function DeliveryAddressForm({
+  handleFormSubmit,
+  loading,
+  onSubmit,
+}) {
+  const [bairro, setBairro] = useState('vazio');
+  const [lockForm, setLockForm] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
-  const [bairro, setBairro] = useState('');
+  const [haveAddress, setHaveAddress] = useState(false);
   const [touched, setTouched] = useState({});
-  const [loading, setLoading] = useState(false);
+
   const [form, setForm] = useState({
+    addressee: '',
+    postal_code: '49400-000',
     street: '',
     street_n: '',
-
+    neighborhood: '',
     city: '',
     state: '',
     complement: '',
     reference: '',
   });
 
+  const addresseeRef = useRef();
+  const postalCodeRef = useRef();
   const streetRef = useRef();
   const streetNumberRef = useRef();
   const neighborhoodRef = useRef();
@@ -39,7 +57,31 @@ export default function DeliveryAddressForm({ navigation }) {
   const complementRef = useRef();
   const referenceRef = useRef();
 
-  const userId = useSelector(state => state.user.profile.id);
+  const userName = useSelector(state => state.user.profile.name);
+
+  useEffect(() => {
+    async function checkHaveAddress() {
+      setLockForm(true);
+      const response = await api.get('address');
+
+      if (response.data) {
+        setHaveAddress(true);
+
+        const data = {
+          ...response.data,
+          postal_code: cepMask(response.data.postal_code),
+          addressee: userName,
+        };
+
+        setForm(data);
+        setLockForm(false);
+      } else {
+        setLockForm(false);
+      }
+    }
+
+    checkHaveAddress();
+  }, [userName]);
 
   async function onChangeText(id, value) {
     const { errors, text } = await handleChangeText(form, id, value);
@@ -72,25 +114,7 @@ export default function DeliveryAddressForm({ navigation }) {
     const errors = await handleSubmit(form);
 
     if (!errors) {
-      setLoading(true);
-      await api.post('/address_estab', {
-        ...form,
-        user_id: userId,
-        postal_code: '49400-000',
-        neighborhood: bairro,
-        city: 'Lagarto',
-        state: 'SE',
-      });
-      setForm({
-        street: '',
-        street_n: '',
-        complement: '',
-        reference: '',
-      });
-      setBairro('');
-
-      setLoading(false);
-      navigation.goBack();
+      handleFormSubmit(form, haveAddress);
     } else {
       let alltouched;
       Object.keys(errors).forEach(
@@ -101,10 +125,6 @@ export default function DeliveryAddressForm({ navigation }) {
     }
   }
 
-  function onValueChange2(value) {
-    setBairro(value);
-  }
-  console.tron.log(bairro);
   return (
     <>
       <Label style={{ color: '#F4A460' }}>Rua</Label>
@@ -142,10 +162,9 @@ export default function DeliveryAddressForm({ navigation }) {
           style={{ color: '#999' }}
           mode="dropdown"
           iosIcon={<Icon name="arrow-down" />}
-          placeholder={translate('neighborhood_placeholder')}
-          selectedValue={bairro}
-          onValueChange={onValueChange2}
-          onBlur={() => onBlur('neighborhood')}>
+          selectedValue={form.neighborhood}
+          onValueChange={text => onChangeText('neighborhood', text)}>
+          <Picker.Item label="Selecione um bairro...." />
           <Picker.Item label="CENTRO" value="CENTRO" />
           <Picker.Item label="ATM Card" value="key1" />
           <Picker.Item label="Debit Card" value="key2" />

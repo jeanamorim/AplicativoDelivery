@@ -47,7 +47,16 @@ export const DateRow = styled.View`
   flex-direction: row;
   justify-content: space-between;
 `;
-
+export const Text = styled.Text`
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+`;
+export const TextInfo = styled.Text`
+  font-size: 14px;
+  font-weight: bold;
+  color: #999;
+`;
 export const DateContainer = styled.View`
   flex-direction: column;
 `;

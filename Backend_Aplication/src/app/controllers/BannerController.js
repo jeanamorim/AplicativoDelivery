@@ -1,8 +1,6 @@
 import Banner from '../models/Banner';
 import File from '../models/File';
 
-import Cache from '../../lib/Cache';
-
 // import AdminCheckService from '../../services/AdminCheckService';
 
 class BannerController {
@@ -11,16 +9,10 @@ class BannerController {
 
     const banner = await Banner.create(req.body);
 
-    await Cache.invalidate('banners');
-
     return res.json(banner);
   }
 
   async index(req, res) {
-    const cached = await Cache.get('banners');
-
-    if (cached) return res.json(cached);
-
     const banners = await Banner.findAll({
       attributes: ['id'],
       include: [
@@ -31,8 +23,6 @@ class BannerController {
         },
       ],
     });
-
-    await Cache.set('banners', banners);
 
     return res.json(banners);
   }
@@ -45,8 +35,6 @@ class BannerController {
         id: req.params.id,
       },
     });
-
-    await Cache.invalidate('banners');
 
     return res.json();
   }

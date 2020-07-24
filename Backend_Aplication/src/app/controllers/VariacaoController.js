@@ -1,4 +1,3 @@
-import Product from '../models/Product';
 import Variacao from '../models/Variacao';
 import Opcao from '../models/Opcao';
 
@@ -7,10 +6,9 @@ import Opcao from '../models/Opcao';
 class VariacaoController {
   async store(req, res) {
     // await AdminCheckService.run({ user_id: req.userId });
-    const { name, minimo, maximo, product_id, opcao } = req.body;
+    const { name, minimo, maximo, opcao } = req.body;
 
     const variacao = await Variacao.create({
-      product_id,
       name,
       minimo,
       maximo,
@@ -27,11 +25,6 @@ class VariacaoController {
     const variacao = await Variacao.findAll({
       attributes: ['id', 'name', 'minimo', 'maximo'],
       include: [
-        {
-          model: Product,
-          as: 'product',
-          attributes: ['id', 'name'],
-        },
         {
           model: Opcao,
           as: 'opcao',

@@ -2,20 +2,30 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+
 import { useSelector, useDispatch } from 'react-redux';
 import Iconn from 'react-native-vector-icons/MaterialCommunityIcons';
 import api from '../../services/api';
-import { YellowBox, Image } from 'react-native';
+import { YellowBox, StyleSheet } from 'react-native';
 YellowBox.ignoreWarnings(['VirtualizedLists']);
 import Icons from 'react-native-vector-icons/FontAwesome5';
-import storage from '@react-native-community/async-storage';
-import Background from '../../components/Background';
-import { withNavigationFocus } from 'react-navigation';
-import { ItemCount } from './styles';
 
-import styles from './style';
-import { StatusBar, Alert, BackHandler, ActivityIndicator } from 'react-native';
+import Background from '../../components/Background';
+import { useIsFocused } from '@react-navigation/native';
+import {
+  ProductList,
+  ContainerCard,
+  Left,
+  Avatar,
+  Info,
+  Name,
+  Time,
+  TextBadge,
+  Avaliacao,
+  TextInfo,
+} from './styles';
+
+import { StatusBar, Alert, ActivityIndicator } from 'react-native';
 import colors from '../../styles/colors';
 
 import {
@@ -23,35 +33,29 @@ import {
   Container,
   Header,
   Content,
-  Left,
   Right,
-  Body,
-  Text,
-  View,
-  Thumbnail,
   Separator,
-  CardItem,
-  Card,
-  Icon,
+  Badge,
+  Text,
 } from 'native-base';
 
 import OfertasEstabelecimento from '../../components/OfertasEstabelecimentos';
 import CategoriaEstabelecimento from '../../components/CategoriasEstabelecimentos';
 export default function ProductsLojas({ navigation, route }) {
   StatusBar.setBackgroundColor(colors.finalisar);
-  const [total, setTotal] = useState(0);
-
+  const [total, setTotal] = useState([]);
+  const dispatch = useDispatch();
   const { product } = route.params;
   const [loading, setLoading] = useState(false);
-
+  const cartSize = useSelector(state => state.cart.length);
+  const isFocused = useIsFocused();
   const id = product.id;
 
-  async function getData() {
-    const response = await api.get(`cart/${id}`);
-    setTotal(response.headers['x-total-count']);
-  }
-  console.log(total);
-  useFocusEffect(() => {
+  useEffect(() => {
+    async function getData() {
+      const response = await api.get(`offer_estab/${id}`);
+      setTotal(response.headers['x-total-count']);
+    }
     getData();
   }, []);
 
@@ -61,7 +65,7 @@ export default function ProductsLojas({ navigation, route }) {
         <Header style={styles.headerNameLoja}>
           <Button transparent textStyle={{ color: '#87838B' }}>
             <Icons name="credit-card" size={20} color="#FFF" />
-            <Text>Aceitamos Cartão</Text>
+            <Text>Aceitamos Cartão na entrega</Text>
           </Button>
           <Right style={styles.iconPesquisar}>
             <Button transparent>
@@ -79,104 +83,57 @@ export default function ProductsLojas({ navigation, route }) {
 
         <Button
           style={styles.buttonCart}
-          onPress={() =>
-            navigation.navigate('Cart', {
-              id: id,
-            })
-          }>
+          onPress={() => navigation.navigate('Cart')}>
           <Iconn style={styles.iconCart} name="basket" color="#FFF" size={33} />
           {loading ? (
-            <ActivityIndicator />
+            <ActivityIndicator
+              color="#f00"
+              size={25}
+              style={{ top: 20, right: 9 }}
+            />
           ) : (
-            <ItemCount>{total || 0}</ItemCount>
+            <Badge style={{ marginLeft: -10, marginTop: 30 }}>
+              <Text>{cartSize || 0}</Text>
+            </Badge>
           )}
         </Button>
 
         <Content style={{ flex: 1 }}>
-          <Card
-            style={{
-              elevation: 5,
-              flex: 1,
-            }}>
-            <CardItem>
-              <Left>
-                <Thumbnail
-                  source={{
-                    uri: product.image.url.replace('localhost', '10.0.0.104'),
-                  }}
-                />
-                <Body>
-                  <Text>{product.name_loja}</Text>
-                  <Button
-                    transparent
-                    textStyle={{ color: '#87838B' }}
-                    onPress={() =>
-                      navigation.navigate('InfoLojas', { product: product })
-                    }>
-                    <Icons
-                      color="#F4A460"
-                      name="angle-double-right"
-                      size={20}
-                    />
-                    <Text style={{ color: '#F4A460' }}>Ver Informação</Text>
-                  </Button>
-                </Body>
-              </Left>
-            </CardItem>
+          <ContainerCard
+            onPress={() => navigation.navigate('InfoLojas', { product })}>
+            <Left>
+              <Avatar
+                past={product.status === 'FECHADO' ? true : false}
+                source={{
+                  uri: product.image.url.replace('localhost', '10.0.0.104'),
+                }}
+              />
+              <Info>
+                <Name>{product.name_loja}</Name>
+                <Time> {product.tempo_entrega} min</Time>
+                <Avaliacao>
+                  <TextInfo note>{product.avaliacao}</TextInfo>
+                  <Icons
+                    name="star-half-alt"
+                    size={15}
+                    color="#F4A460"
+                    style={{ marginLeft: 10, marginTop: 2 }}
+                  />
+                </Avaliacao>
+              </Info>
+            </Left>
+            {product.status === 'ABERTO' ? (
+              <Text style={styles.statusAberto}>{product.status}</Text>
+            ) : (
+              <Text style={styles.statusFechado}>{product.status}</Text>
+            )}
+          </ContainerCard>
+          {total > 0 ? (
+            <Separator style={styles.separator}>
+              <Text style={styles.textseparator}>Ofertas do dia</Text>
+            </Separator>
+          ) : null}
 
-            <CardItem>
-              <Left>
-                <Icons name="star-half-alt" size={15} color="#F4A460" />
-                <Text note style={styles.avaliacaoLoja}>
-                  {product.avaliacao}
-                </Text>
-              </Left>
-              <Body>
-                <Text>
-                  <Icons name="clock" size={15} color="#999" />
-                  <Text
-                    note
-                    style={{
-                      fontFamily: 'CerebriSans-Regular',
-                      color: '#000',
-                    }}>
-                    {product.tempo_entrega} min
-                  </Text>
-                </Text>
-              </Body>
-              {product.status === 'ABERTO' ? (
-                <Right>
-                  <Text>
-                    <Text
-                      note
-                      style={{
-                        fontFamily: 'CerebriSans-Regular',
-                        color: '#20B402',
-                      }}>
-                      {product.status}
-                    </Text>
-                  </Text>
-                </Right>
-              ) : (
-                <Right>
-                  <Text>
-                    <Text
-                      note
-                      style={{
-                        fontFamily: 'CerebriSans-Regular',
-                        color: '#B22222',
-                      }}>
-                      {product.status}
-                    </Text>
-                  </Text>
-                </Right>
-              )}
-            </CardItem>
-          </Card>
-
-          <Separator style={styles.separator}>
-            <Text style={styles.textseparator}>Ofertas do dia</Text>
-          </Separator>
           <OfertasEstabelecimento id={id} navigation={navigation} />
           <Separator style={styles.separator}>
             <Text style={styles.textseparator}>Categorias</Text>
@@ -191,3 +148,61 @@ export default function ProductsLojas({ navigation, route }) {
     </Background>
   );
 }
+const styles = StyleSheet.create({
+  statusAberto: {
+    color: '#20B402',
+  },
+  statusFechado: {
+    color: '#B22222',
+  },
+
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+  },
+
+  headerButton: {
+    backgroundColor: '#F4A460',
+    height: 60,
+  },
+  iconPesquisar: {
+    marginRight: 20,
+    marginTop: 5,
+  },
+  headerNameLoja: {
+    backgroundColor: '#F4A460',
+    height: 50,
+  },
+
+  buttonCart: {
+    height: 65,
+    width: 65,
+    borderRadius: 70,
+    borderWidth: 1,
+    backgroundColor: '#F4A460',
+    borderColor: '#F4A460',
+    position: 'absolute',
+    zIndex: 9999,
+    flex: 1,
+
+    left: 0,
+    right: 0,
+    bottom: 20,
+  },
+  iconCart: {
+    marginLeft: 15,
+    marginTop: -2,
+  },
+  separator: {
+    borderWidth: 1,
+    backgroundColor: '#fff',
+    borderColor: '#fff',
+    marginLeft: 3,
+    marginRight: 3,
+  },
+  textseparator: {
+    fontSize: 17,
+    fontFamily: 'CerebriSans-ExtraBold',
+    color: '#000',
+  },
+});

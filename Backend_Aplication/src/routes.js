@@ -35,6 +35,7 @@ import EstabelecimentoControllers from './app/controllers/EstabelecimentoControl
 import SessionEstabelecimentoController from './app/controllers/SessionEstabelecimentoController';
 import OfertasEstabelecimento from './app/controllers/ControllersMobile/OfertasestabelecimentoControllers';
 import CategoriasEstabelecimento from './app/controllers/ControllersMobile/CategoriaestabelecimentoControllers';
+import offersEstabelecimento from './app/controllers/ControllersMobile/BuscarEstabelecimentoPorId';
 import ProductEstabelecimento from './app/controllers/ControllersMobile/ProductEstabelecimentoController';
 import AddressesUserEstab from './app/controllers/ControllersMobile/AdressesUserLogadoController';
 import OfertasGeral from './app/controllers/ControllersMobile/ListaOfertasGeralControllers';
@@ -43,6 +44,7 @@ import OpcaoVariacaoEstabControllers from './app/controllers/ControllersMobile/O
 import ListAdressesPorId from './app/controllers/ControllersMobile/ListAdressesPorIdController';
 import OrderUserControllers from './app/controllers/ControllersMobile/OrderUsersControllers';
 import BuscarPorCategoria from './app/controllers/ControllersMobile/BuscarEstabelecimentoCategoriaControllers';
+import RemoveCartUser from './app/controllers/ControllersMobile/RemoveCartTotal';
 
 import TotalCancelados from './app/controllers/ControllerRelatorios/TotalCancelado';
 import TotalCartao from './app/controllers/ControllerRelatorios/TotalCartão';
@@ -106,6 +108,7 @@ routes.get('/OrderAdmin', OrderControllerAdmins.index);
 routes.post('/users', validateUserStore, UserController.store);
 routes.post('/estabelecimento', EstabelecimentoControllers.store);
 routes.put('/estabelecimento', EstabelecimentoControllers.update);
+routes.get('/estabelecimento', EstabelecimentoControllers.index);
 
 routes.post(
   '/sessions',
@@ -154,6 +157,10 @@ routes.put('/address_estab/:id', AddressesUserEstab.update);
 routes.post('/address_estab', AddressesUserEstab.store);
 // buscar ofertas por estabelecimento no mobile
 routes.get('/offer_estab/:id', OfertasEstabelecimento.index);
+// buscar categorias por estabelecimento no mobile
+routes.get('/categories_estab/:id', CategoriasEstabelecimento.index);
+// buscar valores de frete por estabelecimento no mobile
+routes.get('/settings', SettingController.index);
 routes.put(
   '/address',
   authMiddlewareUsers,
@@ -170,11 +177,20 @@ routes.get('/offersGeral', OfertasGeral.index);
 routes.get('/variacao_produto/:id', VariacaoProduto.index);
 // lista todas as opcoes das variacoes passando o id da variacao
 routes.get('/opcao_variacao/:id', OpcaoVariacaoEstabControllers.index);
+// lista todas as produtos de uam categoria
+routes.get('/productsCategorias/:id', ProductEstabelecimento.index);
+// listar estabelecimento por id
+routes.get('/offersEstabelecimento/:id', offersEstabelecimento.index);
 
 routes.post('/cart', CartControllers.store);
 routes.get('/cart/:id', CartControllers.index);
 routes.put('/cart/:id', CartControllers.update);
 routes.delete('/cart/:id', CartControllers.delete);
+routes.delete('/cartRemove/:id', RemoveCartUser.delete);
+
+routes.post('/banners', BannerController.store);
+routes.get('/banners', BannerController.index);
+routes.delete('/banners/:id', BannerController.delete);
 
 routes.use(authMiddleware);
 
@@ -186,12 +202,8 @@ routes.delete('/admins/:id', AdminController.delete);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
-routes.post('/banners', BannerController.store);
-routes.get('/banners', BannerController.index);
-routes.delete('/banners/:id', BannerController.delete);
-
 routes.post('/categories', validateCategoryStore, CategoryController.store);
-routes.get('/categories_estab/:id', CategoriasEstabelecimento.index);
+
 routes.get('/categories', CategoryController.index);
 routes.get('/categories/:id', CategoriaDetails.index);
 routes.delete('/categories/:id', CategoryController.delete);
@@ -199,13 +211,12 @@ routes.put('/categories/:id', CategoryController.update);
 // Listar categoria por id p/editar painel web
 routes.get('/categorialist/:id', ListCategoriaEdit.index);
 
-routes.get('/estabelecimento', EstabelecimentoControllers.index);
 // routes.delete('/estabelecimento/:id', EstabelecimentoControllers.delete);
 routes.put('/estabelecimento/:id', EstabelecimentoControllers.update);
 
 routes.post('/products', validateProductStore, ProductController.store);
 routes.get('/products', ProductController.index);
-routes.get('/productsCategorias/:id', ProductEstabelecimento.index);
+
 routes.get('/productsList', ProductListControllers.index);
 routes.get('/products/:id', ProductDetails.index);
 routes.delete('/products/:id', ProductController.delete);

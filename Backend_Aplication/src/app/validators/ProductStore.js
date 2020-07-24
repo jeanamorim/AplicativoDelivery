@@ -10,7 +10,6 @@ export default async (req, res, next) => {
       image_id: Yup.number().required(),
       category_id: Yup.number().required(),
       price: Yup.number().required(),
-      observacao: Yup.string(),
     });
 
     await schema.validate(req.body, { abortEarly: false });

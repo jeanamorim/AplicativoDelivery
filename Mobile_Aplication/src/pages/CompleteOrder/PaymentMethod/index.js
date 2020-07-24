@@ -39,8 +39,7 @@ import {
 export default function PaymentMethod({ navigation, route }) {
   const [methodSelected, setMethodSelected] = useState('DINHEIRO');
   const [loading, setLoading] = useState(false);
-  const { orderDetails } = route.params;
-  console.tron.log(methodSelected);
+  const { orderDetails, address } = route.params;
 
   return (
     <Wrapper>
@@ -106,8 +105,9 @@ export default function PaymentMethod({ navigation, route }) {
             <Button
               onPress={() =>
                 navigation.navigate('Troco', {
+                  address,
+                  orderDetails,
                   paymentMethod: methodSelected,
-                  orderDetails: orderDetails,
                 })
               }
               loading={loading}>
@@ -116,7 +116,9 @@ export default function PaymentMethod({ navigation, route }) {
           ) : (
             <Button
               onPress={() =>
-                navigation.navigate('DeliveryAddress', {
+                navigation.navigate('OrderConfirmation', {
+                  address,
+                  orderDetails,
                   paymentMethod: methodSelected,
                 })
               }

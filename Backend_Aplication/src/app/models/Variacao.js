@@ -17,9 +17,10 @@ class Variacao extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Product, {
+    this.belongsToMany(models.Product, {
+      through: 'ProductsVariacoes',
       as: 'product',
-      foreignKey: 'product_id',
+      foreignKey: 'variacao_id',
     });
     this.belongsToMany(models.Opcao, {
       through: 'OpcaoVariacao',

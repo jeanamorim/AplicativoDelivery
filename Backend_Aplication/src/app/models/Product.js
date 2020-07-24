@@ -9,7 +9,6 @@ class Product extends Model {
         price: Sequelize.FLOAT,
         quantity: Sequelize.FLOAT,
         unit: Sequelize.STRING,
-        observacao: Sequelize.STRING,
       },
       {
         sequelize: connection,
@@ -28,6 +27,11 @@ class Product extends Model {
     this.belongsTo(models.Category, {
       as: 'category',
       foreignKey: 'category_id',
+    });
+    this.belongsToMany(models.Variacao, {
+      through: 'ProductsVariacoes',
+      as: 'variacao',
+      foreignKey: 'product_id',
     });
   }
 }

@@ -1,6 +1,5 @@
 import Estabelecimento from '../models/Estabelecimento';
 import File from '../models/File';
-import Cache from '../../lib/Cache';
 
 // import AdminCheckService from '../../services/AdminCheckService';
 
@@ -32,8 +31,6 @@ class EstabelecimentoController {
       image_id,
     } = await Estabelecimento.create(req.body);
 
-    await Cache.invalidate('estabelecimento');
-
     return res.json({
       id,
       name,
@@ -57,11 +54,12 @@ class EstabelecimentoController {
     // const cached = await Cache.get('estabelecimento');
 
     // if (cached) return res.json(cached);
+    const count = await Estabelecimento.findAndCountAll();
     const { page = 1 } = req.query;
     const estabelecimento = await Estabelecimento.findAll({
       order: [['status']],
-      limit: 5,
-      offset: (page - 1) * 5,
+      limit: 15,
+      offset: (page - 1) * 15,
       attributes: [
         'id',
         'name',
@@ -86,7 +84,7 @@ class EstabelecimentoController {
     });
 
     // await Cache.set('estabelecimento', estabelecimento);
-
+    res.header('X-Total-Count', count.count);
     return res.json(estabelecimento);
   }
 
@@ -128,8 +126,6 @@ class EstabelecimentoController {
       gender,
       cpf,
     } = await estabelecimento.update(req.body);
-
-    await Cache.invalidate('estabelecimento');
 
     return res.json({
       id,

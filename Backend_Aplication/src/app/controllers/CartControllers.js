@@ -1,6 +1,7 @@
 import Cart from '../models/Cart';
 import Product from '../models/Product';
 import File from '../models/File';
+import Estabelecimento from '../models/Estabelecimento';
 
 // mport AdminCheckService from '../../services/AdminCheckService';
 
@@ -34,8 +35,8 @@ class Carrinho {
       where: {
         estabelecimento_id: req.params.id,
       },
-      limit: 10,
-      offset: (page - 1) * 10,
+      limit: 30,
+      offset: (page - 1) * 30,
       atributes: ['observacao', 'quantidade'],
       include: [
         {
@@ -49,6 +50,18 @@ class Carrinho {
             'unit',
             'quantity',
           ],
+          include: [
+            {
+              model: File,
+              as: 'image',
+              attributes: ['path', 'url'],
+            },
+          ],
+        },
+        {
+          model: Estabelecimento,
+          as: 'estabelecimento',
+          attributes: ['id', 'name_loja'],
           include: [
             {
               model: File,
@@ -92,7 +105,7 @@ class Carrinho {
 
     await Cart.destroy({
       where: {
-        estabelecimento_id: req.params.id,
+        id: req.params.id,
       },
     });
 

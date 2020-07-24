@@ -95,7 +95,7 @@ class CreateOrderService {
 
       // Get order complete details
 
-      const orderProducts = await OrderDetail.findAll({
+      const order_details = await OrderDetail.findAll({
         where: {
           order_id: id,
         },
@@ -109,7 +109,7 @@ class CreateOrderService {
               {
                 model: File,
                 as: 'image',
-                attributes: ['path', 'url'],
+                attributes: ['id', 'name', 'url'],
               },
               {
                 model: Category,
@@ -122,7 +122,7 @@ class CreateOrderService {
       });
 
       // Organize products by categories
-
+      /*
       const orderProductsGrouped = Object.values(
         orderProducts.reduce((result, { quantity, price, total, product }) => {
           // Create new group if necessary
@@ -146,7 +146,7 @@ class CreateOrderService {
           return result;
         }, {}),
       );
-
+*/
       const orderProductsCount = products.reduce((result, { quantity }) => {
         return result + quantity;
       }, 0);
@@ -156,7 +156,7 @@ class CreateOrderService {
         orderDetails: {
           user,
           orderNumber: id,
-          orderProductsGrouped,
+          orderProductsGrouped: order_details,
           orderProductsCount,
           deliveryFee: delivery_fee,
           discount,
@@ -211,7 +211,7 @@ class CreateOrderService {
         payment_condition,
         cc_brand,
         cc_last_4_digits,
-        products: orderProductsGrouped,
+        order_details,
       };
     } catch (err) {
       if (transaction) await transaction.rollback();

@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Home from '../pages/Home';
 import EstabelecimentoByCategory from '../pages/EstabelecimentoByCategory';
+import OfertasPrincipal from '../components/OfertasPrincipal';
 import ProductsLojas from '../pages/ProductsLojas';
 import Cart from '../pages/Cart';
 import DeliveryAddress from '../pages/CompleteOrder/DeliveryAddress';
@@ -20,7 +21,12 @@ import InfoLojas from '../pages/InfoLojas';
 
 const Stack = createStackNavigator();
 
-export default function Delivery() {
+export default function HomeRoutes({navigation, route}) {
+  if (route.state && route.state.index > 0){
+    navigation.setOptions({tabBarVisible: false});
+  } else {
+    navigation.setOptions({tabBarVisible: true});
+  }
   return (
     <Stack.Navigator
       headerMode="screen"
@@ -30,7 +36,7 @@ export default function Delivery() {
         headerTintColor: '#FFF',
         headerTitleStyle: {fontSize: 18},
         headerTransparent: false,
-        tabBarVisible: false,
+
       }}
       initialRouteName="Home">
       <Stack.Screen
@@ -156,6 +162,7 @@ export default function Delivery() {
         name="DeliveryAddress"
         component={DeliveryAddress}
       />
+
        <Stack.Screen
         headerLeft={({navigation}) => ({
           onPress: navigation.goBack(),
@@ -235,6 +242,15 @@ export default function Delivery() {
         name="NewAdress"
         component={NewAdress}
       />
+        <Stack.Screen
+        headerLeft={({navigation}) => ({
+          onPress: navigation.goBack(),
+        })}
+
+        name="OfertasPrincipal"
+        component={OfertasPrincipal}
+      />
+
     </Stack.Navigator>
   );
 }

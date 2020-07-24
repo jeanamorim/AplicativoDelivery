@@ -9,8 +9,8 @@ import Background from '../../../components/Background';
 import { Text, Footer, FooterTab, Button } from 'native-base';
 export default function Troco({ navigation, route }) {
   const [troco, setTroco] = useState('');
-  const { orderDetails, paymentMethod } = route.params;
-  console.tron.log(orderDetails);
+  const { orderDetails, paymentMethod, address, id, loja } = route.params;
+
   return (
     <Background>
       <View
@@ -29,6 +29,9 @@ export default function Troco({ navigation, route }) {
           <Text style={{ textAlign: 'center', fontSize: 20 }}>
             vai querer troco para quanto?
           </Text>
+          <Text note style={{ alignSelf: 'center', color: '#f00' }}>
+            Voçê pode deixar em branco caso não precise.
+          </Text>
           <TextInput
             style={{
               paddingHorizontal: 20,
@@ -37,6 +40,7 @@ export default function Troco({ navigation, route }) {
               borderColor: '#c3c3c3',
               marginTop: 10,
               height: 60,
+              borderRadius: 20,
             }}
             required
             maxLength={8}
@@ -44,7 +48,7 @@ export default function Troco({ navigation, route }) {
             keyboardType="numeric"
             value={troco}
             onChangeText={setTroco}
-            placeholder="Digite em branco caso não precise."
+            placeholder="Deixe em branco caso nao precise."
             placeholderTextColor="#c3c3c3"
           />
         </View>
@@ -53,9 +57,13 @@ export default function Troco({ navigation, route }) {
         <FooterTab style={{ backgroundColor: '#F4A460' }}>
           <Button
             onPress={() =>
-              navigation.navigate('DeliveryAddress', {
-                paymentMethod: paymentMethod,
+              navigation.navigate('OrderConfirmation', {
+                address,
+                orderDetails,
+                paymentMethod,
                 troco: troco,
+                id,
+                loja: loja,
               })
             }>
             <Text style={{ fontSize: 15, color: '#fff' }}>Comfirmar</Text>

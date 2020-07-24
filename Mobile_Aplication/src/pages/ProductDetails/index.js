@@ -9,16 +9,15 @@ import Iconn from 'react-native-vector-icons/MaterialCommunityIcons';
 import { addToCartRequest } from '../../store/modules/cart/actions';
 import { formatPrice } from '../../util/format';
 import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
-import { withNavigationFocus } from 'react-navigation';
+import { useIsFocused } from '@react-navigation/native';
+import PropTypes from 'prop-types';
 import {
   Button,
   Container,
   Header,
   Input,
   Item,
-  Text,
   Content,
-  Left,
   Right,
   Body,
   Thumbnail,
@@ -32,8 +31,21 @@ import {
   FooterTab,
   Footer,
   Badge,
+  Text,
 } from 'native-base';
-import { ProductList } from './styles';
+
+import {
+  ProductList,
+  ContainerCard,
+  Left,
+  Avatar,
+  Info,
+  Name,
+  Time,
+  TextBadge,
+  Avaliacao,
+  TextInfo,
+} from './styles';
 import api from '../../services/api';
 export default function ProductDetails({ navigation, route }) {
   const { categoria, estabelecimento } = route.params;
@@ -43,33 +55,23 @@ export default function ProductDetails({ navigation, route }) {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-
+  const cartSize = useSelector(state => state.cart.length);
+  const isFocused = useIsFocused();
   const id = categoria.id;
-  //total de itens no carrinho
 
-  useFocusEffect(() => {
-    async function getData() {
-      const response = await api.get(`cart/${estabelecimento.id}`);
-      setQuantCart(response.headers['x-total-count']);
-    }
-    getData();
-  }, []);
   async function getProduct() {
     if (loading) {
       return;
     }
-
     const response = await api.get(`productsCategorias/${id}?page=${page}`);
-
     setProducts([...products, ...response.data]);
     setPage(page + 1);
+    setIsVisible(true);
   }
   useEffect(() => {
-    getProduct();
-  }, [id]);
-
-  useEffect(() => {
-    setTimeout(() => setIsVisible(true), 500);
+    if (isFocused) {
+      getProduct();
+    }
   }, []);
 
   function renderFooter() {
@@ -85,57 +87,44 @@ export default function ProductDetails({ navigation, route }) {
 
   function RenderProdutos({ item }) {
     return (
-      <Card>
-        <List>
+      <ContainerCard
+        onPress={() =>
+          navigation.navigate('DetalhesItens', {
+            produtoDetails: item,
+            estabelecimento: estabelecimento,
+          })
+        }>
+        <Left>
           <ShimmerPlaceHolder
-            key={item.id}
-            style={{
-              height: 65,
-              margin: 7,
-              width: '97%',
-            }}
             autoRun={true}
-            visible={isVisible}>
-            <ListItem
-              avatar
-              onPress={() =>
-                navigation.navigate('DetalhesItens', {
-                  produtoDetails: item,
-                  estabelecimento: estabelecimento,
-                })
-              }>
-              <Left>
-                <Thumbnail
-                  square
-                  source={{
-                    uri: item.image.url.replace('localhost', '10.0.0.104'),
-                  }}
-                  style={{
-                    height: 64,
-                    width: 64,
-                    marginTop: -10,
-                    marginLeft: -8,
-                  }}
-                />
-              </Left>
-              <Body>
-                <Text
-                  numberOfLines={1}
-                  style={{ fontFamily: 'CerebriSans-Regular' }}>
-                  {item.name}
-                </Text>
-                <Text
-                  note
-                  numberOfLines={2}
-                  style={{ fontFamily: 'CerebriSans-Regular' }}>
-                  {item.description}
-                </Text>
-              </Body>
-              <Text style={styles.price}>{formatPrice(item.price)}</Text>
-            </ListItem>
+            visible={isVisible}
+            style={{ width: 70, height: 70 }}>
+            <Avatar
+              source={{
+                uri: item.image.url,
+              }}
+            />
           </ShimmerPlaceHolder>
-        </List>
-      </Card>
+
+          <Info>
+            <ShimmerPlaceHolder autoRun={true} visible={isVisible}>
+              <Name>{item.name}</Name>
+            </ShimmerPlaceHolder>
+            <ShimmerPlaceHolder
+              autoRun={true}
+              visible={isVisible}
+              style={{ marginTop: 4 }}>
+              <Time> {item.description}</Time>
+            </ShimmerPlaceHolder>
+          </Info>
+        </Left>
+        <ShimmerPlaceHolder
+          autoRun={true}
+          visible={isVisible}
+          style={{ width: 80 }}>
+          <TextInfo style={styles.price}>{formatPrice(item.price)}</TextInfo>
+        </ShimmerPlaceHolder>
+      </ContainerCard>
     );
   }
 
@@ -154,46 +143,31 @@ export default function ProductDetails({ navigation, route }) {
         />
       </Container>
 
-      <Footer>
-        <FooterTab style={{ backgroundColor: '#F4A460' }}>
-          <Button>
-            <Icon
-              name="home"
-              style={{ color: '#fff' }}
-              onPress={() => navigation.navigate('Home')}
-            />
-          </Button>
-
-          <Button vertical>
-            <Icon
-              style={{ color: '#fff' }}
-              name="arrow-back"
-              onPress={() => navigation.goBack()}
-            />
-          </Button>
-          <Button
-            badge
-            vertical
-            onPress={() =>
-              navigation.navigate('Cart', {
-                id: estabelecimento.id,
-              })
-            }>
-            {loading ? (
-              <ActivityIndicator size={20} color="#000" />
-            ) : (
-              <Badge>
-                <Text>{quantItensCart || 0}</Text>
-              </Badge>
-            )}
-
-            <Icon name="basket" style={{ color: '#fff' }} />
-          </Button>
-        </FooterTab>
-      </Footer>
+      <Button
+        style={styles.buttonCart}
+        onPress={() =>
+          navigation.navigate('Cart', {
+            id: estabelecimento.id,
+            product: estabelecimento,
+          })
+        }>
+        <Iconn style={styles.iconCart} name="basket" color="#FFF" size={33} />
+        {loading ? (
+          <ActivityIndicator
+            color="#f00"
+            size={25}
+            style={{ top: 20, right: 9 }}
+          />
+        ) : (
+          <Badge style={{ marginLeft: -10, marginTop: 30 }}>
+            <Text>{cartSize || 0}</Text>
+          </Badge>
+        )}
+      </Button>
     </Background>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -205,5 +179,24 @@ const styles = StyleSheet.create({
     padding: 10,
     color: '#20B402',
     fontFamily: 'CerebriSans-Regular',
+  },
+  buttonCart: {
+    height: 65,
+    width: 65,
+    borderRadius: 70,
+    borderWidth: 1,
+    backgroundColor: '#F4A460',
+    borderColor: '#F4A460',
+    position: 'absolute',
+    zIndex: 9999,
+    flex: 1,
+
+    left: 0,
+    right: 0,
+    bottom: 20,
+  },
+  iconCart: {
+    marginLeft: 15,
+    marginTop: -2,
   },
 });

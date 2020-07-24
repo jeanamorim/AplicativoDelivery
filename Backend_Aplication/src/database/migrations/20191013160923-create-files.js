@@ -16,6 +16,14 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
+      size: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      url: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,

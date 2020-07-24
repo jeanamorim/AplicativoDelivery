@@ -10,8 +10,8 @@ class CategoriaestabelecimentoControllers {
       where: {
         estabelecimento_id: req.params.id,
       },
-      limit: 10,
-      offset: (page - 1) * 10,
+      limit: 20,
+      offset: (page - 1) * 20,
       attributes: ['id', 'name'],
       include: [
         {

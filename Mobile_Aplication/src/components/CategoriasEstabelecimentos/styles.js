@@ -4,13 +4,7 @@ import { darken } from 'polished';
 import Swiper from 'react-native-swiper';
 import colors from '../../styles/colors';
 
-export const Wrapper = styled.SafeAreaView`
-  flex: 1;
-`;
-
-export const Container = styled.ScrollView.attrs({
-  showsVerticalScrollIndicator: false,
-})``;
+import { RectButton } from 'react-native-gesture-handler';
 
 export const ImageSlide = styled(Swiper).attrs({
   autoplay: true,
@@ -19,102 +13,9 @@ export const ImageSlide = styled(Swiper).attrs({
   height: 220,
 })``;
 
-export const Banner = styled.Image`
-  flex: 1;
-  width: 100%;
-`;
-
-export const ListContainer = styled.View`
-  padding: 0 5px;
-  flex: 1;
-`;
-
-export const CategoriesHeaderText = styled.Text`
-  margin: 10px 0 5px;
-  font-size: 18px;
-  font-weight: bold;
-  color: ${colors.black};
-`;
-
-export const CategoryList = styled.FlatList.attrs({
-  horizontal: true,
-  showsHorizontalScrollIndicator: false,
-})``;
-
-export const Category = styled.View`
-  align-self: stretch;
-  align-items: center;
-  margin: 5px;
-`;
-
-export const CategoryImageContainer = styled(BaseButton)`
-  background: ${colors.primary};
-  height: 84px;
-  width: 84px;
-  border-radius: 42px;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const CategoryImage = styled.Image`
-  height: 80px;
-  width: 80px;
-  border-radius: 40px;
-`;
-
-export const CategoryName = styled.Text``;
-
-export const ProductsHeaderText = styled.Text`
-  margin: 10px 0 5px;
-  font-size: 18px;
-  font-weight: bold;
-  color: ${colors.black};
-`;
-
 export const ProductList = styled.FlatList.attrs({
   showsVerticalScrollIndicator: false,
-  numColumns: 3,
 })``;
-
-export const Product = styled.View`
-  background: ${colors.white};
-  border-radius: 4px;
-  padding: 10px;
-  flex: 0.5;
-  align-items: center;
-  margin: 3px;
-`;
-
-export const ImageContainer = styled.TouchableOpacity``;
-
-export const ProductImage = styled.Image.attrs({ resizeMode: 'contain' })`
-  width: 140;
-  height: 140;
-  margin-bottom: 5px;
-  border-radius: 50px;
-`;
-
-export const ProductTitle = styled.Text`
-  margin: 5px 0;
-  font-size: 10px;
-  font-size: 11;
-  font-family: 'CerebriSans-Regular';
-`;
-
-export const ProductInfoContainer = styled.View`
-  align-self: stretch;
-  justify-content: space-between;
-  flex-direction: row;
-  margin-bottom: 8px;
-`;
-
-export const ProductUnit = styled.Text`
-  color: ${colors.black};
-`;
-
-export const ProductPrice = styled.Text`
-  color: ${colors.red};
-`;
 
 export const AddButton = styled(BaseButton)`
   background: ${colors.primary};
@@ -215,4 +116,44 @@ export const DateRow = styled.View`
 
 export const DateContainer = styled.View`
   flex-direction: column;
+`;
+
+export const ContainerCard = styled(RectButton)`
+  margin-bottom: 5px;
+  padding: 10px;
+  border-radius: 1;
+  background: #f9f9f9;
+  border-bottom-color: #000;
+
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const Left = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+export const TextInfo = styled.Text`
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+`;
+
+export const Avatar = styled.Image`
+  width: 55px;
+  height: 55px;
+  border-color: #f4a460;
+  border-width: 2;
+  border-radius: 50px;
+`;
+
+export const Info = styled.View`
+  margin-left: 10px;
+`;
+
+export const Name = styled.Text`
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
 `;

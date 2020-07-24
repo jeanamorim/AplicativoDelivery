@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
-import { Alert } from 'react-native';
+import { Alert, Button } from 'react-native';
 import { useSelector } from 'react-redux';
 import storage from '@react-native-community/async-storage';
 import { dateLanguage } from '../../../locales';
@@ -16,35 +17,18 @@ import {
   FailedAnimationContainer,
   FailedAnimation,
 } from './styles';
-import api from '../../../services/api';
+
 export default function PaymentResult({ navigation, route }) {
-  const id = useSelector(state => state.user.profile.id);
-  const { status, orderId, idLoja } = route.params;
+  const { status, orders } = route.params;
 
-  /*
-  useEffect(() => {
-    async function loadOrders() {
-      const response = await api.get(`orders_user/${56}`);
-
-      navigation.navigate('OrdersRoutes', {
-        screen: 'OrdersDetails',
-        order: response.data[0],
-      });
-
-    }
-
-    loadOrders();
-  }, [id, navigation]);
- */
-
-  setTimeout(() => navigation.navigate('Home'), 2000);
-  useEffect(() => {
-    async function deleteCart() {
-      await api.delete(`cart/${idLoja}`);
-    }
-
-    deleteCart();
-  }, [id, idLoja, navigation]);
+  setTimeout(
+    () =>
+      navigation.navigate({
+        name: 'OrdersRoutes',
+        params: { screen: 'OrderDetails', orders },
+      }),
+    2000,
+  );
 
   return (
     <Container status={status}>
@@ -67,6 +51,3 @@ export default function PaymentResult({ navigation, route }) {
     </Container>
   );
 }
-PaymentResult.navigationOptions = ({ navigation }) => ({
-  title: 'Resultado do pedido',
-});
